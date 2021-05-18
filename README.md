@@ -7,6 +7,7 @@
 | NMec | Name | email |
 |--:|---|---|
 | 90327 | Diogo Costa Correia | diogo.correia99@ua.pt |
+| 93460 | João Gil Ferreira de Sousa Fernandes | joaogilfernandes@ua.pt |
 | 00000 | Fulano Tal e Qual | fulano@ua.pt |
 |  |  |  |
 
