@@ -6,6 +6,7 @@
 
 | NMec | Name | email |
 |--:|---|---|
+| 90327 | Diogo Costa Correia | diogo.correia99@ua.pt |
 | 00000 | Fulano Tal e Qual | fulano@ua.pt |
 |  |  |  |
 
