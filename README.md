@@ -11,7 +11,7 @@
 | 92975 | Leandro Filipe Gomes Rito | leandro.rito@ua.pt |
 | 93460 | João Gil Ferreira de Sousa Fernandes | joaogilfernandes@ua.pt |
 | 93427 | Lara Vieira Rodrigues | laravieirarodrigues@ua.pt |
-| 00000 | Fulano Tal e Qual | fulano@ua.pt |
+| 73211 | Mariana Pinheiro Gomes | marianapinheiro@ua.pt |
 |  |  |  |
 
 ## Folder organization
