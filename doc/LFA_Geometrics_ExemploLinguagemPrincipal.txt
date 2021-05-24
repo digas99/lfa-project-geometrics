@@ -1,0 +1,155 @@
+/-  Criacação de variavéis a partir do ficheiro abc.file
+/-  use, Figure, Color e end são palavras reservadas.
+use "abc.file": 		
+	Figure ship -> ship1 
+	Color myPurple -> lightPurple
+	.
+	.
+end 
+
+/- Inicialização do board com nome à escolha
+/- Board é palavra reservada
+Board "InputName"
+
+/- Inicialização de uma lista com figuras
+/- start e List é palavra reservada
+start Figure List lista
+
+/- Inicialização de uma String txt com ship
+/- A String não está a ser utilizada neste programa
+/- serve apenas para demonstração
+/- Text é palavra reservada. -> representa atribuição
+start Text txt -> "ship"
+
+/- alteração das propriedades de ship
+/- change,pos,posY e depth são palavras reservadas
+change ship pos -> center
+change ship posY -> 20
+change ship depth -> 1
+ 
+/- Inicializaçáo da variavél goal
+/- Line,set,display,width,thickness,posX,color,collision,exposed,true,white
+start Line goal
+/- definição das propriedades de goal
+set goal: 
+	display -> exposed
+	width -> 400
+	thickness -> 2
+	posY -> 390
+	posX -> 0
+	color -> white
+	collision -> true
+	depth -> 1
+end
+
+/- Inicialização da variavél square 
+/- seguida da sua atribuição de propriedades
+/- sendo que o square está definido como hidden não tem efeito na animação
+/- false,blue,hidden,center são palavras reservadas
+start Square square:
+	display -> hidden
+	width -> 100
+	thickness -> 2
+	posY -> center
+	posX -> 0
+	color -> blue
+	collision -> false
+	depth -> 5
+end
+
+/- adicionar variavéis à lista
+/- add é palavra reservada
+lista add goal
+lista add square
+
+/- desenho da figura no Board
+/- draw é palavra reservada
+draw lista
+draw ship 
+
+/- start Number count
+/- count -> 0.5
+
+/- Inicialização da variavél time do tipo Time com atribuição de valor
+/- Time e ms são palavras reservadas
+start Time time -> 1000 ms
+
+
+/- Angle,º,deg,pi,rad são palavras reservadas
+/- 180º ou 180 deg ou 2pi rad ou 1 rad
+start Angle angle -> 180º 
+
+/- loop que faz uma iteração a cada 1000ms e que tem como condição de paragem
+/- a colisão de ship com a posição de destino pretendida
+/- each é palavra reservada
+/- --------------------------- falta acrescentar interação com o utilizador(keyPress)-------------------------------
+each time:
+	change ship posY -> 2
+	change ship rotate -> angle
+	
+	/- if,collides,stop são palavras reservadas
+	if ship collides goal:
+		stop 
+	end
+	
+	angle + 5
+	draw ship
+end
+
+/- Conceito de função 
+/- Task e with são palavras reservadas
+start Task sum with x,y:
+	sum -> x+y
+end
+
+/- Conceito de função sem parâmetros de entrada
+start Task alert:
+	write "Mensagem"
+end
+
+/- Invocar a função
+start Number n -> 2 
+start Number result -> call sum with 1,n
+call alert
+
+start Number n -> call sum with 1,2 + 3 / 2
+
+/- Ciclo mais flexível 
+/- from é palavra reservada 
+each time with i from 0 to 100:
+	change ship posY -> 2
+	change ship rotate -> angle
+	
+	if ship collides goal:
+		stop 
+	end
+	
+	angle + 5
+	draw ship
+end
+
+/- green é palavra reservada
+change ship color -> green
+
+/- Devolve a localização atual de ship
+/- where is é palavra reservada 
+where is ship?
+
+/- Fecho do programa(com atraso)
+/- close é palavra reservada
+close 3000ms	
+
+	
+
+
+	
+	
+	
+
+
+
+
+ 
+
+
+
