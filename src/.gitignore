@@ -1,0 +1,12 @@
+# java files
+*.class
+
+# antlr
+*.tokens
+*.interp
+*Lexer.*
+*BaseListener.*
+*Listener.*
+*BaseVisitor.*
+*Visitor.*
+*Parser.*
