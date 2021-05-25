@@ -1,4 +1,4 @@
-# Geometrics/Quiz/BDex language
+# Geometrics language
 
 -----
 
