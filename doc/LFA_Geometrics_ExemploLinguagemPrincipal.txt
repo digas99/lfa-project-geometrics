@@ -3,8 +3,6 @@
 use "abc.file": 		
 	Figure ship -> ship1 
 	Color myPurple -> lightPurple
-	.
-	.
 end 
 
 /- Inicialização do board com nome à escolha
@@ -22,27 +20,27 @@ start Figure List lista
 start Text txt -> "ship"
 
 /- alteração das propriedades de ship
-/- change,pos,posY e depth são palavras reservadas
-change ship pos -> center
-change ship posY -> 20
-change ship depth -> 1
+/- set,pos,pos y e depth são palavras reservadas
+set ship pos -> center
+set ship pos y -> 20
+set ship depth -> 1
  
 /- Inicializaçáo da variavél goal
-/- Line,set,display,width,thickness,posX,color,collision,exposed,true,white
+/- Line,set,display,width,thickness,pos x,color,collision,exposed,true,white
 start Line goal
 /- definição das propriedades de goal
 set goal: 
 	display -> exposed
 	width -> 400
 	thickness -> 2
-	posY -> 390
-	posX -> 0
+	pos y -> 390
+	pos x -> 0
 	color -> white
 	collision -> true
 	depth -> 1
 end
 
-/- Inicialização da variavél square 
+/- Inicialização da variavel square 
 /- seguida da sua atribuição de propriedades
 /- sendo que o square está definido como hidden não tem efeito na animação
 /- false,blue,hidden,center são palavras reservadas
@@ -50,8 +48,8 @@ start Square square:
 	display -> hidden
 	width -> 100
 	thickness -> 2
-	posY -> center
-	posX -> 0
+	pos y -> center
+	pos x -> 0
 	color -> blue
 	collision -> false
 	depth -> 5
@@ -84,22 +82,23 @@ start Angle angle -> 180º
 /- each é palavra reservada
 /- --------------------------- falta acrescentar interação com o utilizador(keyPress)-------------------------------
 each time:
-	change ship posY -> 2
-	change ship rotate -> angle
+	set ship pos y -> 2
+	set ship rotate -> angle
 	
 	/- if,collides,stop são palavras reservadas
-	if ship collides goal:
-		stop 
-	end
+	/-if ship collides goal:
+	/-	stop 
+	/-end
 	
-	angle + 5
+	/- set angle + 5
 	draw ship
 end
 
 /- Conceito de função 
 /- Task e with são palavras reservadas
 start Task sum with x,y:
-	sum -> x+y
+	/- set sum -> x+y
+	start Number n
 end
 
 /- Conceito de função sem parâmetros de entrada
@@ -112,24 +111,24 @@ start Number n -> 2
 start Number result -> call sum with 1,n
 call alert
 
-start Number n -> call sum with 1,2 + 3 / 2
+/- start Number n -> call sum with 1,2 + 3 / 2
 
 /- Ciclo mais flexível 
 /- from é palavra reservada 
 each time with i from 0 to 100:
-	change ship posY -> 2
-	change ship rotate -> angle
+	set ship pos y -> 2
+	set ship rotate -> angle
 	
-	if ship collides goal:
-		stop 
-	end
+	/-if ship collides goal:
+	/-	stop 
+	/-end
 	
-	angle + 5
+	/- set angle + 5
 	draw ship
 end
 
 /- green é palavra reservada
-change ship color -> green
+set ship color -> green
 
 /- Devolve a localização atual de ship
 /- where is é palavra reservada 
@@ -137,7 +136,7 @@ where is ship?
 
 /- Fecho do programa(com atraso)
 /- close é palavra reservada
-close 3000ms	
+close 3000 ms	
 
 	
 
