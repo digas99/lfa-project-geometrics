@@ -20,21 +20,21 @@ start Figure List lista
 start Text txt -> "ship"
 
 /- alteração das propriedades de ship
-/- set,pos,pos y e depth são palavras reservadas
+/- set,pos,posY e depth são palavras reservadas
 set ship pos -> center
-set ship pos y -> 20
+set ship posY -> 20
 set ship depth -> 1
- 
+
 /- Inicializaçáo da variavél goal
-/- Line,set,display,width,thickness,pos x,color,collision,exposed,true,white
+/- Line,set,display,width,thickness,posX,color,collision,exposed,true,white
 start Line goal
 /- definição das propriedades de goal
 set goal: 
 	display -> exposed
 	width -> 400
 	thickness -> 2
-	pos y -> 390
-	pos x -> 0
+	posY -> 390
+	posX -> 0
 	color -> white
 	collision -> true
 	depth -> 1
@@ -48,8 +48,8 @@ start Square square:
 	display -> hidden
 	width -> 100
 	thickness -> 2
-	pos y -> center
-	pos x -> 0
+	posY -> center
+	posX -> 0
 	color -> blue
 	collision -> false
 	depth -> 5
@@ -82,22 +82,24 @@ start Angle angle -> 180º
 /- each é palavra reservada
 /- --------------------------- falta acrescentar interação com o utilizador(keyPress)-------------------------------
 each time:
-	set ship pos y -> 2
+	set ship posY -> 2
 	set ship rotate -> angle
 	
 	/- if,collides,stop são palavras reservadas
-	/-if ship collides goal:
-	/-	stop 
-	/-end
+	if ship collides goal:
+		stop 
+	end
 	
-	/- set angle + 5
+	set angle + 5
+	set angle + n + 5
+	set angle -> angle + 5
 	draw ship
 end
 
 /- Conceito de função 
 /- Task e with são palavras reservadas
 start Task sum with x,y:
-	/- set sum -> x+y
+	set sum -> x+y
 	start Number n
 end
 
@@ -116,14 +118,14 @@ call alert
 /- Ciclo mais flexível 
 /- from é palavra reservada 
 each time with i from 0 to 100:
-	set ship pos y -> 2
+	set ship posY -> 2
 	set ship rotate -> angle
 	
-	/-if ship collides goal:
-	/-	stop 
-	/-end
-	
-	/- set angle + 5
+	if ship collides goal:
+		stop 
+	end
+
+	set angle + 5
 	draw ship
 end
 
