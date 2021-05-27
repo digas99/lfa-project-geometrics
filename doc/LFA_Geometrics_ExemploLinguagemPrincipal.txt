@@ -44,7 +44,7 @@ end
 /- seguida da sua atribuição de propriedades
 /- sendo que o square está definido como hidden não tem efeito na animação
 /- false,blue,hidden,center são palavras reservadas
-start Square square:
+start Rectangle square:
 	display -> hidden
 	width -> 100
 	thickness -> 2

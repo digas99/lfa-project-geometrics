@@ -12,13 +12,18 @@ useAttribs	: ('Figure' | 'Color') ID '->' ID ;
 stats	: varsInit				#statVarsInit
 		| varsSet				#statVarsSet
 		| list					#statList
-		| 'draw' ID				#statDraw
+		| 'draw' ID	(',' ID)*	#statDraw
 		| loop					#statLoop
 		| conditional			#statConditional
 		| funcCall				#statFuncCall
 		| easteregg				#statEasterEgg
 		| 'write' (ID | STRING)	#statConsoleLog
+		| container				#statContainer
 		;
+
+// Begin container
+container	: 'container' ID ':' stats+ 'end' ;
+// End container
 
 // Begin expr
 expr	: expr op=('*' | '/') expr			#exprMultDiv
@@ -31,6 +36,17 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr '^' value=('+'|'-')? expr	#exprPower
 		;
 // End expr
+
+// Begin pointsExpr
+pointsExpr	: pointsExpr ('*' | '/' | '+' | '-') pointsExpr		#pointsExprCalc
+			| point												#pointsExprPoint
+			| ID												#pointsExprID
+			| ID ID												#pointsExprTypeProperty
+			| expr ',' expr										#pointsExprExpr
+			| 'center'											#pointsCenter
+			;
+
+// End pointsExpr
 
 // Begin boolean logic
 // different is equivalent to xor
@@ -49,20 +65,22 @@ booleanLogic	: booleanLogic op=('or' | 'and' | 'different'
 // Begin vars initialization
 varsInit	: 'start' varsInitSpecifics ;
 
-varsInitSpecifics	: prop=('Figure' | 'Square' | 'Line'
-						| 'Circle' | 'Text' | 'Number'
-						| 'Time' | 'Angle') ID										#varsOnlyInit
-					| prop=('Figure' | 'Square' | 'Line'
-						| 'Circle') value='List' ID									#varsInitList
-					| 'Text' ID '->' (STRING | funcCall)							#varsInitText
-					| 'Number' ID '->' (expr | funcCall)							#varsInitNumber
-					| 'Time' ID '->' (time | funcCall)								#varsInitTime
-					| 'Angle' ID '->' (angle | funcCall)							#varsInitAngla						
-					| 'Square' ID ':' (commonProperty | squareProperty)+ 'end'		#varsInitSquare
-					| 'Line' ID ':' (commonProperty | lineProperty)+ 'end'			#varsInitLine
-					| 'Circle' ID ':' (commonProperty | circleProperty)+ 'end'		#varsInitCircle
-					| 'Figure' ID ':' (commonProperty | squareProperty)+ 'end'		#varsInitFigure
-					| 'Task' ID ('with' ID (',' ID)* )? ':' stats+ 'end'			#varsInitFunc
+varsInitSpecifics	: prop=('Figure' | 'Triangle' | 'Rectangle'
+						| 'Circle' | 'Text' | 'Point' | 'Line'
+						| 'Number' | 'Time' | 'Angle') ID								#varsOnlyInit
+					| prop=('Figure' | 'Rectangle' | 'Line'
+						| 'Circle') value='List' ID										#varsInitList
+					| 'Text' ID '->' (STRING | funcCall)								#varsInitText
+					| 'Number' ID '->' (expr | funcCall)								#varsInitNumber
+					| 'Time' ID '->' (time | funcCall)									#varsInitTime
+					| 'Angle' ID '->' (angle | funcCall)								#varsInitAngle						
+					| 'Point' ID '->' pointsExpr										#varsInitPoint
+					| 'Triangle' ID '->' (commonProperty | triangleProperty)+ 'end'		#varsInitTriangle
+					| 'Rectangle' ID ':' (commonProperty | rectangleProperty)+ 'end'	#varsInitRectangle
+					| 'Line' ID ':' (commonProperty | lineProperty)+ 'end'				#varsInitLine
+					| 'Circle' ID ':' (commonProperty | circleProperty)+ 'end'			#varsInitCircle
+					| 'Figure' ID ':' (commonProperty | rectangleProperty)+ 'end'		#varsInitFigure
+					| 'Task' ID ('with' ID (',' ID)* )? ':' stats+ 'end'				#varsInitFunc
 					;
 // End vars initialization
 
@@ -71,33 +89,42 @@ funcCall	: 'call' ID ('with' (expr | STRING) (',' (expr | STRING))* )? ;
 // End func call
 
 // Begin vars set
-varsSet	: 'set' ID (inlineSet | blockSet)
-		| 'set' ID '->' expr
-		| 'set' ID ('*' | '/' | '+' | '-') expr
+varsSet	: 'set' ID (inlineSet | blockSet)			#varsSetProperties
+		| 'set' ID '->' expr						#varsSetExpr
+		| 'set' ID ('*' | '/' | '+' | '-') expr		#varsSetCalc
 		;
 
-inlineSet	: (commonProperty | squareProperty | circleProperty) ;
+inlineSet	: (commonProperty | rectangleProperty | circleProperty | lineProperty | triangleProperty) ;
 
 blockSet : ':' inlineSet+ 'end' ;
 // End vars set
 
 // Begin objects properties
-commonProperty	: prop=('posX' | 'posY' 
-						| 'pos' | 'border'
-						| 'width' | 'height'
-						| 'radius' | 'diameter'
-						| 'thickness' | 'rotate'
-						| 'depth') '->' (expr)						#commonPropNumbers
+commonProperty	: prop=( 'border' | 'thickness'
+					|'rotate' | 'depth') '->' expr					#commonPropNumbers
 				| prop=('color' | 'borderColor') '->' (ID|color)	#commonPropColors
 				| 'display' '->' value=('exposed' | 'hidden')		#commonPropDisplay
 				| 'collision' '->' (TRUTHVAL|ID)					#commonPropCollisions
 				;
 
-lineProperty	: 'width' '->' expr ;
+lineProperty	: 'width' '->' expr								#linePropertyWidth
+				| ('center' | 'startingPoint'
+					| 'endingPoint') '->' pointsExpr			#linePropertyPoints
+				| 'angle' '->' (ID | angle)						#linePropertyAngle
+				;
 
-squareProperty	: ('width' | 'height') '->' expr ;
+rectangleProperty	: ('width' | 'height') '->' expr			#rectanglePropertySize
+					| 'center' '->' pointsExpr					#rectanglePropertyCenter
+					| 'angle' '->' (ID | angle)					#rectanglePropertyAngle
+					;
 
-circleProperty	: ('radius' | 'diameter') '->' expr ;
+circleProperty	: ('radius' | 'diameter') '->' expr				#circlePropertySize
+				| ('center' | 'startingPoint'						
+					| 'endingPoint') '->' pointsExpr			#circlePropertyPointss
+				;
+
+triangleProperty	: ('p0' | 'p1' | 'p2') '->' expr ;
+
 // End objects properties
 
 
@@ -121,19 +148,20 @@ loop	: 'each' (time | ID) loopSpecifics 'end' ;
 
 loopSpecifics	: ':' (stats+ | 'stop')										#eachTime
 				| 'until' booleanLogic ':' (stats+ | 'stop')				#eachWhile
-				| 'with' ID 'from' expr 'to' expr ':' (stats+ | 'stop') #eachFor
+				| 'with' ID 'from' expr 'to' expr ':' (stats+ | 'stop') 	#eachFor
 				;
 
 // Begin easteregg
-easteregg	: 'where iss' ID '?' ; 
+easteregg	: 'where is' ID '?' ; 
 // End easteregg
 
+point : NUMBER ',' NUMBER ;
 angle : expr ('º' | 'deg' | 'rad') ;
 time : expr ('ms'|'s'); 
 
 TRUTHVAL : 'true' | 'false';
-NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 ID: [a-zA-Z0-9]+;	
+NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 STRING: '"' .*? '"';
 WS	: [ \t\n\r]+ -> skip;
 COMMENT: '/-' .*? '\n' -> skip;
