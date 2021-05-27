@@ -14,14 +14,14 @@ container ship:
 	start Line horizontalLine
 	start Circle shipsHead
 	
-	start Point p0 -> 3,0
+	start Point point -> 3,0
 
 	set verticalLine:
-		startingPoint -> p
+		startingPoint -> point
 		endingPoint -> 3,3
 	end
 
-	start Angle angle -> 0º
+	start Angle ang -> 0º
 
 	set horizontalLine:	
 		center -> 3,2
@@ -50,8 +50,7 @@ container bigSquareSmallCircle:
 
 	set rec:
 		width -> 6
-		heigth -> 6
-		center -> 4,4
+		height -> 6
 		angle -> 0 deg
 	end
 
@@ -67,7 +66,7 @@ set bigSquareSmallCircle angle -> -30 deg
 
 draw bigSquareSmallCircle
 
-close 100 ms
+close 1000 ms
 
 /- wrap ship and bigSquareSmallCircle together
 /- start Figure wrapper:

@@ -21,8 +21,8 @@ start Text txt -> "ship"
 
 /- alteração das propriedades de ship
 /- set,pos,posY e depth são palavras reservadas
-set ship pos -> center
-set ship posY -> 20
+/- set ship pos -> center
+/- set ship posY -> 20
 set ship depth -> 1
 
 /- Inicializaçáo da variavél goal
@@ -33,8 +33,8 @@ set goal:
 	display -> exposed
 	width -> 400
 	thickness -> 2
-	posY -> 390
-	posX -> 0
+	/-posY -> 390
+	/-posX -> 0
 	color -> white
 	collision -> true
 	depth -> 1
@@ -48,8 +48,8 @@ start Rectangle square:
 	display -> hidden
 	width -> 100
 	thickness -> 2
-	posY -> center
-	posX -> 0
+	/-posY -> center
+	/-posX -> 0
 	color -> blue
 	collision -> false
 	depth -> 5
@@ -72,27 +72,26 @@ draw ship
 /- Time e ms são palavras reservadas
 start Time time -> 1000 ms
 
-
 /- Angle,º,deg,pi,rad são palavras reservadas
 /- 180º ou 180 deg ou 2pi rad ou 1 rad
-start Angle angle -> 180º 
+start Angle ang -> 180º
 
 /- loop que faz uma iteração a cada 1000ms e que tem como condição de paragem
 /- a colisão de ship com a posição de destino pretendida
 /- each é palavra reservada
 /- --------------------------- falta acrescentar interação com o utilizador(keyPress)-------------------------------
 each time:
-	set ship posY -> 2
-	set ship rotate -> angle
+	/-set ship posY -> 2
+	set ship rotate -> ang
 	
 	/- if,collides,stop são palavras reservadas
 	if ship collides goal:
 		stop 
 	end
 	
-	set angle + 5
-	set angle + n + 5
-	set angle -> angle + 5
+	set ang + 5
+	set ang + n + 5
+	set ang -> ang + 5
 	draw ship
 end
 
@@ -118,14 +117,14 @@ call alert
 /- Ciclo mais flexível 
 /- from é palavra reservada 
 each time with i from 0 to 100:
-	set ship posY -> 2
-	set ship rotate -> angle
+	/-set ship posY -> 2
+	set ship rotate -> ang
 	
 	if ship collides goal:
 		stop 
 	end
 
-	set angle + 5
+	set ang + 5
 	draw ship
 end
 
@@ -139,18 +138,3 @@ where is ship?
 /- Fecho do programa(com atraso)
 /- close é palavra reservada
 close 3000 ms	
-
-	
-
-
-	
-	
-	
-
-
-
-
- 
-
-
-

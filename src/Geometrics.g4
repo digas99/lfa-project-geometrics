@@ -41,7 +41,9 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 pointsExpr	: pointsExpr ('*' | '/' | '+' | '-') pointsExpr		#pointsExprCalc
 			| point												#pointsExprPoint
 			| ID												#pointsExprID
-			| ID ID												#pointsExprTypeProperty
+			| ID ('center' | 'startingPoint' | 'endingPoint'
+				| 'topLeftPoint' | 'topRightPoint'
+				| 'bottomLeftPoint' | 'bottomRightPoint')		#pointsExprTypeProperty
 			| expr ',' expr										#pointsExprExpr
 			| 'center'											#pointsCenter
 			;
@@ -67,13 +69,13 @@ varsInit	: 'start' varsInitSpecifics ;
 
 varsInitSpecifics	: prop=('Figure' | 'Triangle' | 'Rectangle'
 						| 'Circle' | 'Text' | 'Point' | 'Line'
-						| 'Number' | 'Time' | 'Angle') ID								#varsOnlyInit
+						| 'Number' |  'Angle' | 'Time') ID								#varsOnlyInit
 					| prop=('Figure' | 'Rectangle' | 'Line'
 						| 'Circle') value='List' ID										#varsInitList
 					| 'Text' ID '->' (STRING | funcCall)								#varsInitText
 					| 'Number' ID '->' (expr | funcCall)								#varsInitNumber
-					| 'Time' ID '->' (time | funcCall)									#varsInitTime
 					| 'Angle' ID '->' (angle | funcCall)								#varsInitAngle						
+					| 'Time' ID '->' (time | funcCall)									#varsInitTime
 					| 'Point' ID '->' pointsExpr										#varsInitPoint
 					| 'Triangle' ID '->' (commonProperty | triangleProperty)+ 'end'		#varsInitTriangle
 					| 'Rectangle' ID ':' (commonProperty | rectangleProperty)+ 'end'	#varsInitRectangle
@@ -100,7 +102,7 @@ blockSet : ':' inlineSet+ 'end' ;
 // End vars set
 
 // Begin objects properties
-commonProperty	: prop=( 'border' | 'thickness'
+commonProperty	: prop=('border' | 'thickness'
 					|'rotate' | 'depth') '->' expr					#commonPropNumbers
 				| prop=('color' | 'borderColor') '->' (ID|color)	#commonPropColors
 				| 'display' '->' value=('exposed' | 'hidden')		#commonPropDisplay
@@ -155,9 +157,9 @@ loopSpecifics	: ':' (stats+ | 'stop')										#eachTime
 easteregg	: 'where is' ID '?' ; 
 // End easteregg
 
-point : NUMBER ',' NUMBER ;
 angle : expr ('º' | 'deg' | 'rad') ;
 time : expr ('ms'|'s'); 
+point : NUMBER ',' NUMBER ;
 
 TRUTHVAL : 'true' | 'false';
 ID: [a-zA-Z0-9]+;	
