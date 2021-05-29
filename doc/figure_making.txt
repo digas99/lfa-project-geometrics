@@ -37,9 +37,11 @@ container ship:
 	end
 
 	draw verticalLine, horizontalLine, shipsHead
+	/- draw all
+
 end
 
-draw ships
+draw ship
 
 /- ----------------------------------------
 
