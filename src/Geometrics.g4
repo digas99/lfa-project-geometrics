@@ -166,4 +166,4 @@ ID: [a-zA-Z0-9]+;
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 STRING: '"' .*? '"';
 WS	: [ \t\n\r]+ -> skip;
-COMMENT: '/-' .*? '\n' -> skip;
+COMMENT: '/-' ~[\n]* -> skip;
