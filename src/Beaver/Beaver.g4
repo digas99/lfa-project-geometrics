@@ -1,24 +1,24 @@
 grammar Beaver;
 
-program	: containers (stats '>>')* EOF;
+program	: containers (stats NEWLINE?)* EOF;
 
-containers	: 'containers' '=>' idsList '>>' ;
+containers	: 'containers' '=>' idsList '>>' NEWLINE? ;
 
-stats	: 'Pallete' ID '=>' idsList		#statsPallete
-		| 'Color' ID '=>' color			#statsColor
-		| FIGURE ID '=>' inlineSet+		#statsSet
-		| ID 'contains' '=>' stats+		#statsContains
+stats	: 'Pallete' ID '=>' idsList '>>'	#statsPallete
+		| 'Color' ID '=>' color	'>>'		#statsColor
+		| FIGURE ID '=>' inlineSet+	'>>'	#statsSet
+		| ID 'contains' '=>' (stats NEWLINE?)+	'>>'	#statsContains
 		;
 
-idsList	: ID (',' ID)* ;
+idsList	: ID (',' NEWLINE? ID)* NEWLINE? ;
 
-inlineSet	: ID (expr | pointsExpr | expr color | angle) ;
+inlineSet	: ID (expr | pointsExpr | color | expr color | angle) NEWLINE? ;
 
 expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr op=('+' | '-') expr			#exprAddSub
 		| NUMBER							#exprNumber
+		| ID '[' ID ']'						#exprTypeProperty
 		| ID								#exprID
-		| ID ID								#exprTypeProperty
 		| '(' expr ')'						#exprParentesis
 		| value=('+'|'-') (expr)			#exprUnary
 		| expr '^' value=('+'|'-')? expr	#exprPower
@@ -27,16 +27,16 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 pointsExpr	: pointsExpr ('+' | '-') pointsExpr		#pointsExprCalc
 			| point									#pointsExprPoint
 			| expr									#pointsExprExpr
-			| expr ',' expr							#pointsPointExpr
-			| 'center'								#pointsCenter
+			| 'container-center'					#pointsCenter
 			;
 
-color : '#'ID | (NUMBER ',' NUMBER ',' NUMBER) ;
-point : NUMBER ',' NUMBER ;
+color : '#'ID | (expr ',' expr ',' expr) ;
+point : expr ',' expr ;
 angle : expr ('º' | 'deg' | 'rad') ;
 
 FIGURE: ('Point' | 'Rectangle' | 'Circle' | 'Line' | 'Triangle');
 ID: [a-zA-Z0-9]+;	
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
+NEWLINE : '\r'? '\n';
 WS	: [ \t\n\r]+ -> skip;
 COMMENT: '!!' ~[\n]* -> skip;

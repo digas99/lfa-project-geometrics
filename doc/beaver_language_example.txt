@@ -30,8 +30,8 @@ square contains =>
 	cir contains =>
 		Line diagonal => 
 			startingPoint -20, -20
-			endingPoint 20, 20
-			color #ffffff
+			endingPoint cir[startingPoint] + 2,2
+			color #fffff
 			border 3 #000000 
 		>>
 	>>
