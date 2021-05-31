@@ -38,7 +38,7 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 // End expr
 
 // Begin pointsExpr
-pointsExpr	: pointsExpr ('*' | '/' | '+' | '-') pointsExpr		#pointsExprCalc
+pointsExpr	: pointsExpr ('+' | '-') pointsExpr					#pointsExprCalc
 			| point												#pointsExprPoint
 			| ID												#pointsExprID
 			| ID ('center' | 'startingPoint' | 'endingPoint'
