@@ -34,7 +34,7 @@ set goal:
 	width -> 400
 	thickness -> 2
 	/-posY -> 390
-	/-posX -> 0
+	/-	 -> 0
 	color -> white
 	collision -> true
 	depth -> 1

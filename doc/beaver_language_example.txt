@@ -1,0 +1,37 @@
+containers =>
+	square
+>>
+
+Color red => #f24235
+Color blue => 53, 56, 242
+
+Pallete myPallete =>
+	red,
+	blue
+>>
+
+Rectangle square =>
+	size 400, 400
+	angle 0º
+	color <red>
+	border 2 #f24235
+>>
+
+square contains =>
+	!! center of container is 0,0
+	Circle cir =>
+		center 0,0
+		diameter 100
+		color <blue>
+	>>
+
+	cir contains =>
+		Line diagonal => 
+			startingPoint -20, -20
+			endingPoint 20, 20
+			color #ffffff
+			border 3 #000000 
+		>>
+	>>
+
+>>
