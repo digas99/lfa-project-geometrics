@@ -2,18 +2,20 @@ containers =>
 	square
 >>
 
-Color red => #f24235
-Color blue => 53, 56, 242
+Color red => #f24235 >>
+Color blue => 53, 56, 242 >>
 
 Pallete myPallete =>
 	red,
 	blue
 >>
 
+Rectangle square => size 400,400 >>
+
 Rectangle square =>
 	size 400, 400
 	angle 0º
-	color <red>
+	color red
 	border 2 #f24235
 >>
 
@@ -22,7 +24,7 @@ square contains =>
 	Circle cir =>
 		center 0,0
 		diameter 100
-		color <blue>
+		color blue
 	>>
 
 	cir contains =>
@@ -33,5 +35,4 @@ square contains =>
 			border 3 #000000 
 		>>
 	>>
-
 >>
