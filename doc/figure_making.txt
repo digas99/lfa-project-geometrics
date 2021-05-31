@@ -1,0 +1,76 @@
+/-        O
+/-        |
+/-  -------------
+/- 		  |
+/- 	      |
+
+/- container forces everything within that block to be relative to that container
+/- and not the Board
+
+Board "Building Test"
+
+container ship:
+	start Line verticalLine
+	start Line horizontalLine
+	start Circle shipsHead
+	
+	start Point point -> 3,0
+
+	set verticalLine:
+		startingPoint -> point
+		endingPoint -> 3,3
+	end
+
+	start Angle ang -> 0º
+
+	set horizontalLine:	
+		center -> 3,2
+		angle -> ang 
+		width -> 4
+	end
+
+	start Point shipsHeadStartingPoint -> verticalLine endingPoint
+
+	set shipsHead:
+		startingPoint -> shipsHeadStartingPoint
+		endingPoint -> shipsHeadStartingPoint + 0,1
+	end
+
+	draw verticalLine, horizontalLine, shipsHead
+	/- draw all
+
+end
+
+draw ship
+
+/- ----------------------------------------
+
+container bigSquareSmallCircle:
+
+	start Rectangle rec
+	start Circle cir
+
+	set rec:
+		width -> 6
+		height -> 6
+		angle -> 0 deg
+	end
+
+	set cir:
+		startingPoint -> rec topLeftPoint + 2,0
+		endingPoint -> cir startingPoint + 0,2  /- rec topLeftPoint + 2,2
+	end
+
+	draw rec, cir
+end
+
+set bigSquareSmallCircle angle -> -30 deg
+
+draw bigSquareSmallCircle
+
+close 1000 ms
+
+/- wrap ship and bigSquareSmallCircle together
+/- start Figure wrapper:
+/-
+/- end
