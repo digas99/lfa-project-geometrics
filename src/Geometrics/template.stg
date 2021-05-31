@@ -1,0 +1,32 @@
+module(name, stat, hasVars, hasList, hasPoints, hasFig) ::= <<
+<if(hasList)>
+import java.util.List.*;
+<endif>
+<if(hasVars)>
+import java.util.Map.HashMap;
+<endif>
+<if(hasFigs)>
+import javax.swing.*;
+<endif>
+<if(hasPoints)>
+import java.awt.Point;
+<endif>
+
+public class <name> {
+    <if(hasVars)>
+    static HashMap <String,String> vars = new HashMap<>();
+    <endif>
+    <stats(stat)>
+}
+>>
+
+
+main(stat) ::= <<
+public static main void(String[] args) throws Exception{
+    <stats(stats)>;
+}
+>>
+
+stats(stat) ::= <<
+<if(stat)><stat; separator="\n"><endif>
+>>

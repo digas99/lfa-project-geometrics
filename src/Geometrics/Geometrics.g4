@@ -131,7 +131,7 @@ triangleProperty	: ('p0' | 'p1' | 'p2') '->' expr ;
 
 
 // in color, the properties are #xxxxx and rgb
-color	: (ID | '#'NUMBER | NUMBER ',' NUMBER ',' NUMBER) ;
+color	: (ID | '#'expr | (NUMBER ',' NUMBER ',' NUMBER)) ;
 
 // End vars initialization
 
