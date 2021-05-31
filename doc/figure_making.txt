@@ -53,6 +53,7 @@ container bigSquareSmallCircle:
 	set rec:
 		width -> 6
 		height -> 6
+		center -> 4,4
 		angle -> 0 deg
 	end
 
