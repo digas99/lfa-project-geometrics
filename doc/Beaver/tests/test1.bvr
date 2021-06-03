@@ -1,0 +1,33 @@
+!! --------- 
+!! |   O   |
+!! | / | \ |
+!! |   |   |
+!! |  / \  |
+!! ---------
+!! invisible hitbox
+!!
+!! Errors related to figure properties
+
+containers => 
+    hitbox
+>>
+
+Rectangle hitbox =>
+    size 200    !! wrong
+    angle 0º
+    color #f4444444 !! wrong
+    border 3 red
+>>
+
+Number n => 10 >>
+
+hitbox contains =>
+	Circle head =>
+		width 200 !! wrong
+		angle 10, 20 !! wrong
+		radius 10
+		border n !! wrong
+	>>
+
+	!! incomplete...
+>>

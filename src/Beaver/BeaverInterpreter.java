@@ -86,10 +86,18 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visitChildren(ctx);
    }
 
-   @Override public String visitColor(BeaverParser.ColorContext ctx) {
+   @Override public String visitColorHex(BeaverParser.ColorHexContext ctx) {
       return visitChildren(ctx);
    }
 
+   @Override public String visitColorRGB(BeaverParser.ColorRGBContext ctx) {
+      return visitChildren(ctx);
+   }
+
+   @Override public String visitColorPallete(BeaverParser.ColorPalleteContext ctx) {
+      return visitChildren(ctx);
+   }
+   
    @Override public String visitPoint(BeaverParser.PointContext ctx) {
       return visitChildren(ctx);
    }

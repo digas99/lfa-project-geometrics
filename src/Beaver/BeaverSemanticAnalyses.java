@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -7,13 +8,15 @@ import java.util.stream.IntStream;
 public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
 
    @Override public Boolean visitProgram(BeaverParser.ProgramContext ctx) {
-      return allTrue(ctx.stats().stream()
+      boolean statsValid = allTrue(ctx.stats().stream()
                .map(stat -> visit(stat))
-               .collect(Collectors.toList())) && visit(ctx.containers());
+               .collect(Collectors.toList()));
+      boolean containersValid = visit(ctx.containers());
+      return statsValid && containersValid;
    }
 
    @Override public Boolean visitContainers(BeaverParser.ContainersContext ctx) {
-      return visit(ctx.idsList());
+      return ctx.idsList() != null ? visit(ctx.idsList()) : true;
    }
 
    @Override public Boolean visitStatsPallete(BeaverParser.StatsPalleteContext ctx) {
@@ -21,29 +24,32 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       if (hasBeenInit(var))
          throwWarning(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(multVarInitWarningMessage, var));
 
+      currentPallete = var;
+      palletes.put(var, new ArrayList<>());
       varsPallete.add(var);
 
       return visit(ctx.idsList());
    }
 
    @Override public Boolean visitStatsColor(BeaverParser.StatsColorContext ctx) {
-      String var = ctx.ID().getText();
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      String var = ctx.ID(0).getText();
+      
       if (hasBeenInit(var))
-         throwWarning(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(multVarInitWarningMessage, var));
+         throwWarning(line, col, String.format(multVarInitWarningMessage, var));
 
       vars.add(var);
 
-      return visit(ctx.color());
+      return ctx.color() != null ? visit(ctx.color()) : hasBeenInit(line, col, ctx.ID(1).getText());
    }
 
    @Override public Boolean visitStatsNumber(BeaverParser.StatsNumberContext ctx) {
       String var = ctx.ID().getText();
-      if (hasBeenInit(var))
-         throwWarning(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(multVarInitWarningMessage, var));
 
       vars.add(var);
 
-      return true;
+      return hasBeenInit(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), var);
    }
 
    @Override public Boolean visitStatsSet(BeaverParser.StatsSetContext ctx) {
@@ -63,10 +69,10 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
             varsCircle.add(var);
             break;
          case "Line":
-            varsPoint.add(var);
+            varsLine.add(var);
             break;
          case "Triangle":
-            varsPoint.add(var);
+            varsTriangle.add(var);
             break;
       }
       
@@ -105,13 +111,14 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    @Override public Boolean visitIdsList(BeaverParser.IdsListContext ctx) {
       // check if there variables not initialized, and if so then return false
       // if all variables haven't returned true, then return false
-      return allTrue(ctx.ID().stream().map(var -> {
-         if (!hasBeenInit(var.getText())) {
-            throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notInitVarErrorMessage, var.getText()));
-            return false;
-         }
-         return true;
-      }).collect(Collectors.toList()));
+      return allTrue(ctx.ID().stream()
+               .map(var -> {
+                  String varText = var.getText();
+                  if (currentPallete != null)
+                     palletes.get(currentPallete).add(varText);
+                  return hasBeenInit(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), varText);
+               })
+               .collect(Collectors.toList()));
    }
 
    @Override public Boolean visitInlineSet(BeaverParser.InlineSetContext ctx) {
@@ -151,15 +158,28 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitBorderValue(BeaverParser.BorderValueContext ctx) {
-      return visit(ctx.expr()) && visit(ctx.color());
+      boolean valid = true;
+      if (ctx.color() != null) {
+         valid = visit(ctx.color());
+      }
+      else {
+         String var = ctx.ID().getText();
+         valid = hasBeenInit(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), var);
+      }
+      boolean validExpr = visit(ctx.expr());
+      return valid && validExpr;
    }
 
    @Override public Boolean visitExprMultDiv(BeaverParser.ExprMultDivContext ctx) {
-      return visit(ctx.expr(0)) && visit(ctx.expr(1));
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
    }
 
    @Override public Boolean visitExprAddSub(BeaverParser.ExprAddSubContext ctx) {
-      return visit(ctx.expr(0)) && visit(ctx.expr(1));
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
    }
 
    @Override public Boolean visitExprTypeProperty(BeaverParser.ExprTypePropertyContext ctx) {
@@ -207,10 +227,19 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitExprID(BeaverParser.ExprIDContext ctx) {
-      String id = ctx.ID().getText();
-      boolean valid = vars.contains(id);
-      if (!valid)
-         throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notInitVarErrorMessage, id));
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      String var = ctx.ID().getText();
+      boolean valid = hasBeenInit(line, col, var);
+      if (valid) {
+         // if it is not a number var
+         if (!vars.contains(var)) {
+            throwError(line, col, String.format(notVarTypeNumberErrorMessage, var));
+            valid = false;
+         }
+      }
+      else
+         throwError(line, col, String.format(notInitVarErrorMessage, var));
       return valid;
    }
 
@@ -219,7 +248,9 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitExprPower(BeaverParser.ExprPowerContext ctx) {
-      return visit(ctx.expr(0)) && visit(ctx.expr(1));
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
    }
 
    @Override public Boolean visitExprNumber(BeaverParser.ExprNumberContext ctx) {
@@ -228,7 +259,9 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitPointsExprCalc(BeaverParser.PointsExprCalcContext ctx) {
-      return visit(ctx.pointsExpr(0)) && visit(ctx.pointsExpr(1));
+      boolean expr0 = visit(ctx.pointsExpr(0));
+      boolean expr1 = visit(ctx.pointsExpr(1));
+      return expr0 && expr1;
    }
 
    @Override public Boolean visitPointsExprPoint(BeaverParser.PointsExprPointContext ctx) {
@@ -239,28 +272,52 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return visit(ctx.expr());
    }
 
-   @Override public Boolean visitColor(BeaverParser.ColorContext ctx) {
-      List<Boolean> allChecks = new ArrayList<>();
-      // if hexadecimal color code
-      if (ctx.ID() != null || ctx.NUMBER() != null) {
-         boolean validId = true;
-         String id = ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText();
-         // check if color code has more than 6 characters
-         if (id.length() > 6) {
-            validId = false;
-            throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notValidColorCodeErrorMessage, "#"+id));
-         }
-         allChecks.add(validId);
-      }
-      // then it is rgb
-      else
-         allChecks.addAll(Arrays.asList(visit(ctx.expr(0)), visit(ctx.expr(1)), visit(ctx.expr(2))));
+   @Override public Boolean visitColorHex(BeaverParser.ColorHexContext ctx) {
+      String id = ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText();
+      // check if color code has more than 6 characters
+      boolean valid = id.length() <= 6;
+      if (!valid)
+         throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notValidColorCodeErrorMessage, "#"+id));
+      
+      return valid;
+   }
 
-      return allTrue(allChecks);
+   @Override public Boolean visitColorRGB(BeaverParser.ColorRGBContext ctx) {
+      return allTrue(Arrays.asList(visit(ctx.expr(0)), visit(ctx.expr(1)), visit(ctx.expr(2))));
+   }
+
+   @Override public Boolean visitColorPallete(BeaverParser.ColorPalleteContext ctx) {
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      String pallete = ctx.ID(1).getText();
+      boolean validVar = true;
+      String var;
+      if (ctx.var != null) {
+         var = ctx.var.getText();
+         validVar = hasBeenInit(line, col, var);
+
+         List<String> colors = palletes.get(pallete);
+         if (validVar && colors != null && !colors.contains(var)) {
+            throwError(line, col, String.format(colorNotInPalleteErrorMessage, var, pallete));
+            validVar = false;
+         }
+      }
+      else {
+         var = ctx.index.getText();
+         // if is a variable and it doesn't represent a number
+         if (!isNumber(var) && !vars.contains(var)) {
+            throwError(line, col, String.format(notVarTypeNumberErrorMessage, var));
+            validVar = false;
+         }
+      }
+      boolean validPallete = hasBeenInit(line, col, pallete);
+      return validVar && validPallete;
    }
 
    @Override public Boolean visitPoint(BeaverParser.PointContext ctx) {
-      return visit(ctx.expr(0)) && visit(ctx.expr(1));
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1; 
    }
 
    @Override public Boolean visitAngle(BeaverParser.AngleContext ctx) {
@@ -327,6 +384,14 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return anyTrue(Arrays.asList(isPoint, isRectangle, isCircle, isLine, isTriangle, isVar, isPallete));
    }
 
+   private static boolean hasBeenInit(int line, int col, String var) {
+      boolean valid = hasBeenInit(var);
+      if (!valid)
+         throwError(line, col, String.format(notInitVarErrorMessage, var));
+      
+      return valid;
+   }
+
    private static void throwWarning(int line, int col, String message) {
       System.err.printf("Warning@%d:%d -> %s\n", line, col, message);
    }
@@ -341,6 +406,8 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String notPropOfFigureErrorMessage = "%s is not a valid property of %s!";
    static private String notValueOfPropErrorMessage = "Invalid value for property %s!";
    static private String multVarInitWarningMessage = "Variable %s was initialized multiple times!";
+   static private String notVarTypeNumberErrorMessage = "%s is not a variable of type Number!";
+   static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s";
 
    static private List<String> vars = new ArrayList<>();
    static private List<String> varsPoint = new ArrayList<>();
@@ -349,7 +416,9 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private List<String> varsLine = new ArrayList<>();
    static private List<String> varsTriangle = new ArrayList<>();
    static private List<String> varsPallete = new ArrayList<>();
+   static private HashMap<String, List<String>> palletes = new HashMap<>();
    static private String currentVar;
+   static private String currentPallete;
 
    static private String[] pointProps = {"color", "border", "x", "y", "startingPoint", "endingPoint"};
    static private String[] rectangleProps = {"color", "border", "width", "height", "center", "angle", "size"};
@@ -357,8 +426,8 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String[] lineProps = {"color", "border", "angle", "center", "startingPoint", "endingPoint"};
    static private String[] triangleProps = {"color", "border", "p0", "p1", "p2"};
 
-   static private String[] propsAsExpr = {"width", "height", "diameter", "radius", "color"};
-   static private String[] propsAsPointsExpr = {"x", "y", "center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
+   static private String[] propsAsExpr = {"width", "height", "diameter", "radius", "color", "x", "y"};
+   static private String[] propsAsPointsExpr = {"center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
    static private String[] propsAsColor = {"color"};
    static private String[] propsAsExprColor = {"border"};
    static private String[] propsAsAngle = {"angle"};
