@@ -16,6 +16,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visitChildren(ctx);
    }
 
+   @Override public String visitStatsNumber(BeaverParser.StatsNumberContext ctx) {
+      return visitChildren(ctx);
+   }
+
    @Override public String visitStatsSet(BeaverParser.StatsSetContext ctx) {
       return visitChildren(ctx);
    }

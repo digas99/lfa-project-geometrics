@@ -4,15 +4,18 @@ program	: containers (stats NEWLINE?)* EOF;
 
 containers	: 'containers' '=>' idsList '>>' NEWLINE? ;
 
-stats	: 'Pallete' ID '=>' idsList '>>'	#statsPallete
-		| 'Color' ID '=>' color	'>>'		#statsColor
-		| FIGURE ID '=>' inlineSet+	'>>'	#statsSet
-		| ID 'contains' '=>' (stats NEWLINE?)+	'>>'	#statsContains
+stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
+		| 'Color' ID '=>' color	'>>'					#statsColor
+		| 'Number' ID '=>' NUMBER '>>'					#statsNumber
+		| FIGURE ID '=>' inlineSet+	'>>'				#statsSet
+		| ID 'contains' '=>' (stats NEWLINE?)+ '>>'		#statsContains
 		;
 
 idsList	: ID (',' NEWLINE? ID)* NEWLINE? ;
 
-inlineSet	: ID (expr | pointsExpr | color | expr color | angle) NEWLINE? ;
+inlineSet	: ID (expr | pointsExpr | color | borderValue | angle) NEWLINE? ;
+
+borderValue : expr color ;
 
 expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr op=('+' | '-') expr			#exprAddSub
@@ -30,13 +33,13 @@ pointsExpr	: pointsExpr ('+' | '-') pointsExpr		#pointsExprCalc
 			| 'container-center'					#pointsCenter
 			;
 
-color : '#'ID | (expr ',' expr ',' expr) ;
+color : '#'(ID|NUMBER) | (expr ',' expr ',' expr) ;
 point : expr ',' expr ;
 angle : expr ('º' | 'deg' | 'rad') ;
 
 FIGURE: ('Point' | 'Rectangle' | 'Circle' | 'Line' | 'Triangle');
-ID: [a-zA-Z0-9]+;	
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
+ID: [a-zA-Z0-9]+;	
 NEWLINE : '\r'? '\n';
 WS	: [ \t\n\r]+ -> skip;
 COMMENT: '!!' ~[\n]* -> skip;
