@@ -1,0 +1,79 @@
+module(name, stat, hasVars, hasList, hasPoints, hasFig) ::= <<
+<if(hasList)>
+import java.util.List.*;
+<endif>
+<if(hasVars)>
+import java.util.Map.HashMap;
+<endif>
+<if(hasFigs)>
+import javax.swing.*;
+<endif>
+<if(hasPoints)>
+import java.awt.Point;
+<endif>
+
+public class <name> {
+    <if(hasVars)>
+    static HashMap <String,String> vars = new HashMap<>();
+    <endif>
+    
+    public static main void(String[] args) throws Exception{
+        <stats(stats)>;
+    }
+}
+>>
+
+
+stats(stat) ::= <<
+<if(stat)><stat; separator="\n"><endif>
+>>
+
+conditional(stat, var, stat_true, stat_false) ::= <<
+<stats(stat)>
+if(<var>){
+    <stat_true>
+}
+<if(stat_false)>
+else{
+    <stat_false>
+}
+<endif>
+>>
+
+declList(type, var) ::= List <type> <var> = new List<>();
+
+declVar(type, var, value) ::= <type> <var><if(value)> = <value><endif>;
+
+add_to_list(<var> <value>) ::= <var>.add(<value>);
+
+get_from_map(<type> <var> <varMap> <value>) ::= <type> <var> = <varMap>.get(<value>);
+
+line_class(type, packageName, name, var) ::= <<
+
+package <packageName>;
+
+public class <type>{
+    <class_vars(type, var)>
+    
+    public <type>(<class_vars(type, var)>){
+        <declVar(type, var, value)>
+    }
+    <class_getVar(type, var)>;
+}
+>>
+
+class_vars(type, var) ::= private <type> <var>; 
+
+class_getVar(type, name) ::= <<
+public <type> <var>(){
+    return <var>;
+}
+>>
+
+call_func(name, param) ::= <name>(<param>);
+
+loop(stat, conditional) ::= <<
+while(<conditional>){
+    <stats(stat)>
+}
+>>
