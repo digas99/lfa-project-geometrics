@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+
+import structures.SuperFigure;
+import structures.Color;
+import structures.Pallete;
+
 public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    @Override public String visitProgram(BeaverParser.ProgramContext ctx) {
@@ -105,4 +111,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    @Override public String visitAngle(BeaverParser.AngleContext ctx) {
       return visitChildren(ctx);
    }
+
+   List<SuperFigure> containers = new ArrayList<>();
+   List<Color> colors = new ArrayList<>();
+   List<Pallete> palletes = new ArrayList<>();
 }

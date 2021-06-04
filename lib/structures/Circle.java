@@ -26,7 +26,7 @@ public class Circle extends Figure {
 	}
 
     public double endingPoint() {
-		return this.startingPoint;
+		return this.endingPoint;
 	}
 
 	public void setEndingPoint(double endingPoint) {
