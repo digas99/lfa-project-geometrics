@@ -1,4 +1,4 @@
-package Structures;
+package structures;
 
 public class Point {
     private double x;

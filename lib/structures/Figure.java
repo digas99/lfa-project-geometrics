@@ -1,4 +1,4 @@
-package Structures;
+package structures;
 
 public abstract class Figure {
     private Color color;

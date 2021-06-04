@@ -7,6 +7,7 @@
 		"/usr/local/lib/ST-4.1.jar",
 		"/usr/local/lib/antlr-4.8-complete.jar",
 		"/usr/local/lib/antlr-runtime-4.8.jar",
-		"geometrics.jar"
+		"geometrics.jar",
+		"src/geometrics.jar"
 	]
 }
