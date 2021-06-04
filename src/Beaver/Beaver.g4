@@ -20,16 +20,19 @@ borderValue : expr (ID | color) ;
 expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr op=('+' | '-') expr			#exprAddSub
 		| NUMBER							#exprNumber
-		| ID '[' ID ']'						#exprTypeProperty
-		| ID								#exprID
-		| '(' expr ')'						#exprParentesis
+		| identifiers						#exprIds
+		| '(' expr ')'						#exprParentheses
 		| value=('+'|'-') (expr)			#exprUnary
 		| expr '^' value=('+'|'-')? expr	#exprPower
 		;
 
+identifiers	: ID '[' ID ']'		#idProp
+			| ID				#id
+			;
+
 pointsExpr	: pointsExpr ('+' | '-') pointsExpr		#pointsExprCalc
+			| identifiers							#pointsIds
 			| point									#pointsExprPoint
-			| expr									#pointsExprExpr
 			| 'container-center'					#pointsCenter
 			;
 

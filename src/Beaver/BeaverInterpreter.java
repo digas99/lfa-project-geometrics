@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 import structures.SuperFigure;
 import structures.Color;
@@ -50,17 +51,21 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visitChildren(ctx);
    }
 
-   @Override public String visitExprTypeProperty(BeaverParser.ExprTypePropertyContext ctx) {
+   @Override public String visitIdProp(BeaverParser.IdPropContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public String visitExprParentesis(BeaverParser.ExprParentesisContext ctx) {
+   @Override public String visitExprIds(BeaverParser.ExprIdsContext ctx) {
+      return visitChildren(ctx);
+   }
+
+   @Override public String visitExprParentheses(BeaverParser.ExprParenthesesContext ctx) {
       return visitChildren(ctx);
    }
 
    // SEPARATION
    
-   @Override public String visitExprID(BeaverParser.ExprIDContext ctx) {
+   @Override public String visitId(BeaverParser.IdContext ctx) {
       return visitChildren(ctx);
    }
 
@@ -80,16 +85,16 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visitChildren(ctx);
    }
 
+   @Override public String visitPointsIds(BeaverParser.PointsIdsContext ctx) {
+      return visitChildren(ctx);
+   }
+
    @Override public String visitPointsExprCalc(BeaverParser.PointsExprCalcContext ctx) {
       return visitChildren(ctx);
    }
 
    @Override public String visitPointsExprPoint(BeaverParser.PointsExprPointContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override public String visitPointsExprExpr(BeaverParser.PointsExprExprContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.point());
    }
 
    @Override public String visitColorHex(BeaverParser.ColorHexContext ctx) {
@@ -105,11 +110,11 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
    
    @Override public String visitPoint(BeaverParser.PointContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr(0))+","+visit(ctx.expr(1));
    }
 
    @Override public String visitAngle(BeaverParser.AngleContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr());
    }
 
    List<SuperFigure> containers = new ArrayList<>();

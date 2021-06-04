@@ -182,7 +182,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return expr0 && expr1;
    }
 
-   @Override public Boolean visitExprTypeProperty(BeaverParser.ExprTypePropertyContext ctx) {
+   @Override public Boolean visitIdProp(BeaverParser.IdPropContext ctx) {
       int line = ctx.getStart().getLine();
       int col = ctx.getStart().getCharPositionInLine();
       String var = ctx.ID(0).getText();
@@ -222,11 +222,15 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return valid;
    }
 
-   @Override public Boolean visitExprParentesis(BeaverParser.ExprParentesisContext ctx) {
+   @Override public Boolean visitExprIds(BeaverParser.ExprIdsContext ctx) {
+      return visit(ctx.identifiers());
+   }
+
+   @Override public Boolean visitExprParentheses(BeaverParser.ExprParenthesesContext ctx) {
       return visit(ctx.expr());
    }
 
-   @Override public Boolean visitExprID(BeaverParser.ExprIDContext ctx) {
+   @Override public Boolean visitId(BeaverParser.IdContext ctx) {
       int line = ctx.getStart().getLine();
       int col = ctx.getStart().getCharPositionInLine();
       String var = ctx.ID().getText();
@@ -264,12 +268,12 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return expr0 && expr1;
    }
 
-   @Override public Boolean visitPointsExprPoint(BeaverParser.PointsExprPointContext ctx) {
-      return visit(ctx.point());
+   @Override public Boolean visitPointsIds(BeaverParser.PointsIdsContext ctx) {
+      return visit(ctx.identifiers());
    }
 
-   @Override public Boolean visitPointsExprExpr(BeaverParser.PointsExprExprContext ctx) {
-      return visit(ctx.expr());
+   @Override public Boolean visitPointsExprPoint(BeaverParser.PointsExprPointContext ctx) {
+      return visit(ctx.point());
    }
 
    @Override public Boolean visitColorHex(BeaverParser.ColorHexContext ctx) {
