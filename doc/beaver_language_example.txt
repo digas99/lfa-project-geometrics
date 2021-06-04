@@ -36,3 +36,10 @@ square contains =>
 		>>
 	>>
 >>
+
+Triangle t =>
+	color blue
+	p0 10, 2
+	p1 12, 2
+	p2 10, 2
+>>

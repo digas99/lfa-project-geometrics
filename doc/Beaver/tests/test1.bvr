@@ -25,9 +25,13 @@ hitbox contains =>
 	Circle head =>
 		width 200 !! wrong
 		angle 10, 20 !! wrong
-		radius 10
+		radius pi
 		border n !! wrong
 	>>
 
 	!! incomplete...
+>>
+
+Circle c =>
+	width 10
 >>
