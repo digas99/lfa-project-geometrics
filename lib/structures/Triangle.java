@@ -5,8 +5,8 @@ public class Triangle extends Figure{
     private Point p1;
     private Point p2;
 
-    public Triangle(Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, Point p0, Point p1, Point p2) {
-		super(color, borderColor, border, center, filled, thickness, collide, visibility); 
+    public Triangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, Point p0, Point p1, Point p2) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility); 
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;

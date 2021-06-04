@@ -2,34 +2,34 @@ package structures;
 
 public class Circle extends Figure {
     
-	private double startingPoint;
-	private double endingPoint;
+	private Point startingPoint;
+	private Point endingPoint;
 	private double diameter;
 
-	public Circle(Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide,boolean visibility,double diameter) {
-		super(color, borderColor, border, center, filled, thickness, collide, visibility);
+	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide,boolean visibility,double diameter) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility);
 		this.diameter = diameter;
 	}
 	
-	public Circle(Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, double startingPoint,boolean visibility,double endingPoint) {
-		super(color, borderColor, border, center, filled, thickness, collide,visibility);
+	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, Point startingPoint, Point endingPoint) {
+		super(id, color, borderColor, border, center, filled, thickness, collide,visibility);
 		this.startingPoint = startingPoint;
 		this.endingPoint = endingPoint;
 	}
 
-    public double startingPoint() {
+    public Point startingPoint() {
 		return this.startingPoint;
 	}
 
-	public void setStartingPoint(double startingPoint) {
+	public void setStartingPoint(Point startingPoint) {
 		this.startingPoint = startingPoint;
 	}
 
-    public double endingPoint() {
+    public Point endingPoint() {
 		return this.endingPoint;
 	}
 
-	public void setEndingPoint(double endingPoint) {
+	public void setEndingPoint(Point endingPoint) {
 		this.endingPoint = endingPoint;
 	}
 

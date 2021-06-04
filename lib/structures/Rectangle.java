@@ -2,38 +2,38 @@ package structures;
 
 public class Rectangle extends Figure {
     
-	private int width;
-	private int height;
-	private int angle;
+	private double width;
+	private double height;
+	private double angle;
 
-	public Rectangle(Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, int width, int height, int angle) {
-		super(color, borderColor, border, center, filled, thickness, collide, visibility);
+	public Rectangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, double width, double height, double angle) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility);
 		this.width = width;
 		this.height = height;
 		this.angle = angle;
 	}
 
-	public int width() {
+	public double width() {
 		return this.width;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(double width) {
 		this.width = width;
 	}
 
-	public int height() {
+	public double height() {
 		return this.height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(double height) {
 		this.height = height;
 	}
 
-    public int angle() {
+    public double angle() {
 		return this.angle;
 	}
 
-    public void setAngle(int angle){
+    public void setAngle(double angle){
         this.angle = angle;
     }
 

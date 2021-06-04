@@ -1,5 +1,6 @@
 grammar Beaver;
 
+// stats NEWLINE*???
 program	: NEWLINE* containers NEWLINE* (stats NEWLINE?)* EOF;
 
 containers	: 'containers' '=>' idsList? '>>' NEWLINE* ;

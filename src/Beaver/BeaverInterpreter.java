@@ -1,9 +1,17 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import structures.SuperFigure;
+import structures.Triangle;
+import structures.Circle;
 import structures.Color;
+import structures.Figure;
+import structures.Line;
 import structures.Pallete;
+import structures.Point;
+import structures.RGB;
+import structures.Rectangle;
 
 public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
@@ -28,6 +36,48 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
 
    @Override public String visitStatsSet(BeaverParser.StatsSetContext ctx) {
+      String figure = ctx.FIGURE().getText();
+      String id = ctx.ID().getText();
+      // figure properties
+      Color color = new Color(new RGB(255, 255, 255));
+      Color borderColor = new Color(new RGB(0, 0, 0));
+      double border = 0;
+      Point center = new Point(0, 0);
+      boolean filled = false;
+      double thickness = 0;
+      boolean collide = true;
+      boolean visibility = true;
+      // rectangle properties
+      double width = 0;
+      double height = 0;
+      // circle properties
+      double diameter = 0;
+      // triangle properties
+      Point middlePoint = new Point(0, 0);
+      // properties shared by several figures, but not all
+      Point startingPoint = new Point(0, 0);
+      Point endingPoint = new Point(0, 0);
+      double angle = 0;
+      List<String> properties = ctx.inlineSet().stream().map(prop -> visit(prop)).collect(Collectors.toList());
+      properties.stream().forEach(prop -> {
+         String[] split = prop.split(";");
+         
+      });
+      Figure f;
+      switch(figure) {
+         case "Rectangle":
+            f = new Rectangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, width, height, angle);
+            break;
+         case "Circle":
+            f = new Circle(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, endingPoint);
+            break;
+         case "Line":
+            f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, endingPoint, angle);
+            break;
+         case "Triangle":
+            f = new Triangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, middlePoint, endingPoint);
+            break;
+      }
       return visitChildren(ctx);
    }
 
@@ -40,7 +90,19 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
 
    @Override public String visitInlineSet(BeaverParser.InlineSetContext ctx) {
-      return visitChildren(ctx);
+      String prop = ctx.ID().getText();
+      String value;
+      if (ctx.expr() != null)
+         value = visit(ctx.expr());
+      else if (ctx.pointsExpr() != null)
+         value = visit(ctx.pointsExpr());
+      else if (ctx.color() != null)
+         value = visit(ctx.color());
+      else if (ctx.borderValue() != null)
+         value = visit(ctx.borderValue());
+      else
+         value = visit(ctx.angle());       
+      return prop+";"+value;
    }
 
    @Override public String visitExprMultDiv(BeaverParser.ExprMultDivContext ctx) {
@@ -105,7 +167,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visitChildren(ctx);
    }
 
-   @Override public String visitColorPallete(BeaverParser.ColorPalleteContext ctx) {
+   @Override public String visitColorPallete(BeaverParser.ColorPalleteContext ctx) { 
       return visitChildren(ctx);
    }
    

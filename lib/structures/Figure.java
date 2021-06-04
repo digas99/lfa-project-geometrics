@@ -9,8 +9,10 @@ public abstract class Figure {
     private double thickness;
     private boolean collide;
     private boolean visibility;
+    private String id;
 
-    public Figure(Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility) {
+    public Figure(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility) {
+        this.id = id;
         this.color = color;
         this.borderColor = borderColor;
         this.center = center;
