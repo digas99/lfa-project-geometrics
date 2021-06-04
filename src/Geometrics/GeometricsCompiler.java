@@ -50,7 +50,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
-   // grupo2
+   // grupo2 Mariana
    @Override
    public ST visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
       return visitChildren(ctx);
@@ -152,7 +152,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
-   // grupo2
+   // grupo2 Leandro
    @Override
    public ST visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
       return visitChildren(ctx);
@@ -254,7 +254,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
-   // grupo2
+   // grupo2 Leandro
    @Override
    public ST visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
       return visitChildren(ctx);
@@ -356,7 +356,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
-   // grupo2
+   // grupo2 Mariana
    @Override
    public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
       return visitChildren(ctx);
