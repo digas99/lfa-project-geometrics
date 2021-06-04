@@ -10,3 +10,6 @@
 *BaseVisitor.*
 *Visitor.*
 *Parser.*
+
+# vscode
+*.vscode

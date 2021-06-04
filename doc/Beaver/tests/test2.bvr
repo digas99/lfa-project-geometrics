@@ -1,0 +1,32 @@
+!! Errors related to colors properties
+containers =>
+
+>>
+
+Line hd => x 10, 10 >>
+
+Color red => 50,50, hd >>
+
+Color green => #fsdfafda >>
+
+Color purple => green >>
+
+Color blue => purple >>
+
+Pallete colors =>
+	red,
+	green,
+	blue
+>>
+
+Pallete otherColors =>
+	red,
+	purple
+>>
+
+Color myRed => brown from colors >> 
+Color otherRed => green from otherColors >>
+
+Rectangle r =>
+	color purple from newColors
+>>

@@ -1,6 +1,6 @@
 import org.stringtemplate.v4.*;
 
-public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
+public class GeometricsSemanticsAnalyses extends GeometricsBaseVisitor<ST> {
    // grupo1
    @Override
    public ST visitProgram(GeometricsParser.ProgramContext ctx) {
