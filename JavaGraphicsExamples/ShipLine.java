@@ -71,7 +71,7 @@ public class ShipLine extends JPanel implements ActionListener {
 
 
         containerShip.translate((int)sumRect.getCenterX(),(int)sumRect.getCenterY());
-        containerShip.rota(angle);
+        containerShip.rotate(angle);
         containerShip.translate((int)-sumRect.getCenterX(),(int)-sumRect.getCenterY());
         
 //////////////////--------------------------__Line Container -----------------------------/////////////////
