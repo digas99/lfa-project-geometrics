@@ -6,13 +6,13 @@ public class Circle extends Figure {
 	private Point endingPoint;
 	private double diameter;
 
-	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide,boolean visibility,double diameter) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility);
+	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide,boolean visibility, boolean container, double diameter) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
 		this.diameter = diameter;
 	}
 	
-	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, Point startingPoint, Point endingPoint) {
-		super(id, color, borderColor, border, center, filled, thickness, collide,visibility);
+	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, Point startingPoint, Point endingPoint) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
 		this.startingPoint = startingPoint;
 		this.endingPoint = endingPoint;
 	}
