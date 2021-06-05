@@ -29,7 +29,7 @@ public class Color {
 		this.rgb = rgb;
 	}
 
-	public static Color stringToColor(String color) {
+	public static Color parseColor(String color) {
 		color = color.replaceAll(" ", "");
 		String[] split = color.split(",");
 		if (split.length > 0) {

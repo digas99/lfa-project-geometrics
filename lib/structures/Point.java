@@ -25,7 +25,7 @@ public class Point {
 		this.y = y;
 	}
 
-	public static Point stringToPoint(String p) {
+	public static Point parsePoint(String p) {
 		p = p.replaceAll(" ", "");
 		String[] split = p.split(",");
 		return new Point(Double.parseDouble(split[0]), Double.parseDouble(split[1]));

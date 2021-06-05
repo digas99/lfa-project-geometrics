@@ -64,12 +64,12 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          String value = split[1];
          switch(split[0]) {
             case "color":
-               color = Color.stringToColor(value);   
+               color = Color.parseColor(value);   
                break;
             case "border":
                String[] values = value.split(" ");
                border = Double.parseDouble(values[0]);
-               borderColor = Color.stringToColor(values[1]);
+               borderColor = Color.parseColor(values[1]);
                break;
             case "width":
                width = Double.parseDouble(value);
@@ -78,13 +78,13 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
                height = Double.parseDouble(value);
                break;
             case "center":
-               center = Point.stringToPoint(value);
+               center = Point.parsePoint(value);
                break;
             case "angle":
                angle = Double.parseDouble(value);
                break;
             case "size":
-               Point s = Point.stringToPoint(value);
+               Point s = Point.parsePoint(value);
                width = s.x();
                height = s.y(); 
                break;
@@ -95,19 +95,19 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
                diameter = Double.parseDouble(value)*2;
                break;
             case "startingPoint":
-               startingPoint = Point.stringToPoint(value);
+               startingPoint = Point.parsePoint(value);
                break;
             case "endingPoint":
-               endingPoint = Point.stringToPoint(value);
+               endingPoint = Point.parsePoint(value);
                break;
             case "p0":
-               startingPoint = Point.stringToPoint(value);
+               startingPoint = Point.parsePoint(value);
                break;
             case "p1":
-               middlePoint = Point.stringToPoint(value);
+               middlePoint = Point.parsePoint(value);
                break;
             case "p2":
-               endingPoint = Point.stringToPoint(value);
+               endingPoint = Point.parsePoint(value);
                break;
          } 
       }
