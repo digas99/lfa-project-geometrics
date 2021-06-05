@@ -6,8 +6,8 @@ public class Rectangle extends Figure {
 	private double height;
 	private double angle;
 
-	public Rectangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, double width, double height, double angle) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility);
+	public Rectangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, double width, double height, double angle) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
 		this.width = width;
 		this.height = height;
 		this.angle = angle;
