@@ -13,11 +13,18 @@ public class Color {
 		this.rgb = rgb;
 	}
 
-	public String colorHexCode() {
+	public Color(Color color) {
+		if (color.hexCode() != null)
+			this.hexCode = color.hexCode();
+		else
+			this.rgb = color.rgb();
+	}
+
+	public String hexCode() {
 		return hexCode;
 	}
 
-	public RGB colorRGB() {
+	public RGB rgb() {
 		return rgb;
 	}
 
