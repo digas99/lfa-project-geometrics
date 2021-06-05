@@ -38,4 +38,8 @@ public class RGB {
     public void setP2(int p2) {
 		this.p2 = p2;
 	}
+
+    @Override public String toString() {
+        return this.p0+","+this.p1+","+this.p2;
+    }
 }
