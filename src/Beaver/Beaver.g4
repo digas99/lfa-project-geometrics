@@ -9,6 +9,7 @@ containers	: 'containers' '=>' idsList? '>>' NEWLINE* ;
 stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 		| 'Color' ID '=>' (ID | color) '>>'				#statsColor
 		| 'Number' ID '=>' NUMBER '>>'					#statsNumber
+		| 'Point' ID '=>' pointsExpr '>>'				#statsPoint
 		| FIGURE ID '=>' inlineSet+	'>>'				#statsSet
 		| ID 'contains' '=>' (stats NEWLINE*)+ '>>'		#statsContains
 		;
@@ -34,7 +35,7 @@ identifiers	: ID '[' ID ']'		#idProp
 			| ID				#id
 			;
 
-pointsExpr	: pointsExpr ('+' | '-') pointsExpr		#pointsExprCalc
+pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
 			| identifiers							#pointsIds
 			| point									#pointsExprPoint
 			| 'container-center'					#pointsCenter
@@ -48,7 +49,7 @@ color 	: '#'(ID|NUMBER)									#colorHex
 point : expr ',' expr ;
 angle : expr ('º' | 'deg' | 'rad') ;
 
-FIGURE: ('Point' | 'Rectangle' | 'Circle' | 'Line' | 'Triangle');
+FIGURE: ('Rectangle' | 'Circle' | 'Line' | 'Triangle');
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 ID: [a-zA-Z0-9]+;	
 NEWLINE : '\r'? '\n';

@@ -30,6 +30,14 @@ public class Point {
 		this.y = y;
 	}
 
+	public static Point sum(Point p0, Point p1) {
+		return new Point(p0.x()+p1.x(), p0.y()+p1.y());
+	}
+
+	public static Point sub(Point p0, Point p1) {
+		return new Point(p0.x()-p1.x(), p0.y()-p1.y());
+	}
+
 	public static Point parsePoint(String p) {
 		p = p.replaceAll(" ", "");
 		String[] split = p.split(",");

@@ -52,6 +52,16 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return hasBeenInit(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), var);
    }
 
+   @Override public Boolean visitStatsPoint(BeaverParser.StatsPointContext ctx) {
+      String var = ctx.ID().getText();
+      boolean validVar = hasBeenInit(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), var);
+
+      varsPoint.add(var);
+
+      boolean validVal = visit(ctx.pointsExpr());
+      return validVar && validVal;
+   }
+
    @Override public Boolean visitStatsSet(BeaverParser.StatsSetContext ctx) {
       String var = ctx.ID().getText();
       if (hasBeenInit(var))
@@ -59,9 +69,6 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
 
       currentVar = var;
       switch(ctx.FIGURE().getText()) {
-         case "Point":
-            varsPoint.add(var);
-            break;
          case "Rectangle":
             varsRectangle.add(var);
             break;
@@ -126,15 +133,13 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       int col = ctx.getStart().getCharPositionInLine();
       String var = currentVar;
       String prop = ctx.ID().getText(); 
-      boolean isPoint = varsPoint.contains(var);
       boolean isRectangle = varsRectangle.contains(var);
       boolean isCircle = varsCircle.contains(var);
       boolean isLine = varsLine.contains(var);
       boolean isTriangle = varsTriangle.contains(var);
       String figure;
       boolean valid = false;
-      if (isPoint && !contains(pointProps, prop)) figure = "Point";
-      else if (isRectangle && !contains(rectangleProps, prop)) figure = "Rectangle";
+      if (isRectangle && !contains(rectangleProps, prop)) figure = "Rectangle";
       else if (isCircle && !contains(circleProps, prop)) figure = "Circle";
       else if (isLine && !contains(lineProps, prop)) figure = "Line";
       else if (isTriangle && !contains(triangleProps, prop)) figure = "Triangle";
@@ -424,7 +429,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String currentVar;
    static private String currentPallete;
 
-   static private String[] pointProps = {"color", "border", "x", "y", "startingPoint", "endingPoint"};
+   static private String[] pointProps = {"x", "y"};
    static private String[] rectangleProps = {"color", "border", "width", "height", "center", "angle", "size"};
    static private String[] circleProps = {"color", "border", "diameter", "radius", "center", "startingPoint", "endingPoint"};
    static private String[] lineProps = {"color", "border", "angle", "center", "startingPoint", "endingPoint"};
