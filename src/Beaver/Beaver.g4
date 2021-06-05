@@ -1,20 +1,23 @@
 grammar Beaver;
 
-// stats NEWLINE*???
-program	: NEWLINE* containers NEWLINE* (stats NEWLINE?)* EOF;
+// stats NEWLINE?
+program	: NEWLINE* containers NEWLINE* (stats NEWLINE*)* EOF;
 
 containers	: 'containers' '=>' idsList? '>>' NEWLINE* ;
 
+// ID 'contains' '=>' (stats NEWLINE?)+ '>>'
 stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 		| 'Color' ID '=>' (ID | color) '>>'				#statsColor
 		| 'Number' ID '=>' NUMBER '>>'					#statsNumber
 		| FIGURE ID '=>' inlineSet+	'>>'				#statsSet
-		| ID 'contains' '=>' (stats NEWLINE?)+ '>>'		#statsContains
+		| ID 'contains' '=>' (stats NEWLINE*)+ '>>'		#statsContains
 		;
 
-idsList	: ID (',' NEWLINE? ID)* NEWLINE? ;
+// idsList	: ID (',' NEWLINE? ID)* NEWLINE? ;
+idsList	: ID (',' NEWLINE* ID)* NEWLINE* ;
 
-inlineSet	: ID (expr | pointsExpr | color | borderValue | angle) NEWLINE? ;
+// NEWLINE? 
+inlineSet	: ID (expr | pointsExpr | color | borderValue | angle) NEWLINE* ;
 
 borderValue : expr (ID | color) ;
 
