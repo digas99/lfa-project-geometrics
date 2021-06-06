@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 
-
 public class AllInOne extends JPanel implements ActionListener {
 
 
@@ -104,6 +103,7 @@ public class AllInOne extends JPanel implements ActionListener {
             // remember paint method is where changes happen.
             containerPurpleBlackSquare.fill(rect2);
             containerRedSquare.fill(rectS);
+            
         }
         // Only use dispose when you are sure you no longer need to update the
         // container. For example, above(in if statment), I made changes to containerRedSquare
@@ -205,7 +205,6 @@ public class AllInOne extends JPanel implements ActionListener {
         AllInOne n = new AllInOne();
         JFrame frame1 = new JFrame();
         frame1.setTitle("Geometrics");
-        //frame1.setBackground(Color.MAGENTA);
         frame1.setSize(1000,1000);
         frame1.setVisible(true);
         // centers the board to the center of screen
@@ -215,7 +214,6 @@ public class AllInOne extends JPanel implements ActionListener {
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.add(n);
     }
-    
 } 
 
 
