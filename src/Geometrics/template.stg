@@ -27,6 +27,50 @@ public static main void(String[] args) throws Exception{
 }
 >>
 
+func_paint(stat, board_collision) ::= <<
+public void paint(Graphics g){
+    super.paintComponent(g);
+    <stats(stat)>
+
+    timer.start();
+    
+    @Override
+    public void actionPerformed(ActionEvent e){
+        <stats(stat)>
+
+        <if(board_collision)><board_collision><endif>
+    }
+    repaint();
+}
+>>
+
+board_collision() ::= <<
+if(xRedSquare >= Length_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+
+}else if( xPurpleBlackSquare >= Width_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+
+}else if(xGreenCircle >= Width_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+
+}else if(xRedCircle >= Length_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+}
+>>
+
 stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
@@ -119,3 +163,5 @@ declFunc(type, name, var) ::= <<
 public <type> <name>(<type> <var>){
     <stats(stat)>
 }
+>>
+
