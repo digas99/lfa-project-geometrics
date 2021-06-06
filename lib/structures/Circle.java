@@ -48,14 +48,13 @@ public class Circle extends Figure {
 
 	public String printFigure() {
 		return String.format("%s \"%s\"\n", this.getClass().getSimpleName(), this.id())
-			  +"         **\n"
-			  +"      **    **\n"
-			  +"     *        *\n"
-			  +"     *        *\n"
-			  +"      **    **\n"
-			  +"         **\n"
-			  +this.startingPoint.print()+"   "+this.endingPoint.print()+"\n"
-			  +String.format("Center: %14s\nDiameter: %9.2f\n", this.center().print(), this.diameter)
+			  +"    **\n"
+			  +" **    **\n"
+			  +"*        *\n"
+			  +"*        *\n"
+			  +" **    **\n"
+			  +"    **\n"
+			  +String.format("StartingPoint: %5s\nEndingPoint: %5s\nCenter: %14s\nDiameter: %9.2f\n",this.startingPoint.print(), this.endingPoint.print(), this.center().print(), this.diameter)
 			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
 			  ;
 	}

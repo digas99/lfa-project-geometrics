@@ -35,11 +35,22 @@ public class BeaverMain {
                BeaverInterpreter beaverInterpreter = new BeaverInterpreter();
                beaverInterpreter.visit(tree);
 
-               // print figures sorted by number of figures they have
+               // sort all figures by number of figures
                List<Figure> sortedByNmrFigures = beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).collect(Collectors.toList());
+               // get all containers
+               List<Figure> containers = beaverInterpreter.containers();
                System.out.println("");
-               printFigureFamilyTree(sortedByNmrFigures.get(0), 0);
+               containers.stream().forEach(container -> {
+                  System.out.println("\n");
+                  container.printFamilyTree(0);
+                  System.out.println("");
+                  container.printFamily();
+                  System.out.println("___________________________________________________________");
+               });
                System.out.println("");
+
+               //sortedByNmrFigures.forEach(figure -> System.out.println(figure.printFigure()));
+
                // print default sorting
                beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
             }
@@ -55,17 +66,4 @@ public class BeaverMain {
       }
    }
 
-   public static void printFigureFamilyTree(Figure figure, int level) {
-      List<Figure> children = figure.figures();
-      for (int i=0; i<level; i++) {
-         System.out.print(" ");
-      }
-      System.out.printf("-%s\n", figure.id());
-      if (children.size() > 0) {
-         level++;
-         for (Figure child : children) {
-            printFigureFamilyTree(child, level);
-         }
-      }
-   }
 }

@@ -52,7 +52,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
 
       vars.add(var);
 
-      return true;
+      return visit(ctx.expr());
    }
 
    @Override public Boolean visitStatsPoint(BeaverParser.StatsPointContext ctx) {
@@ -450,7 +450,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String[] pointProps = {"x", "y"};
    static private String[] rectangleProps = {"filled", "collide", "visibility", "color", "border", "width", "height", "center", "angle", "size"};
    static private String[] circleProps = {"filled", "collide", "visibility", "color", "border", "diameter", "radius", "center", "startingPoint", "endingPoint"};
-   static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint"};
+   static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint", "length"};
    static private String[] triangleProps = {"filled", "collide", "visibility", "color", "border", "p0", "p1", "p2"};
 
    static private String[] propsAsTruthVal = {"filled", "visibility", "collide"};

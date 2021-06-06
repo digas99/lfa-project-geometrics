@@ -20,7 +20,7 @@ Rectangle square => size 100,400 >>
 
 Rectangle square =>	
 	size 400, 400
-	angle 0º
+	angle 180º
 	color red
 	border 2 #f24235
 	filled true
@@ -41,9 +41,15 @@ square contains =>
 	cir contains =>
 		Line diagonal => 
 			startingPoint -20, -20
-			endingPoint cir[startingPoint] + 2,2
+			endingPoint cir[startingPoint] ++ 2,2
 			color #fffff
 			border 3 #000000 
+		>>
+
+		Line diagonal =>
+			center cir[center] ++ 10,10
+			length 20
+			angle pi rad
 		>>
 	>>
 
