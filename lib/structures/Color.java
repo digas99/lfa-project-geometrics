@@ -67,11 +67,7 @@ public class Color {
 	public static Color parseColor(String color) {
 		color = color.replaceAll(" ", "");
 		String[] split = color.split(",");
-<<<<<<< HEAD
-		if (split.length > 0) {
-=======
 		if (split.length > 1) {
->>>>>>> 4ccbfb90a6a06c732f823d358dbd07fa62f329b3
 			return new Color(new RGB(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2])));
 		}
 		color = color.replaceAll("#", "");

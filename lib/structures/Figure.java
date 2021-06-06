@@ -132,10 +132,6 @@ public class Figure {
 		return figuresArray;
     }
 
-<<<<<<< HEAD
-    @Override public String toString() {
-        return String.format("[%s] color: %s; border: %d %s; center: %s; thickness: %d; %s; %s; %s; %s; has %d figures", this.id, this.color, this.border, this.borderColor, this.center, this.thickness, this.container ? "container" : "!container", this.filled ? "filled" : "!filled", this.collide ? "collides" : "!collides", this.visibility ? "visible" : "!visible", this.figures.size());
-=======
     public int numberFigures() {
         return this.figures.size();
     }
@@ -146,6 +142,5 @@ public class Figure {
 
     @Override public String toString() {
         return String.format("[%s] \ncolor: %s; \nborder: %.2f %s; \ncenter: %s; \nthickness: %.2f; \n%s; \n%s; \n%s; \n%s; \nhas %d figures", this.id, this.color, this.border, this.borderColor, this.center.print(), this.thickness, this.container ? "container" : "!container", this.filled ? "filled" : "!filled", this.collide ? "collides" : "!collides", this.visibility ? "visible" : "!visible", this.figures.size());
->>>>>>> 4ccbfb90a6a06c732f823d358dbd07fa62f329b3
     }
 }

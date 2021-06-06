@@ -18,11 +18,7 @@ stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 idsList	: ID (',' NEWLINE* ID)* NEWLINE* ;
 
 // NEWLINE? 
-<<<<<<< HEAD
-inlineSet	: ID (expr | pointsExpr | color | borderValue | angle) NEWLINE* ;
-=======
 inlineSet	: ID (expr | pointsExpr | color | borderValue | angle | TRUTHVAL) NEWLINE* ;
->>>>>>> 4ccbfb90a6a06c732f823d358dbd07fa62f329b3
 
 borderValue : expr (ID | color) ;
 

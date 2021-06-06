@@ -30,8 +30,6 @@ public class Point {
 		this.y = y;
 	}
 
-<<<<<<< HEAD
-=======
 	public static Point sum(Point p0, Point p1) {
 		return new Point(p0.x()+p1.x(), p0.y()+p1.y());
 	}
@@ -44,20 +42,16 @@ public class Point {
 		return Math.sqrt(Math.pow(p0.x()-p1.x(),2) + Math.pow(p0.y()-p1.y(), 2));
 	}
 
->>>>>>> 4ccbfb90a6a06c732f823d358dbd07fa62f329b3
 	public static Point parsePoint(String p) {
 		p = p.replaceAll(" ", "");
 		String[] split = p.split(",");
 		return new Point(Double.parseDouble(split[0]), Double.parseDouble(split[1]));
 	}
 
-<<<<<<< HEAD
-=======
 	public String print() {
 		return "("+this.x+", "+this.y+")";
 	}
 
->>>>>>> 4ccbfb90a6a06c732f823d358dbd07fa62f329b3
 	@Override public String toString() {
 		return this.x+","+this.y;
 	}
