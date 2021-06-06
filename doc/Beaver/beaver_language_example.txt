@@ -10,6 +10,12 @@ Pallete myPallete =>
 	blue
 >>
 
+Pallete pallete2 =>
+	red,
+	blue,
+	red
+>>
+
 Rectangle square => size 100,400 >>
 
 Rectangle square =>	
@@ -17,12 +23,17 @@ Rectangle square =>
 	angle 0º
 	color red
 	border 2 #f24235
+	filled true
 >>
+
+Number n => 0 >>
+
+Point c => n,0 >>
 
 square contains =>
 	!! center of container is 0,0
 	Circle cir =>
-		center 0,0
+		center c
 		diameter 100
 		color blue
 	>>

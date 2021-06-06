@@ -18,7 +18,7 @@ stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 idsList	: ID (',' NEWLINE* ID)* NEWLINE* ;
 
 // NEWLINE? 
-inlineSet	: ID (expr | pointsExpr | color | borderValue | angle) NEWLINE* ;
+inlineSet	: ID (expr | pointsExpr | color | borderValue | angle | TRUTHVAL) NEWLINE* ;
 
 borderValue : expr (ID | color) ;
 
@@ -31,16 +31,17 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr '^' value=('+'|'-')? expr	#exprPower
 		;
 
-identifiers	: ID '[' ID ']'		#idProp
-			| ID				#id
+
+pointsExpr	: pointsExpr op=('++' | '--') pointsExpr	#pointsExprCalc
+			| identifiers								#pointsIds
+			| point										#pointsExprPoint
+			| 'container-center'						#pointsCenter
 			;
 
-pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
-			| identifiers							#pointsIds
-			| point									#pointsExprPoint
-			| 'container-center'					#pointsCenter
+identifiers	: ID				#id
+			| ID '[' ID ']'		#idProp
 			;
-
+			
 color 	: '#'(ID|NUMBER)									#colorHex
 		| expr ',' expr ',' expr							#colorRGB
 		| (var=ID | '['index=(ID | NUMBER) ']') 'from' ID	#colorPallete
@@ -49,6 +50,7 @@ color 	: '#'(ID|NUMBER)									#colorHex
 point : expr ',' expr ;
 angle : expr ('º' | 'deg' | 'rad') ;
 
+TRUTHVAL : 'true' | 'false';
 FIGURE: ('Rectangle' | 'Circle' | 'Line' | 'Triangle');
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 ID: [a-zA-Z0-9]+;	

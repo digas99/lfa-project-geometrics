@@ -47,7 +47,7 @@ public class Circle extends Figure {
     }
 
 	public String printFigure() {
-		return String.format("%s\n\"%s\"\n", this.getClass().getCanonicalName(), this.id())
+		return String.format("%s \"%s\"\n", this.getClass().getSimpleName(), this.id())
 			  +"         **\n"
 			  +"      **    **\n"
 			  +"     *        *\n"

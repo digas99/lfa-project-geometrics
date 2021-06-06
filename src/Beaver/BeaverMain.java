@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.util.stream.Collectors;
+import java.util.Comparator;
+import structures.Figure;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
@@ -29,8 +33,10 @@ public class BeaverMain {
                BeaverInterpreter beaverInterpreter = new BeaverInterpreter();
                beaverInterpreter.visit(tree);
 
-               beaverInterpreter.figures().entrySet().stream().forEach(figure -> System.out.println(figure.getValue().printFigure()+"\n"));
-               //System.out.println(beaverInterpreter.palletes());
+               // print figures sorted by number of figures they have
+               beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).forEach(figure -> System.out.println(figure.printFigure()+"\n"));
+               // print default sorting
+               beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
             }
          }
       }

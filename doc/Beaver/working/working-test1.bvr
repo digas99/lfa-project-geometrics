@@ -1,0 +1,58 @@
+containers =>
+	stickman1
+>>
+
+Color skinColor => 232, 205, 132 >>
+Color black => #000000 >>
+
+Pallete stickamn1Colors =>
+	skinColor
+>>
+
+Rectangle stickman1 =>
+	size 300,400
+	visibility false
+	collide false
+>>
+
+stickman1 contains => 
+
+	Circle head =>
+		color skinColor
+		border 20 black
+		filled true
+		startingPoint 0, 120
+		endingPoint 0, 80
+	>>
+
+	Line body =>
+		border 20 black
+		startingPoint head[endingPoint]
+		endingPoint 0, -80
+	>>
+
+	Line leftArm =>
+		border 20 black
+		startingPoint 0,0
+		endingPoint -120, 0 ++ head[endingPoint] ++ 0, 20
+	>>
+
+	Line rightArm =>
+		border 20 black
+		startingPoint 0,0
+		endingPoint leftArm[endingPoint] ++ 240, 0
+	>>
+
+	Line leftLeg =>
+		border 20 black
+		startingPoint body[endingPoint]
+		endingPoint -120, -180 
+	>>
+
+	Line rightLeg =>
+		border 20 black
+		startingPoint leftLeg[startingPoint]
+		endingPoint leftLeg[endingPoint] ++ 240, 0
+	>>
+	
+>>

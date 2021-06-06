@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+
 import java.util.Stack;
 
 import structures.Triangle;
@@ -19,7 +22,11 @@ import structures.Rectangle;
 public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    @Override public String visitProgram(BeaverParser.ProgramContext ctx) {
-      return visitChildren(ctx);
+      System.out.println("Starting tree traversal...");
+      ctx.stats().stream().forEach(stat -> visit(stat));
+      // visit(ctx.containers());
+      return null;
+      // return visitChildren(ctx);
    }
 
    @Override public String visitContainers(BeaverParser.ContainersContext ctx) {
@@ -28,7 +35,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    @Override public String visitStatsPallete(BeaverParser.StatsPalleteContext ctx) {
       String palleteId = ctx.ID().getText();
-      String[] colorIds = visit(ctx.idsList()).split(",");
+      String[] colorIds = visit(ctx.idsList()).split(";");
       List<Color> colors = Arrays.asList(colorIds).stream().map(id -> colorVars.get(id)).collect(Collectors.toList()); 
       Pallete pallete = new Pallete(palleteId, colors);
       palletes.put(palleteId, pallete);
@@ -37,7 +44,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    @Override public String visitStatsColor(BeaverParser.StatsColorContext ctx) {
       String id = ctx.ID(0).getText();
-      colorVars.put(id, ctx.ID(1) != null ? colorVars.get(ctx.ID(0).getText()) : new Color(id, Color.parseColor(visit(ctx.color()))));
+      colorVars.put(id, ctx.ID(1) != null ? colorVars.get(ctx.ID(1).getText()) : new Color(id, Color.parseColor(visit(ctx.color()))));
       return null;
    }
 
@@ -129,6 +136,15 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
             case "p2":
                endingPoint = Point.parsePoint(value);
                break;
+            case "collide":
+               collide = value.equals("true") ? true : false;
+               break;
+            case "filled":
+               filled = value.equals("true") ? true : false;
+               break;
+            case "visibility":
+               visibility = value.equals("true") ? true : false;
+               break;
          } 
       }
 
@@ -160,6 +176,11 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return null;
    }
 
+   @Override public String visitStatsPoint(BeaverParser.StatsPointContext ctx) {
+      pointVars.put(ctx.ID().getText(), Point.parsePoint(visit(ctx.pointsExpr())));
+      return null;
+   }
+
    @Override public String visitStatsContains(BeaverParser.StatsContainsContext ctx) {
       String id = ctx.ID().getText();
 
@@ -177,7 +198,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
 
    @Override public String visitIdsList(BeaverParser.IdsListContext ctx) {
-      return String.join(",", ctx.ID().stream().map(id -> visit(id)).collect(Collectors.toList()));
+      return String.join(";", ctx.ID().stream().map(id -> id.getText()).collect(Collectors.toList()));
    }
 
    @Override public String visitInlineSet(BeaverParser.InlineSetContext ctx) {
@@ -191,8 +212,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          value = visit(ctx.color());
       else if (ctx.borderValue() != null)
          value = visit(ctx.borderValue());
-      else
+      else if (ctx.angle() != null)
          value = visit(ctx.angle());       
+      else
+         value = ctx.TRUTHVAL().getText();
       return prop+";"+value;
    }
 
@@ -259,7 +282,14 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    @Override public String visitId(BeaverParser.IdContext ctx) {
       String id = ctx.ID().getText();
-      return numVars.containsKey(id) ? Double.toString(numVars.get(id)) : colorVars.get(id).toString();
+      String result;
+      if (numVars.containsKey(id))
+         result = Double.toString(numVars.get(id));
+      else if (colorVars.containsKey(id))
+         result = colorVars.get(id).toString();
+      else
+         result = pointVars.get(id).toString();
+      return result;
    }
 
    @Override public String visitExprUnary(BeaverParser.ExprUnaryContext ctx) {
@@ -274,9 +304,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return ctx.NUMBER().getText();
    }
 
-   // TODO
    @Override public String visitPointsCenter(BeaverParser.PointsCenterContext ctx) {
-      return visitChildren(ctx);
+      return openFigures.peek().center().toString();
    }
 
    @Override public String visitPointsIds(BeaverParser.PointsIdsContext ctx) {
@@ -288,10 +317,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       Point p1 = Point.parsePoint(visit(ctx.pointsExpr(1)));
       Point result = new Point(0,0);      
       switch(ctx.op.getText()) {
-         case "+":
+         case "++":
             result = Point.sum(p0, p1);
             break;
-         case "-":
+         case "--":
             result = Point.sub(p0,p1);
             break;
       }
@@ -348,6 +377,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    private HashMap<String, Pallete> palletes = new HashMap<>();
    private HashMap<String, Double> numVars = new HashMap<>();
    private HashMap<String, Color> colorVars = new HashMap<>();
+   private HashMap<String, Point> pointVars = new HashMap<>();
 
    public HashMap<String, Figure> figures() {
       return this.figures;
