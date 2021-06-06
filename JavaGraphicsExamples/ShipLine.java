@@ -1,75 +1,117 @@
-//////////////////////////---THIS IS NOT FINISHED--------------------------------
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.geom.Point2D;
-import java.awt.geom.Path2D;
-
+import java.lang.Math;
 
 public class ShipLine extends JPanel implements ActionListener {
 
 
     final int Width_Board = 1000;
     final int Length_Board = 1000;  
-    Timer timer = new Timer(30,this);
-    int velShipbody = 1;
-    int velTriangle = 1;
+    Timer timer = new Timer(5,this);
+    int velShipBody = 1;
     double angle = 0.0;
-    Point point = new Point(100,500);
-    int xShipbody = (int)point.getY();
+    double xShipBody = 500;
+    double HeightTriangle = 50;
+    double maxRandAngle = 360;
+    double maxRandColor = 255;
+    int r=0;
+    int gr=0;
+    int b=0;
 
     public void paint(Graphics g){
 
+        super.paintComponent(g);        
 
-        super.paintComponent(g);
+        r=(int)(Math.random() * maxRandColor);
+        gr=(int)(Math.random() * maxRandColor);
+        b=(int)(Math.random() * maxRandColor);
 
-        int xShipBody = (int)point.getX();
         Graphics2D containerShip = (Graphics2D)g.create(); 
-
-  
-        Rectangle2D Shipbody = new Rectangle((int)point.getX(),xShipBody,200,200);
         
+        Rectangle2D ShipBody = new Rectangle2D.Double(450,xShipBody,200,200);
+        
+        Point2D pointTopLeftRect = new Point2D.Double(ShipBody.getX(),ShipBody.getY());
+        Point2D pointTopRightRect = new Point2D.Double(pointTopLeftRect.getX()+ShipBody.getWidth(),pointTopLeftRect.getY());
 
         Polygon triangle =  new Polygon();
-        triangle.addPoint((int)point.getX(),(int)point.getY());
-        triangle.addPoint((int)point.getX(),(int)point.getY()+200);
-        triangle.addPoint((int)point.getX()-50,(int)point.getY()+100);
+        // This logic puts the triangle on top of rect(or any other figure)
+        // it's made by me, so I'm not sure if it works for everything. 
+        // Bottom left(in this case) point of triangle
+        triangle.addPoint((int)pointTopLeftRect.getX(),(int)pointTopLeftRect.getY());
+        // Bottom right(in this case) point of triangle
+        triangle.addPoint((int)pointTopRightRect.getX(),(int)pointTopRightRect.getY());
 
-        containerShip.setColor(Color.BLACK);
-        containerShip.draw(Shipbody);
-        containerShip.setColor(Color.MAGENTA);
+        triangle.addPoint(((int)pointTopLeftRect.getX()+(int)pointTopRightRect.getX())/2, 
+                         (int)pointTopLeftRect.getY()-(int)HeightTriangle);
+
+        //containerShip.setColor(new Color(r,gr,b));
+        containerShip.setColor(new Color(r,gr,b));
+        //This is thickness
         containerShip.setStroke(new BasicStroke(10));
+   
+        Rectangle RectTriangle = new Rectangle(triangle.getBounds());
+
+        Rectangle2D sumRect = new Rectangle2D.Double(RectTriangle.getX(),RectTriangle.getY(),
+                                                     ShipBody.getWidth(),ShipBody.getHeight()+RectTriangle.getHeight());
+
+
+        containerShip.translate((int)sumRect.getCenterX(),(int)sumRect.getCenterY());
+        containerShip.rotate(angle);
+        containerShip.translate((int)-sumRect.getCenterX(),(int)-sumRect.getCenterY());
+
+        containerShip.fill(ShipBody);
         containerShip.draw(triangle);
-        containerShip.dispose();
+    
+
         
+//////////////////--------------------------Line Container -----------------------------/////////////////
+        
+        Graphics2D containerLine = (Graphics2D)g.create();
+        
+        containerLine.setColor(new Color(r,gr,b));
+        containerLine.setStroke(new BasicStroke(20));
+        Shape line = new Line2D.Double(0,50,1000,50);
+        containerLine.draw(line);
+
+        if(line.intersects(sumRect)){
+            velShipBody -= 1;
+            angle = Math.toRadians((Math.random() * maxRandAngle)); 
+            }
+
+        containerShip.dispose();
+        containerLine.dispose();
 
         timer.start();
-    } 
-
-    
+        
+    }
+        
     @Override
     public void actionPerformed(ActionEvent e) {
+ 
+        // This moves Rect and triangle at the same time because they share xShipBody
+        xShipBody -= velShipBody;
 
-        xShipbody -= velShipbody ;
-
+        if( xShipBody == Width_Board-200){ 
+            velShipBody = velShipBody * -1;
+            angle = Math.toRadians((Math.random() * maxRandAngle));
+        }
 
         repaint();
-        
     }
 
     public static void main(String[] args) {
         ShipLine n = new ShipLine();
         JFrame frame1 = new JFrame();
         frame1.setTitle("Geometrics");
-        //frame1.setBackground(Color.MAGENTA);
-        frame1.setSize(1000,1000);
-        frame1.setVisible(true);
-        frame1.setLocationRelativeTo(null);
+        frame1.setSize(new Dimension(1000,1000));
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.add(n);
-    }
-    
+        frame1.setLocationRelativeTo(null);
+        frame1.setVisible(true);   
+    }    
 } 
 
 

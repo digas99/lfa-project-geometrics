@@ -10,19 +10,30 @@ Pallete myPallete =>
 	blue
 >>
 
-Rectangle square => size 400,400 >>
+Pallete pallete2 =>
+	red,
+	blue,
+	red
+>>
 
-Rectangle square =>
+Rectangle square => size 100,400 >>
+
+Rectangle square =>	
 	size 400, 400
 	angle 0º
 	color red
 	border 2 #f24235
+	filled true
 >>
+
+Number n => 0 >>
+
+Point c => n,0 >>
 
 square contains =>
 	!! center of container is 0,0
 	Circle cir =>
-		center 0,0
+		center c
 		diameter 100
 		color blue
 	>>
@@ -35,11 +46,11 @@ square contains =>
 			border 3 #000000 
 		>>
 	>>
->>
 
-Triangle t =>
-	color blue
-	p0 10, 2
-	p1 12, 2
-	p2 10, 2
+	Triangle triangle =>
+		color blue
+		p0 10, 2
+		p1 12, 2
+		p2 10, 2
+	>>
 >>
