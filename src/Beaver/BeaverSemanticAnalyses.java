@@ -103,6 +103,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       boolean isLine = varsLine.contains(var);
       boolean isTriangle = varsTriangle.contains(var);
       boolean valid = true;
+      openFigures++;
       if (noneTrue(Arrays.asList(isPoint, isRectangle, isCircle, isLine, isTriangle))) {
          // it is a number
          String errorMessage;
@@ -115,9 +116,11 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
          valid = false;
       }
 
-      return valid && allTrue(ctx.stats().stream()
-               .map(stat -> visit(stat))
-               .collect(Collectors.toList()));
+      boolean validStats = allTrue(ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList()));
+
+      openFigures--;
+
+      return valid && validStats;
    }
 
    @Override public Boolean visitIdsList(BeaverParser.IdsListContext ctx) {
@@ -149,7 +152,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       else if (isLine && !contains(lineProps, prop)) figure = "Line";
       else if (isTriangle && !contains(triangleProps, prop)) figure = "Triangle";
       else figure = "";
-
+    
       if (!figure.equals(""))
          throwError(line, col, String.format(notPropOfFigureErrorMessage, prop, figure));
       // if it is a correct property
@@ -166,8 +169,6 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
                valid = true;
          }
       }
-
-      // System.out.println("inlineset: "+valid);
       return valid;
    }
 
@@ -237,9 +238,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitExprIds(BeaverParser.ExprIdsContext ctx) {
-      boolean valid = visit(ctx.identifiers());
-      // System.out.println("ids: "+valid);
-      return valid;
+      return visit(ctx.identifiers());
    }
 
    @Override public Boolean visitExprParentheses(BeaverParser.ExprParenthesesContext ctx) {
@@ -250,7 +249,6 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       int line = ctx.getStart().getLine();
       int col = ctx.getStart().getCharPositionInLine();
       String var = ctx.ID().getText();
-      // System.out.println(var);
       boolean valid = hasBeenInit(line, col, var);
       if (valid) {
          if (!vars.contains(var) && !varsColor.contains(var) && !varsPoint.contains(var)) {
@@ -261,7 +259,6 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       else
          throwError(line, col, String.format(notInitVarErrorMessage, var));
       
-      // System.out.println(valid);
       return valid;
    }
 
@@ -278,6 +275,10 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    @Override public Boolean visitExprNumber(BeaverParser.ExprNumberContext ctx) {
       String n = ctx.NUMBER().getText();
       return isNumber(n) || n.equals("pi");
+   }
+
+   @Override public Boolean visitPointsCenter(BeaverParser.PointsCenterContext ctx) {
+      return openFigures < 2 ? false : true;
    }
 
    @Override public Boolean visitPointsExprCalc(BeaverParser.PointsExprCalcContext ctx) {
@@ -395,7 +396,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return false;
    }
 
-   private static boolean hasBeenInit(String var) {
+   private boolean hasBeenInit(String var) {
       boolean isPoint = varsPoint.contains(var);
       boolean isRectangle = varsRectangle.contains(var);
       boolean isCircle = varsCircle.contains(var);
@@ -407,7 +408,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       return anyTrue(Arrays.asList(isPoint, isRectangle, isCircle, isLine, isTriangle, isVar, isPallete, isColor));
    }
 
-   private static boolean hasBeenInit(int line, int col, String var) {
+   private boolean hasBeenInit(int line, int col, String var) {
       boolean valid = hasBeenInit(var);
       if (!valid)
          throwError(line, col, String.format(notInitVarErrorMessage, var));
@@ -433,17 +434,18 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String notVarTypeNumberErrorMessage = "%s is not a variable of type Number!";
    static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s";
 
-   static private List<String> vars = new ArrayList<>();
-   static private List<String> varsColor = new ArrayList<>();
-   static private List<String> varsPoint = new ArrayList<>();
-   static private List<String> varsRectangle = new ArrayList<>();
-   static private List<String> varsCircle = new ArrayList<>();
-   static private List<String> varsLine = new ArrayList<>();
-   static private List<String> varsTriangle = new ArrayList<>();
-   static private List<String> varsPallete = new ArrayList<>();
-   static private HashMap<String, List<String>> palletes = new HashMap<>();
-   static private String currentVar;
-   static private String currentPallete;
+   private List<String> vars = new ArrayList<>();
+   private List<String> varsColor = new ArrayList<>();
+   private List<String> varsPoint = new ArrayList<>();
+   private List<String> varsRectangle = new ArrayList<>();
+   private List<String> varsCircle = new ArrayList<>();
+   private List<String> varsLine = new ArrayList<>();
+   private List<String> varsTriangle = new ArrayList<>();
+   private List<String> varsPallete = new ArrayList<>();
+   private HashMap<String, List<String>> palletes = new HashMap<>();
+   private String currentVar;
+   private String currentPallete;
+   private int openFigures = 0;
 
    static private String[] pointProps = {"x", "y"};
    static private String[] rectangleProps = {"filled", "collide", "visibility", "color", "border", "width", "height", "center", "angle", "size"};
@@ -451,7 +453,7 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint"};
    static private String[] triangleProps = {"filled", "collide", "visibility", "color", "border", "p0", "p1", "p2"};
 
-   static private String[] propsAsTruthVal = {"filled", "visible", "collide"};
+   static private String[] propsAsTruthVal = {"filled", "visibility", "collide"};
    static private String[] propsAsExpr = {"center", "width", "height", "diameter", "radius", "color", "x", "y"};
    static private String[] propsAsPointsExpr = {"center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
    static private String[] propsAsColor = {"color"};

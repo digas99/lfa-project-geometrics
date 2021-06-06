@@ -198,8 +198,6 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
 
    @Override public String visitIdsList(BeaverParser.IdsListContext ctx) {
-      // System.out.println(colorVars);
-      // ctx.ID().stream().forEach(id -> System.out.println(id));
       return String.join(";", ctx.ID().stream().map(id -> id.getText()).collect(Collectors.toList()));
    }
 
@@ -319,10 +317,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       Point p1 = Point.parsePoint(visit(ctx.pointsExpr(1)));
       Point result = new Point(0,0);      
       switch(ctx.op.getText()) {
-         case "+":
+         case "++":
             result = Point.sum(p0, p1);
             break;
-         case "-":
+         case "--":
             result = Point.sub(p0,p1);
             break;
       }

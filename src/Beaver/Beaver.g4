@@ -32,10 +32,10 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 		;
 
 
-pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
-			| identifiers							#pointsIds
-			| point									#pointsExprPoint
-			| 'container-center'					#pointsCenter
+pointsExpr	: pointsExpr op=('++' | '--') pointsExpr	#pointsExprCalc
+			| identifiers								#pointsIds
+			| point										#pointsExprPoint
+			| 'container-center'						#pointsCenter
 			;
 
 identifiers	: ID				#id

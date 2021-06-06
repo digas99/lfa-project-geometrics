@@ -132,6 +132,10 @@ public class Figure {
 		return figuresArray;
     }
 
+    public int numberFigures() {
+        return this.figures.size();
+    }
+
 	public String printFigure() {
 		return this.toString();
 	}
