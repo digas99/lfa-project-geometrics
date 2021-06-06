@@ -1,0 +1,14 @@
+containers =>
+	stickman1
+>>
+
+Color skinColor => 232, 205, 132 >>
+
+Pallete stickamn1Colors =>
+	skinColor
+>>
+
+Rectangle wrapper =>
+	size 300,400
+	filled 
+>>

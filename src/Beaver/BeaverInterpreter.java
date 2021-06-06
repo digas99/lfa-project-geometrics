@@ -136,6 +136,15 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
             case "p2":
                endingPoint = Point.parsePoint(value);
                break;
+            case "collide":
+               collide = value.equals("true") ? true : false;
+               break;
+            case "filled":
+               filled = value.equals("true") ? true : false;
+               break;
+            case "visibility":
+               visibility = value.equals("true") ? true : false;
+               break;
          } 
       }
 
@@ -205,8 +214,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          value = visit(ctx.color());
       else if (ctx.borderValue() != null)
          value = visit(ctx.borderValue());
-      else
+      else if (ctx.angle() != null)
          value = visit(ctx.angle());       
+      else
+         value = ctx.TRUTHVAL().getText();
       return prop+";"+value;
    }
 

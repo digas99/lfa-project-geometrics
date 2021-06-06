@@ -18,7 +18,7 @@ stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 idsList	: ID (',' NEWLINE* ID)* NEWLINE* ;
 
 // NEWLINE? 
-inlineSet	: ID (expr | pointsExpr | color | borderValue | angle) NEWLINE* ;
+inlineSet	: ID (expr | pointsExpr | color | borderValue | angle | TRUTHVAL) NEWLINE* ;
 
 borderValue : expr (ID | color) ;
 
@@ -50,6 +50,7 @@ color 	: '#'(ID|NUMBER)									#colorHex
 point : expr ',' expr ;
 angle : expr ('º' | 'deg' | 'rad') ;
 
+TRUTHVAL : 'true' | 'false';
 FIGURE: ('Rectangle' | 'Circle' | 'Line' | 'Triangle');
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 ID: [a-zA-Z0-9]+;	

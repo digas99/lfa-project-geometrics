@@ -156,7 +156,8 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       else {
          if (ctx.color() != null && visit(ctx.color()) && !contains(propsAsColor, prop)
           || ctx.borderValue() != null && visit(ctx.borderValue()) && !contains(propsAsExprColor, prop)
-          || ctx.angle() != null && visit(ctx.angle()) && !contains(propsAsAngle, prop))
+          || ctx.angle() != null && visit(ctx.angle()) && !contains(propsAsAngle, prop)
+          || ctx.TRUTHVAL() != null && !contains(propsAsTruthVal, prop))
             throwError(line, col, String.format(notValueOfPropErrorMessage, prop));
          else {
             // if it is an expr and the visit doesn't return false
@@ -445,11 +446,12 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String currentPallete;
 
    static private String[] pointProps = {"x", "y"};
-   static private String[] rectangleProps = {"color", "border", "width", "height", "center", "angle", "size"};
-   static private String[] circleProps = {"color", "border", "diameter", "radius", "center", "startingPoint", "endingPoint"};
-   static private String[] lineProps = {"color", "border", "angle", "center", "startingPoint", "endingPoint"};
-   static private String[] triangleProps = {"color", "border", "p0", "p1", "p2"};
+   static private String[] rectangleProps = {"filled", "collide", "visibility", "color", "border", "width", "height", "center", "angle", "size"};
+   static private String[] circleProps = {"filled", "collide", "visibility", "color", "border", "diameter", "radius", "center", "startingPoint", "endingPoint"};
+   static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint"};
+   static private String[] triangleProps = {"filled", "collide", "visibility", "color", "border", "p0", "p1", "p2"};
 
+   static private String[] propsAsTruthVal = {"filled", "visible", "collide"};
    static private String[] propsAsExpr = {"center", "width", "height", "diameter", "radius", "color", "x", "y"};
    static private String[] propsAsPointsExpr = {"center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
    static private String[] propsAsColor = {"color"};
