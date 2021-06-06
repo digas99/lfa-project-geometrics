@@ -1,5 +1,7 @@
 package structures;
 
+import java.util.stream.Collectors;
+
 public class Triangle extends Figure{
     private Point p0;
     private Point p1;
@@ -36,6 +38,19 @@ public class Triangle extends Figure{
 		this.p2 = p2;
 	}
 
+	public String printFigure() {
+		return String.format("%s\n\"%s\"\n", this.getClass().getCanonicalName(), this.id())
+			  +"      "+this.p1.print()+"\n"
+			  +"           /\\\n"
+			  +"          /  \\\n"
+			  +"         /    \\\n"
+			  +"        /      \\\n"
+			  +"       ----------\n"
+			  +this.p0.print()+"   "+this.p2.print()+"\n"
+			  +String.format("Center: %14s\n", this.center().print())
+			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
+			  ;
+	}
 	@Override public String toString() {
         return String.format("%s [%s] \ncolor: %s; \nborder: %.2f %s; \ncenter: %s; \nthickness: %.2f; \np0: %s; \np1: %s; \np2: %s; \n%s; \n%s; \n%s; \n%s; \nhas %d figures", this.getClass().getName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.p0.print(), this.p1.print(), this.p2.print(), this.container() ? "container" : "!container", this.filled() ? "filled" : "!filled", this.collide() ? "collides" : "!collides", this.visibility() ? "visible" : "!visible", this.figures().size());
 	}
