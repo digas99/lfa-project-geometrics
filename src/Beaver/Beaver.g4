@@ -31,9 +31,6 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr '^' value=('+'|'-')? expr	#exprPower
 		;
 
-identifiers	: ID '[' ID ']'		#idProp
-			| ID				#id
-			;
 
 pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
 			| identifiers							#pointsIds
@@ -41,6 +38,10 @@ pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
 			| 'container-center'					#pointsCenter
 			;
 
+identifiers	: ID				#id
+			| ID '[' ID ']'		#idProp
+			;
+			
 color 	: '#'(ID|NUMBER)									#colorHex
 		| expr ',' expr ',' expr							#colorRGB
 		| (var=ID | '['index=(ID | NUMBER) ']') 'from' ID	#colorPallete

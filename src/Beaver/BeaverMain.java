@@ -30,7 +30,7 @@ public class BeaverMain {
                beaverInterpreter.visit(tree);
 
                beaverInterpreter.figures().entrySet().stream().forEach(figure -> System.out.println(figure.getValue().printFigure()+"\n"));
-               //System.out.println(beaverInterpreter.palletes());
+               beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
             }
          }
       }
