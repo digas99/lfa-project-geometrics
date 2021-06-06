@@ -1,5 +1,8 @@
 package structures;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Rectangle extends Figure {
     
 	private double width;
@@ -37,7 +40,20 @@ public class Rectangle extends Figure {
         this.angle = angle;
     }
 
+	public String printFigure() {
+		return String.format("%s\n\"%s\"\n", this.getClass().getCanonicalName(), this.id())
+			  +"     -------------------\n"
+			  +"     |                 |\n"
+			  +"     |                 |"+this.height+"\n"
+			  +"     |                 |\n"
+			  +"     -------------------\n"
+			  +"            "+this.width+"\n"
+			  +String.format("Center: %14s\nAngle: %10.2f\n", this.center().print(), this.angle)
+			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
+			  ;
+	}
+
 	@Override public String toString() {
-        return String.format("%s [%s] \ncolor: %s; \nborder: %.2f %s; \ncenter: %s; \nthickness: %.2f; \nwidth: %.2f; \nheight: %.2f; \nangle: %.2f; \n%s; \n%s; \n%s; \n%s; \nhas %d figures", this.getClass().getName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.width, this.height, this.angle, this.container() ? "container" : "!container", this.filled() ? "filled" : "!filled", this.collide() ? "collides" : "!collides", this.visibility() ? "visible" : "!visible", this.figures().size());
+        return String.format("%s [%s] \nColor: %s; \nBorder: %.2f %s; \nCenter: %s; \nThickness: %.2f; \nWidth: %.2f; \nHeight: %.2f; \nAngle: %.2f; \n%s; \n%s; \n%s; \n%s; \nContains [%d] Figures\n", this.getClass().getName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.width, this.height, this.angle, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.collide() ? "Collides" : "!Collides", this.visibility() ? "Visible" : "!Visible", this.figures().size());
 	}
 }

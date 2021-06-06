@@ -25,11 +25,11 @@ public class BeaverMain {
             BeaverSemanticAnalyses beaverSemantic = new BeaverSemanticAnalyses();
             boolean semanticCheck = beaverSemantic.visit(tree);
             if (semanticCheck) {
-               System.out.println("\nSemantic passed with no Errors!\nInterpreting Beaver...");
+               System.out.println("\nSemantic passed with no Errors!\nInterpreting Beaver...\n");
                BeaverInterpreter beaverInterpreter = new BeaverInterpreter();
                beaverInterpreter.visit(tree);
 
-               beaverInterpreter.figures().entrySet().stream().forEach(figure -> System.out.println(figure.getValue()+"\n"));
+               beaverInterpreter.figures().entrySet().stream().forEach(figure -> System.out.println(figure.getValue().printFigure()+"\n"));
                //System.out.println(beaverInterpreter.palletes());
             }
          }

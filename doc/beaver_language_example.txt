@@ -35,11 +35,11 @@ square contains =>
 			border 3 #000000 
 		>>
 	>>
->>
 
-Triangle t =>
-	color blue
-	p0 10, 2
-	p1 12, 2
-	p2 10, 2
+	Triangle triangle =>
+		color blue
+		p0 10, 2
+		p1 12, 2
+		p2 10, 2
+	>>
 >>
