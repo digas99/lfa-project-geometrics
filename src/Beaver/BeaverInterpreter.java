@@ -196,6 +196,12 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return prop+";"+value;
    }
 
+   @Override public String visitBorderValue(BeaverParser.BorderValueContext ctx) {
+      String border = visit(ctx.expr());
+      String color = ctx.ID() != null ? colorVars.get(ctx.ID().getText()).toString() : visit(ctx.color());
+      return border + " " + color;
+   }
+
    @Override public String visitExprMultDiv(BeaverParser.ExprMultDivContext ctx) {
       double x = Double.parseDouble(visit(ctx.expr(0)));
       double y = Double.parseDouble(visit(ctx.expr(1)));
@@ -239,7 +245,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       String prop = ctx.ID(1).getText();
       Figure figure = figures.get(id);
       Class c = figure.getClass();
-      Method wantedPropertyMethod = Arrays.asList(c.getMethods()).stream().filter(method -> method.getName().equals(prop)).collect(Collectors.toList()).get(0);
+      Method wantedPropertyMethod = Arrays.asList(c.getDeclaredMethods()).stream().filter(method -> method.getName().equals(prop)).collect(Collectors.toList()).get(0);
       String methodReturn = "";
       try {
          methodReturn = wantedPropertyMethod.invoke(figure).toString();
@@ -252,7 +258,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
 
    @Override public String visitId(BeaverParser.IdContext ctx) {
-      return Double.toString(numVars.get(ctx.ID().getText()));
+      String id = ctx.ID().getText();
+      return numVars.containsKey(id) ? Double.toString(numVars.get(id)) : colorVars.get(id).toString();
    }
 
    @Override public String visitExprUnary(BeaverParser.ExprUnaryContext ctx) {
@@ -296,11 +303,11 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    }
 
    @Override public String visitColorHex(BeaverParser.ColorHexContext ctx) {
-      return "#"+ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText();
+      return "#"+(ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText());
    }
 
    @Override public String visitColorRGB(BeaverParser.ColorRGBContext ctx) {
-      return visit(ctx.expr(0))+","+visit(ctx.expr(1))+visit(ctx.expr(2));
+      return visit(ctx.expr(0))+","+visit(ctx.expr(1))+","+visit(ctx.expr(2));
    }
 
    @Override public String visitColorPallete(BeaverParser.ColorPalleteContext ctx) { 
@@ -335,10 +342,18 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visit(ctx.expr());
    }
 
-   Stack<Figure> openFigures = new Stack<>();
-   String containerId = "";
-   HashMap<String, Figure> figures = new HashMap<>();
-   HashMap<String, Pallete> palletes = new HashMap<>();
-   HashMap<String, Double> numVars = new HashMap<>();
-   HashMap<String, Color> colorVars = new HashMap<>();
+   private Stack<Figure> openFigures = new Stack<>();
+   private String containerId = "";
+   private HashMap<String, Figure> figures = new HashMap<>();
+   private HashMap<String, Pallete> palletes = new HashMap<>();
+   private HashMap<String, Double> numVars = new HashMap<>();
+   private HashMap<String, Color> colorVars = new HashMap<>();
+
+   public HashMap<String, Figure> figures() {
+      return this.figures;
+   }
+
+   public HashMap<String, Pallete> palletes() {
+      return this.palletes;
+   }
 }

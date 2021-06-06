@@ -10,9 +10,9 @@ Pallete myPallete =>
 	blue
 >>
 
-Rectangle square => size 400,400 >>
+Rectangle square => size 100,400 >>
 
-Rectangle square =>
+Rectangle square =>	
 	size 400, 400
 	angle 0º
 	color red

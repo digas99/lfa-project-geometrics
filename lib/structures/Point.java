@@ -38,10 +38,18 @@ public class Point {
 		return new Point(p0.x()-p1.x(), p0.y()-p1.y());
 	}
 
+	public static double distance(Point p0, Point p1) {
+		return Math.sqrt(Math.pow(p0.x()-p1.x(),2) + Math.pow(p0.y()-p1.y(), 2));
+	}
+
 	public static Point parsePoint(String p) {
 		p = p.replaceAll(" ", "");
 		String[] split = p.split(",");
 		return new Point(Double.parseDouble(split[0]), Double.parseDouble(split[1]));
+	}
+
+	public String print() {
+		return "("+this.x+", "+this.y+")";
 	}
 
 	@Override public String toString() {

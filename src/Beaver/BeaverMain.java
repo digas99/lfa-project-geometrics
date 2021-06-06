@@ -28,6 +28,9 @@ public class BeaverMain {
                System.out.println("\nSemantic passed with no Errors!\nInterpreting Beaver...");
                BeaverInterpreter beaverInterpreter = new BeaverInterpreter();
                beaverInterpreter.visit(tree);
+
+               beaverInterpreter.figures().entrySet().stream().forEach(figure -> System.out.println(figure.getValue()+"\n"));
+               //System.out.println(beaverInterpreter.palletes());
             }
          }
       }
