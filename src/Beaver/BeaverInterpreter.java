@@ -59,17 +59,69 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       Point endingPoint = new Point(0, 0);
       double angle = 0;
       List<String> properties = ctx.inlineSet().stream().map(prop -> visit(prop)).collect(Collectors.toList());
-      properties.stream().forEach(prop -> {
+      for(String prop : properties) {
          String[] split = prop.split(";");
-         
-      });
+         String value = split[1];
+         switch(split[0]) {
+            case "color":
+               color = Color.parseColor(value);   
+               break;
+            case "border":
+               String[] values = value.split(" ");
+               border = Double.parseDouble(values[0]);
+               borderColor = Color.parseColor(values[1]);
+               break;
+            case "width":
+               width = Double.parseDouble(value);
+               break;
+            case "height":
+               height = Double.parseDouble(value);
+               break;
+            case "center":
+               center = Point.parsePoint(value);
+               break;
+            case "angle":
+               angle = Double.parseDouble(value);
+               break;
+            case "size":
+               Point s = Point.parsePoint(value);
+               width = s.x();
+               height = s.y(); 
+               break;
+            case "diameter":
+               diameter = Double.parseDouble(value);   
+               break;
+            case "radius":
+               diameter = Double.parseDouble(value)*2;
+               break;
+            case "startingPoint":
+               startingPoint = Point.parsePoint(value);
+               break;
+            case "endingPoint":
+               endingPoint = Point.parsePoint(value);
+               break;
+            case "p0":
+               startingPoint = Point.parsePoint(value);
+               break;
+            case "p1":
+               middlePoint = Point.parsePoint(value);
+               break;
+            case "p2":
+               endingPoint = Point.parsePoint(value);
+               break;
+         } 
+      }
+
       Figure f;
       switch(figure) {
          case "Rectangle":
             f = new Rectangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, width, height, angle);
             break;
          case "Circle":
-            f = new Circle(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, endingPoint);
+            if (diameter > 0)
+               f = new Circle(id, color, borderColor, border, center, filled, thickness, collide, visibility, diameter);
+            else
+               f = new Circle(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, endingPoint);
             break;
          case "Line":
             f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, endingPoint, angle);
@@ -78,7 +130,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
             f = new Triangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, startingPoint, middlePoint, endingPoint);
             break;
       }
-      return visitChildren(ctx);
+      return null;
    }
 
    @Override public String visitStatsContains(BeaverParser.StatsContainsContext ctx) {

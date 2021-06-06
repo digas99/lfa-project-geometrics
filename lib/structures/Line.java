@@ -6,8 +6,8 @@ public class Line extends Figure {
     private Point endingPoint;
     private double angle;
     
-    public Line(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, Point startingPoint, Point endingPoint, double angle) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility);
+    public Line(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, Point startingPoint, Point endingPoint, double angle) {
+		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
         this.startingPoint = startingPoint;
         this.endingPoint = endingPoint;
         this.angle = angle;
