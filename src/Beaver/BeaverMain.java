@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.Comparator;
+import java.util.List;
+
 import structures.Figure;
 
 import org.antlr.v4.runtime.*;
@@ -34,7 +36,10 @@ public class BeaverMain {
                beaverInterpreter.visit(tree);
 
                // print figures sorted by number of figures they have
-               beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).forEach(figure -> System.out.println(figure.printFigure()+"\n"));
+               List<Figure> sortedByNmrFigures = beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).collect(Collectors.toList());
+               System.out.println("");
+               printFigureFamilyTree(sortedByNmrFigures.get(0), 0);
+               System.out.println("");
                // print default sorting
                beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
             }
@@ -47,6 +52,20 @@ public class BeaverMain {
       catch(RecognitionException e) {
          e.printStackTrace();
          System.exit(1);
+      }
+   }
+
+   public static void printFigureFamilyTree(Figure figure, int level) {
+      List<Figure> children = figure.figures();
+      for (int i=0; i<level; i++) {
+         System.out.print(" ");
+      }
+      System.out.printf("-%s\n", figure.id());
+      if (children.size() > 0) {
+         level++;
+         for (Figure child : children) {
+            printFigureFamilyTree(child, level);
+         }
       }
    }
 }

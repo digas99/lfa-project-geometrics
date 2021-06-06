@@ -4,9 +4,11 @@ containers =>
 
 Color skinColor => 232, 205, 132 >>
 Color black => #000000 >>
+Color eyesBlue => #2faff5 >>
 
 Pallete stickamn1Colors =>
-	skinColor
+	skinColor,
+	eyesBlue
 >>
 
 Rectangle stickman1 =>
@@ -23,6 +25,24 @@ stickman1 contains =>
 		filled true
 		startingPoint 0, 120
 		endingPoint 0, 80
+	>>
+
+	head contains =>
+		Circle rightEye =>
+			color eyesBlue
+			border 10 black
+			filled true
+			startingPoint 0+30, 10
+			endingPoint 0, 10
+		>>
+
+		Circle leftEye =>
+			color eyesBlue
+			border 10 black
+			filled true
+			startingPoint 0-30, 10
+			endingPoint 0, 10
+		>>
 	>>
 
 	Line body =>
