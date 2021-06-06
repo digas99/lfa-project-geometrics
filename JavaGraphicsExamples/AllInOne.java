@@ -44,10 +44,10 @@ public class AllInOne extends JPanel implements ActionListener {
         // will be called every 30ms(in this case) because of Timer(line13)
         // paint method is called on the ActionListener.
         // Rectangle is a special case, you can/it's useful to create it like this 
-        // For other shapes it's best to use new Shape().
+        // For other shapes it's best to use Shape.
         // Where you put the variable is important because how you move figures is 
         // by updating the var. If you want to move it diagonally you have 
-        // to have two vars(and update them).
+        // to have two vars.
         Rectangle rect = new Rectangle(100,xRedSquare,100,100);//x,y,width,height
 
         // This is the color of whataver is "attached" to containerRedSquare, in this case rect.
@@ -66,7 +66,7 @@ public class AllInOne extends JPanel implements ActionListener {
         // You could call draw(containerRedSquare.draw(rect)) to only draw the perimeter of the rectangle.
         containerRedSquare.fill(rect);
 
-        // I have to create a new Shape() for rect to use intersects() (below)
+        // I have to create a Shape for rect to use intersects() (below)
         // You could do Shape square = new Rectangle2D.Double(100,x,100, 100); at the beginning
         // but then you can't use getCenterX() or getCenterY() for the translate, meaning,
         // you have to think about what you are going to do with the figure because
@@ -85,6 +85,7 @@ public class AllInOne extends JPanel implements ActionListener {
 
         containerPurpleBlackSquare.translate((int)rect2.getCenterX(),(int)rect2.getCenterY());
         containerPurpleBlackSquare.rotate(angle);
+        //~3 hours to find out I needed this line
         containerPurpleBlackSquare.translate((int)-rect2.getCenterX(),(int)-rect2.getCenterY());
         containerPurpleBlackSquare.fill(rect2);
 
@@ -96,7 +97,7 @@ public class AllInOne extends JPanel implements ActionListener {
         if(rectS.intersects(rect2)){
             velRedSquare = 0;
             velPurpleBlackSquare = 0;
-            angle += 1;
+            angle += 0.1;
             containerPurpleBlackSquare.setColor(new Color(55,55,55));
             containerRedSquare.setColor(new Color(55,55,55));
             // After changing color (and most other things) you have to fill rect again,
@@ -132,8 +133,8 @@ public class AllInOne extends JPanel implements ActionListener {
         containerRedCircle.fill(circle2);
 
         // intersects() only accepts rectangles. so I'll create
-        // rectangle that encloses the circle(which is a Shape())
-        // using getBounds(). If you don't draw/fill the rect is invisible
+        // rectangle that encloses the circle using getBounds().
+        // If you don't draw/fill the rect, it's invisible
         // If you want to see it add containerRedCircle.draw(rect3);
         Rectangle rect3 = new Rectangle(circle.getBounds());
         
