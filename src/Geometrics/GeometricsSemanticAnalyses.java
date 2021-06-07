@@ -265,14 +265,13 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitTime(GeometricsParser.TimeContext ctx) {
-      String n = ctx.NUMBER().getText();
-      return isNumber(n);
+      return visit(ctx.expr());
    }
 
    @Override public Boolean visitPoint(GeometricsParser.PointContext ctx) {
       boolean expr0 = visit(ctx.expr(0));
       boolean expr1 = visit(ctx.expr(1));
-      return expr0 && expr1;
+      return expr0 && expr1; 
    }
 
    private static boolean isNumber(String val) {
@@ -283,4 +282,72 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
       }
       return true;
    }
+
+   private static boolean allTrue(boolean[] values) {
+      return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
+   }
+
+   private static boolean allTrue(List<Boolean> values) {
+      return values.stream().allMatch(val -> val);
+   }
+
+   private static boolean anyTrue(boolean[] values) {
+      return IntStream.range(0, values.length).mapToObj(i -> values[i]).anyMatch(val -> val);
+   }
+
+   private static boolean anyTrue(List<Boolean> values) {
+      return values.stream().anyMatch(val -> val);
+   }
+
+   private static boolean someTrue(boolean[] values) {
+      return !allTrue(values) && !noneTrue(values);
+   }
+
+   private static boolean someTrue(List<Boolean> values) {
+      return !allTrue(values) && !noneTrue(values);
+   }
+
+   private static boolean noneTrue(boolean[] values) {
+      return !anyTrue(values);
+   }
+
+   private static boolean noneTrue(List<Boolean> values) {
+      return !anyTrue(values);
+   }
+
+   private static void throwWarning(int line, int col, String message) {
+      System.err.printf("Warning@%d:%d -> %s\n", line, col, message);
+   }
+
+   private static void throwError(int line, int col, String message) {
+      System.err.printf("Error@%d:%d -> %s\n", line, col, message);
+   }
+
+   private boolean hasBeenInit(String var) {
+      boolean isPoint = varsPoint.contains(var);
+      boolean isRectangle = varsRectangle.contains(var);
+      boolean isCircle = varsCircle.contains(var);
+      boolean isLine = varsLine.contains(var);
+      boolean isTriangle = varsTriangle.contains(var);
+      boolean isVar = vars.contains(var);
+      boolean isPallete = varsPallete.contains(var);
+      boolean isColor = varsColor.contains(var);
+      return anyTrue(Arrays.asList(isPoint, isRectangle, isCircle, isLine, isTriangle, isVar, isPallete, isColor));
+   }
+
+   private List<String> vars = new ArrayList<>();
+   private List<String> varsColor = new ArrayList<>();
+   private List<String> varsPoint = new ArrayList<>();
+   private List<String> varsRectangle = new ArrayList<>();
+   private List<String> varsCircle = new ArrayList<>();
+   private List<String> varsLine = new ArrayList<>();
+   private List<String> varsTriangle = new ArrayList<>();
+   private List<String> varsPallete = new ArrayList<>();
+   private List<String> varsFigure = new ArrayList<>();
+   private HashMap<String, List<String>> palletes = new HashMap<>();
+   private String currentVar;
+   private String currentPallete;
+   private int openFigures = 0;
+
+
 }
