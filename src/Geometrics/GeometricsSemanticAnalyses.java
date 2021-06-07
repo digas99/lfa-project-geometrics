@@ -9,7 +9,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    // grupo 1
    @Override public String visitProgram(GeometricsParser.ProgramContext ctx) {
-      return visitChildren(ctx);
+      String use = visit(ctx.use());
    }
 
    @Override public String visitUse(GeometricsParser.UseContext ctx) {
@@ -97,9 +97,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
    // grupo 1
    @Override public String visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
-      String n = ctx.NUMBER().getText();
-      return isNumber(n) || n.equals("pi");
-   }
+      
 
    @Override public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
       return visitChildren(ctx);
@@ -295,12 +293,28 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return true;
    }
 
+   private static boolean allNull(List<String> values) {
+      return values.stream().allMatch(val -> val == null);
+   }
+
+   private static boolean allNull(String[] values) {
+      return allNull(Arrays.asList(values));
+   }
+
    private static boolean allTrue(boolean[] values) {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
    }
 
    private static boolean allTrue(List<Boolean> values) {
       return values.stream().allMatch(val -> val);
+   }
+
+   private static boolean anyNull(List<String> values) {
+      return values.stream().anyMatch(val -> val == null);
+   }
+
+   private static boolean anyNull(String[] values) {
+      return anyNull(Arrays.asList(values));
    }
 
    private static boolean anyTrue(boolean[] values) {
@@ -319,12 +333,28 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allTrue(values) && !noneTrue(values);
    }
 
+   private static boolean someNull(String[] values) {
+      return !allNull(values) && !noneNull(values);
+   }
+
+   private static boolean someNull(String<Boolean> values) {
+      return !allNull(values) && !noneNull(values);
+   }
+
    private static boolean noneTrue(boolean[] values) {
       return !anyTrue(values);
    }
 
    private static boolean noneTrue(List<Boolean> values) {
       return !anyTrue(values);
+   }
+
+   private static boolean noneNull(String[] values) {
+      return !anyNull(values);
+   }
+
+   private static boolean noneNull(String<Boolean> values) {
+      return !anyNull(values);
    }
 
    private static void throwWarning(int line, int col, String message) {
@@ -364,6 +394,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       }
       return false;
    }
+
    static private String notInitVarErrorMessage = "Variable %s might have not been initialized!";
    static private String notValidColorCodeErrorMessage = "%s is not a valid color code!";
    static private String notAFigureErrorMessage = "%s is not a Figure!";

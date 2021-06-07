@@ -90,6 +90,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
+      // esta matemática tem de ser feita toda em código java com os string templates
       return doMath(ctx.expr(0), ctx.expr(1), ctx.op.getText());
    }
 
