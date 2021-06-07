@@ -8,7 +8,7 @@ containers	: 'containers' '=>' idsList? '>>' NEWLINE* ;
 // ID 'contains' '=>' (stats NEWLINE?)+ '>>'
 stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 		| 'Color' ID '=>' (ID | color) '>>'				#statsColor
-		| 'Number' ID '=>' NUMBER '>>'					#statsNumber
+		| 'Number' ID '=>' expr '>>'					#statsNumber
 		| 'Point' ID '=>' pointsExpr '>>'				#statsPoint
 		| FIGURE ID '=>' inlineSet+	'>>'				#statsSet
 		| ID 'contains' '=>' (stats NEWLINE*)+ '>>'		#statsContains
@@ -48,7 +48,7 @@ color 	: '#'(ID|NUMBER)									#colorHex
 		;
 
 point : expr ',' expr ;
-angle : expr ('º' | 'deg' | 'rad') ;
+angle : expr type=('º' | 'deg' | 'rad') ;
 
 TRUTHVAL : 'true' | 'false';
 FIGURE: ('Rectangle' | 'Circle' | 'Line' | 'Triangle');

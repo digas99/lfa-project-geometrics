@@ -140,6 +140,24 @@ public class Figure {
 		return this.toString();
 	}
 
+    public void printFamilyTree(int level) {
+        for (int i=0; i<level; i++) {
+            System.out.print(" ");
+        }
+        System.out.printf("-%s\n", this.id);
+        level++;
+        for (Figure child : this.figures) {
+            child.printFamilyTree(level);
+        }
+    }
+
+    public void printFamily() {
+        System.out.printf("%s\n", this.printFigure());
+        for (Figure child : this.figures) {
+            child.printFamily();
+        }
+    }
+
     @Override public String toString() {
         return String.format("[%s] \ncolor: %s; \nborder: %.2f %s; \ncenter: %s; \nthickness: %.2f; \n%s; \n%s; \n%s; \n%s; \nhas %d figures", this.id, this.color, this.border, this.borderColor, this.center.print(), this.thickness, this.container ? "container" : "!container", this.filled ? "filled" : "!filled", this.collide ? "collides" : "!collides", this.visibility ? "visible" : "!visible", this.figures.size());
     }

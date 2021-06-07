@@ -42,6 +42,14 @@ public class Point {
 		return Math.sqrt(Math.pow(p0.x()-p1.x(),2) + Math.pow(p0.y()-p1.y(), 2));
 	}
 
+	public double distance(Point p) {
+		return Math.sqrt(Math.pow(this.x-p.x(),2) + Math.pow(this.y-p.y(), 2));
+	}
+
+	public Point oppositePoint(double length, double angle) {
+		return new Point(this.x+length*Math.cos(angle), this.y+length*Math.sin(angle));
+	}
+
 	public static Point parsePoint(String p) {
 		p = p.replaceAll(" ", "");
 		String[] split = p.split(",");
@@ -49,7 +57,7 @@ public class Point {
 	}
 
 	public String print() {
-		return "("+this.x+", "+this.y+")";
+		return String.format("(%.2f, %.2f)", this.x, this.y);
 	}
 
 	@Override public String toString() {

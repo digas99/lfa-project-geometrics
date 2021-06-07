@@ -1,15 +1,14 @@
 package structures;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Rectangle extends Figure {
     
 	private double width;
 	private double height;
-	private double angle;
+	private Angle angle;
 
-	public Rectangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, double width, double height, double angle) {
+	public Rectangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, double width, double height, Angle angle) {
 		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
 		this.width = width;
 		this.height = height;
@@ -32,23 +31,22 @@ public class Rectangle extends Figure {
 		this.height = height;
 	}
 
-    public double angle() {
+    public Angle angle() {
 		return this.angle;
 	}
 
-    public void setAngle(double angle){
+    public void setAngle(Angle angle){
         this.angle = angle;
     }
 
 	public String printFigure() {
 		return String.format("%s \"%s\"\n", this.getClass().getSimpleName(), this.id())
-			  +"     -------------------\n"
-			  +"     |                 |\n"
-			  +"     |                 |"+this.height+"\n"
-			  +"     |                 |\n"
-			  +"     -------------------\n"
-			  +"            "+this.width+"\n"
-			  +String.format("Center: %14s\nAngle: %10.2f\n", this.center().print(), this.angle)
+			  +"-------------------\n"
+			  +"|                 |\n"
+			  +"|                 |\n"
+			  +"|                 |\n"
+			  +"-------------------\n"
+			  +String.format("Width: %10.2f\nHeight: %10.2f\nCenter: %14s\nAngle: %9s\n",this.width, this.height, this.center().print(), this.angle)
 			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
 			  ;
 	}

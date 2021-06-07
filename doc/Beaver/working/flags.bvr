@@ -1,0 +1,84 @@
+containers =>
+	japanese,
+	french
+>>
+
+!! default flag
+Rectangle flag =>
+	width 500
+	height 300
+>>
+
+Color white => #ffffff >>
+
+Color japRed => 176,0,15 >>
+
+Pallete japaneseColors =>
+	japRed,
+	white
+>>
+
+!! japanese flag
+Rectangle japanese =>
+	width flag[width]
+	height flag[height]
+	color white
+	visibility true
+	filled true
+	collide true
+>>
+
+japanese contains =>
+	Circle sun =>
+		center japanese[center]
+		diameter japanese[width] / 3
+		filled true
+		visibility true
+	>> 
+>>
+
+Color frenchBlue => #0055A4 >>
+Color frenchRed => #EF4135 >>
+
+Pallete frenchColors =>
+	frenchBlue,
+	frenchRed
+>>
+
+!! french flag
+Rectangle french =>
+	size flag[width], flag[height]
+	visibility false
+	filled false
+	collide true
+>>
+
+french contains =>
+	Number sectionWidth => french[width] / 3 >>
+	Number distanceToSideCenter => french[width]/2+sectionWidth >>
+
+	Rectangle frenchLeft =>
+		color frenchBlue
+		height french[height]
+		width sectionWidth
+		center french[center] -- distanceToSideCenter,0
+		visibility true
+		filled true
+	>>
+	Rectangle frenchMiddle =>
+		color white
+		height french[height]
+		width french[width] / 3
+		center french[center]
+		visibility true
+		filled true
+	>>
+	Rectangle frenchRight =>
+		color frenchRed
+		height french[height]
+		width french[width] / 3
+		center french[center] ++ distanceToSideCenter,0
+		visibility true
+		filled true
+	>>
+>>

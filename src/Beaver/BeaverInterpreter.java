@@ -1,15 +1,14 @@
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
-
 import java.util.Stack;
 
 import structures.Triangle;
+import structures.Angle;
 import structures.Circle;
 import structures.Color;
 import structures.Figure;
@@ -25,14 +24,14 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    public String visitProgram(BeaverParser.ProgramContext ctx) {
       System.out.println("Starting tree traversal...");
       ctx.stats().stream().forEach(stat -> visit(stat));
-      // visit(ctx.containers());
+      visit(ctx.containers());
       return null;
-      // return visitChildren(ctx);
    }
 
-   @Override
-   public String visitContainers(BeaverParser.ContainersContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitContainers(BeaverParser.ContainersContext ctx) {
+      String[] containerIds = visit(ctx.idsList()).split(";");
+      this.containers = Arrays.asList(containerIds).stream().map(id -> figures.get(id)).collect(Collectors.toList());   
+      return null;
    }
 
    @Override
@@ -53,9 +52,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return null;
    }
 
-   @Override
-   public String visitStatsNumber(BeaverParser.StatsNumberContext ctx) {
-      numVars.put(ctx.ID().getText(), Double.parseDouble(ctx.NUMBER().getText()));
+   @Override public String visitStatsNumber(BeaverParser.StatsNumberContext ctx) {
+      numVars.put(ctx.ID().getText(), Double.parseDouble(visit(ctx.expr())));
       return null;
    }
 
@@ -88,10 +86,12 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       double diameter = 0;
       // triangle properties
       Point middlePoint = new Point(0, 0);
+      // line properties
+      double length = 0;
       // properties shared by several figures, but not all
       Point startingPoint = new Point(0, 0);
       Point endingPoint = new Point(0, 0);
-      double angle = 0;
+      Angle angle = new Angle(0);
 
       List<String> properties = ctx.inlineSet().stream().map(prop -> visit(prop)).collect(Collectors.toList());
       for (String prop : properties) {
@@ -116,7 +116,12 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
                center = Point.parsePoint(value);
                break;
             case "angle":
-               angle = Double.parseDouble(value);
+               String[] angleSplit = value.split("r");
+               Arrays.asList(angleSplit).forEach(a -> System.out.print(a+" "));
+               if (angleSplit.length > 1)
+                  angle = new Angle(Double.parseDouble(angleSplit[0]));
+               else
+                  angle = new Angle(Integer.parseInt(value));
                break;
             case "size":
                Point s = Point.parsePoint(value);
@@ -153,7 +158,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
             case "visibility":
                visibility = value.equals("true") ? true : false;
                break;
-         }
+            case "length":
+               length = Double.parseDouble(value);
+               break;
+         } 
       }
 
       Figure f = new Figure(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
@@ -171,8 +179,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
                      startingPoint, endingPoint);
             break;
          case "Line":
-            f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, container,
-                  startingPoint, endingPoint, angle);
+            if (length > 0)
+               f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, container, angle, length);
+            else
+               f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, container, startingPoint, endingPoint);
             break;
          case "Triangle":
             f = new Triangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, container,
@@ -291,8 +301,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       String prop = ctx.ID(1).getText();
       Figure figure = figures.get(id);
       Class c = figure.getClass();
-      Method wantedPropertyMethod = Arrays.asList(c.getDeclaredMethods()).stream()
-            .filter(method -> method.getName().equals(prop)).collect(Collectors.toList()).get(0);
+      Method wantedPropertyMethod = Arrays.asList(c.getMethods()).stream().filter(method -> method.getName().equals(prop)).collect(Collectors.toList()).get(0);
       String methodReturn = "";
       try {
          methodReturn = wantedPropertyMethod.invoke(figure).toString();
@@ -327,9 +336,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
             Double.parseDouble(ctx.value.getText() + visit(ctx.expr(1)))));
    }
 
-   @Override
-   public String visitExprNumber(BeaverParser.ExprNumberContext ctx) {
-      return ctx.NUMBER().getText();
+   @Override public String visitExprNumber(BeaverParser.ExprNumberContext ctx) {
+      return ctx.NUMBER().getText().equals("pi") ? Double.toString(Math.PI) : ctx.NUMBER().getText();
    }
 
    @Override
@@ -363,9 +371,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visit(ctx.point());
    }
 
-   @Override
-   public String visitColorHex(BeaverParser.ColorHexContext ctx) {
-      return "#" + (ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText());
+   @Override public String visitColorHex(BeaverParser.ColorHexContext ctx) {
+      return "#"+(ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText().equals("pi") ? Double.toString(Math.PI) : ctx.NUMBER().getText());
    }
 
    @Override
@@ -386,8 +393,9 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          if (ctx.NUMBER() != null) {
             palleteId = ctx.ID(0).getText();
             pallete = palletes.get(palleteId);
-            color = pallete.get(Integer.parseInt(ctx.NUMBER().getText()));
-         } else {
+            color = pallete.get(Integer.parseInt(ctx.NUMBER().getText().equals("pi") ? Double.toString(Math.PI) : ctx.NUMBER().getText()));
+         }
+         else {
             palleteId = ctx.ID(1).getText();
             pallete = palletes.get(palleteId);
             color = pallete.get(Integer.parseInt(ctx.ID(0).getText()));
@@ -401,9 +409,8 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       return visit(ctx.expr(0)) + "," + visit(ctx.expr(1));
    }
 
-   @Override
-   public String visitAngle(BeaverParser.AngleContext ctx) {
-      return visit(ctx.expr());
+   @Override public String visitAngle(BeaverParser.AngleContext ctx) {
+      return visit(ctx.expr())+(ctx.type.getText().equals("rad") ? "rad" : "");
    }
 
    private Stack<Figure> openFigures = new Stack<>();
@@ -413,6 +420,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    private HashMap<String, Double> numVars = new HashMap<>();
    private HashMap<String, Color> colorVars = new HashMap<>();
    private HashMap<String, Point> pointVars = new HashMap<>();
+   private List<Figure> containers = new ArrayList<>();
 
    public HashMap<String, Figure> figures() {
       return this.figures;
@@ -420,5 +428,9 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    public HashMap<String, Pallete> palletes() {
       return this.palletes;
+   }
+
+   public List<Figure> containers() {
+      return this.containers;
    }
 }
