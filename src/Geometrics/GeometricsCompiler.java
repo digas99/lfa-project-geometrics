@@ -209,7 +209,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    @Override public ST visitListRemove(GeometricsParser.ListRemoveContext ctx) {
       return visitChildren(ctx);
    }
-
+   
    @Override public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
       return visitChildren(ctx);
    }
