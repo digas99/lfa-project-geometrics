@@ -1,3 +1,10 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
 
    // grupo 1
@@ -57,7 +64,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    @Override public Boolean visitContainer(GeometricsParser.ContainerContext ctx) {
       return visitChildren(ctx);
    }
-
+//Expr functions start------------------------------------------------------
    @Override public Boolean visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
       boolean expr0 = visit(ctx.expr(0));
       boolean expr1 = visit(ctx.expr(1));
@@ -87,13 +94,28 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
       boolean expr1 = visit(ctx.expr(1));
       return expr0 && expr1;
    }
-
    // grupo 1
    @Override public Boolean visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
       String n = ctx.NUMBER().getText();
       return isNumber(n) || n.equals("pi");
    }
 
+   @Override public Boolean visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
+      return visitChildren(ctx);
+   }
+
+   @Override public Boolean visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
+      return visit(ctx.point());
+   }
+
+   @Override public Boolean visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
+      return visit(ctx.expr());
+   }
+
+   @Override public Boolean visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
+      return visitChildren(ctx);
+   }
+  //Expr functions end------------------------------------------------------
    @Override public Boolean visitIdProp(GeometricsParser.IdPropContext ctx) {
       return visitChildren(ctx);
    }
@@ -107,18 +129,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override public Boolean visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override public Boolean visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
-      return visit(ctx.point());
-   }
-
-   @Override public Boolean visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
       return visitChildren(ctx);
    }
 
@@ -188,10 +198,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
-      return visitChildren(ctx);
-   }
-
    @Override public Boolean visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
       return visitChildren(ctx);
    }
@@ -216,27 +222,40 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    @Override public Boolean visitListRemove(GeometricsParser.ListRemoveContext ctx) {
       return visitChildren(ctx);
    }
-
+   //If function
    @Override public Boolean visitConditional(GeometricsParser.ConditionalContext ctx) {
       return visitChildren(ctx);
    }
-
+   //Loop functions start -----------------------------------------
    @Override public Boolean visitLoop(GeometricsParser.LoopContext ctx) {
       return visitChildren(ctx);
+      //Verify time and loopSpecifics(eachtime,while,for)
    }
 
    @Override public Boolean visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.stats());
+      //Verify stats
+      //Verify stop(interruption trigger)
    }
 
    @Override public Boolean visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      return visitChildren(ctx);
+      Boolean bologic = visit(ctx.booleanlogic());
+      Boolean stat = visit(ctx.stats());
+      return bologic && stat;
+      //Verify booleanLogic and stats
+      //Verify stop(interruption trigger)
    }
 
    @Override public Boolean visitEachFor(GeometricsParser.EachForContext ctx) {
-      return visitChildren(ctx);
+      Boolean expr0 = visit(ctx.expr(0));
+      Boolean expr1 = visit(ctx.expr(1));
+      Boolean stat = visit(ctx.stats());
+      
+      return expr0 && expr1 && stat;
+      //Verify ID, 2 expr and stats
+      //Verify stop(interruption trigger)
    }
-
+   //Loop functions end -----------------------------------------
    @Override public Boolean visitEasteregg(GeometricsParser.EastereggContext ctx) {
       return visitChildren(ctx);
    }
