@@ -2,6 +2,7 @@ package structures;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Pallete {
 	
@@ -99,5 +100,9 @@ public class Pallete {
 
 	public Color shift() {
 		return this.remove(0);
+	}
+
+	@Override public String toString() {
+		return String.format("%s \"%s\"\nColors: [%d] %s\n", this.getClass().getSimpleName(), this.id(), this.colors.size(), "{"+String.join(", ", this.colors().stream().map(color -> color.id()+": "+color.toString()).collect(Collectors.toList()))+"}");
 	}
 }

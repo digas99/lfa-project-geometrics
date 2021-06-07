@@ -1,407 +1,248 @@
-import org.stringtemplate.v4.*;
-
 public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
-   // grupo1
-   @Override
-   public ST visitProgram(GeometricsParser.ProgramContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitUse(GeometricsParser.UseContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatVarsInit(GeometricsParser.StatVarsInitContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatVarsSet(GeometricsParser.StatVarsSetContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatList(GeometricsParser.StatListContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatDraw(GeometricsParser.StatDrawContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatLoop(GeometricsParser.StatLoopContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatConditional(GeometricsParser.StatConditionalContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   // grupo2 Mariana
-   @Override
-   public ST visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitStatContainer(GeometricsParser.StatContainerContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitContainer(GeometricsParser.ContainerContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitExprTypeProperty(GeometricsParser.ExprTypePropertyContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
-      return visitChildren(ctx);
-   }
 
-   @Override
-   public ST visitExprID(GeometricsParser.ExprIDContext ctx) {
+   // grupo 1
+   @Override public ST visitProgram(GeometricsParser.ProgramContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitExprUnary(GeometricsParser.ExprUnaryContext ctx) {
+   @Override public ST visitUse(GeometricsParser.UseContext ctx) {
       return visitChildren(ctx);
    }
 
-   // grupo1
-   @Override
-   public ST visitExprPower(GeometricsParser.ExprPowerContext ctx) {
+   @Override public ST visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
+   @Override public ST visitStatVarsInit(GeometricsParser.StatVarsInitContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPointsExprID(GeometricsParser.PointsExprIDContext ctx) {
+   @Override public ST visitStatVarsSet(GeometricsParser.StatVarsSetContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPointsExprTypeProperty(GeometricsParser.PointsExprTypePropertyContext ctx) {
+   @Override public ST visitStatList(GeometricsParser.StatListContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
+   @Override public ST visitStatDraw(GeometricsParser.StatDrawContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
+   @Override public ST visitStatLoop(GeometricsParser.StatLoopContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
+   @Override public ST visitStatConditional(GeometricsParser.StatConditionalContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPointsExprExpr(GeometricsParser.PointsExprExprContext ctx) {
+   @Override public ST visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
+   // grupo 2
+   @Override public ST visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
+   @Override public ST visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
       return visitChildren(ctx);
    }
 
-   // grupo2 Leandro
-
-   @Override
-   public ST visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
-   public ST visitBoolLogicOps(GeometricsParser.BoolLogicOpsContext ctx) {
+   @Override public ST visitStatContainer(GeometricsParser.StatContainerContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
+   @Override public ST visitContainer(GeometricsParser.ContainerContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
+   @Override public ST visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInit(GeometricsParser.VarsInitContext ctx) {
+   @Override public ST visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
+   @Override public ST visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
+   @Override public ST visitExprId(GeometricsParser.ExprIdContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitText(GeometricsParser.VarsInitTextContext ctx) {
+   @Override public ST visitExprUnary(GeometricsParser.ExprUnaryContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitNumber(GeometricsParser.VarsInitNumberContext ctx) {
+   @Override public ST visitExprPower(GeometricsParser.ExprPowerContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitAngle(GeometricsParser.VarsInitAngleContext ctx) {
+   // grupo 1
+   @Override public ST visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
       return visitChildren(ctx);
    }
 
-   // grupo1
-   @Override
-   public ST visitVarsInitTime(GeometricsParser.VarsInitTimeContext ctx) {
+   @Override public ST visitIdProp(GeometricsParser.IdPropContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitPoint(GeometricsParser.VarsInitPointContext ctx) {
+   @Override public ST visitId(GeometricsParser.IdContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitTriangle(GeometricsParser.VarsInitTriangleContext ctx) {
+   @Override public ST visitPointsId(GeometricsParser.PointsIdContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitRectangle(GeometricsParser.VarsInitRectangleContext ctx) {
+   @Override public ST visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitLine(GeometricsParser.VarsInitLineContext ctx) {
+   @Override public ST visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitCircle(GeometricsParser.VarsInitCircleContext ctx) {
+   @Override public ST visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
+   @Override public ST visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsInitFunc(GeometricsParser.VarsInitFuncContext ctx) {
+   @Override public ST visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitFuncCall(GeometricsParser.FuncCallContext ctx) {
+   @Override public ST visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
       return visitChildren(ctx);
    }
-
-   @Override
-   public ST visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
+   
+   // grupo 2
+   @Override public ST visitBoolLogicOps(GeometricsParser.BoolLogicOpsContext ctx) {
       return visitChildren(ctx);
    }
 
-   // grupo2 Leandro
-   @Override
-   public ST visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
+   @Override public ST visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
+   @Override public ST visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitInlineSet(GeometricsParser.InlineSetContext ctx) {
+   @Override public ST visitVarsInit(GeometricsParser.VarsInitContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitBlockSet(GeometricsParser.BlockSetContext ctx) {
+   @Override public ST visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitCommonPropNumbers(GeometricsParser.CommonPropNumbersContext ctx) {
+   @Override public ST visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitCommonPropColors(GeometricsParser.CommonPropColorsContext ctx) {
+   @Override public ST visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitCommonPropDisplay(GeometricsParser.CommonPropDisplayContext ctx) {
+   @Override public ST visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitCommonPropCollisions(GeometricsParser.CommonPropCollisionsContext ctx) {
+   @Override public ST visitVarsInitFunc(GeometricsParser.VarsInitFuncContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitLinePropertyWidth(GeometricsParser.LinePropertyWidthContext ctx) {
+   @Override public ST visitInlineSet(GeometricsParser.InlineSetContext ctx) {
       return visitChildren(ctx);
    }
-
-   @Override
-   public ST visitLinePropertyPoints(GeometricsParser.LinePropertyPointsContext ctx) {
+   
+   // grupo 1
+   @Override public ST visitBlockSet(GeometricsParser.BlockSetContext ctx) {
       return visitChildren(ctx);
    }
 
-   // grupo1
-   @Override
-   public ST visitLinePropertyAngle(GeometricsParser.LinePropertyAngleContext ctx) {
+   @Override public ST visitAttribs(GeometricsParser.AttribsContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitRectanglePropertySize(GeometricsParser.RectanglePropertySizeContext ctx) {
+   @Override public ST visitFuncCall(GeometricsParser.FuncCallContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitRectanglePropertyCenter(GeometricsParser.RectanglePropertyCenterContext ctx) {
+   @Override public ST visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitRectanglePropertyAngle(GeometricsParser.RectanglePropertyAngleContext ctx) {
+   @Override public ST visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitCirclePropertySize(GeometricsParser.CirclePropertySizeContext ctx) {
+   @Override public ST visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitCirclePropertyPointss(GeometricsParser.CirclePropertyPointssContext ctx) {
+   @Override public ST visitColorId(GeometricsParser.ColorIdContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitTriangleProperty(GeometricsParser.TrianglePropertyContext ctx) {
+   @Override public ST visitColorHex(GeometricsParser.ColorHexContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitColor(GeometricsParser.ColorContext ctx) {
+   @Override public ST visitColorRGB(GeometricsParser.ColorRGBContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitListAdd(GeometricsParser.ListAddContext ctx) {
+   @Override public ST visitListAdd(GeometricsParser.ListAddContext ctx) {
       return visitChildren(ctx);
    }
-
-   @Override
-   public ST visitListRemove(GeometricsParser.ListRemoveContext ctx) {
+   
+   // grupo 2
+   @Override public ST visitListRemove(GeometricsParser.ListRemoveContext ctx) {
       return visitChildren(ctx);
    }
-
-   // grupo2 Mariana
-   @Override
-   public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
+   
+   @Override public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitLoop(GeometricsParser.LoopContext ctx) {
+   @Override public ST visitLoop(GeometricsParser.LoopContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitEachTime(GeometricsParser.EachTimeContext ctx) {
+   @Override public ST visitEachTime(GeometricsParser.EachTimeContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitEachWhile(GeometricsParser.EachWhileContext ctx) {
+   @Override public ST visitEachWhile(GeometricsParser.EachWhileContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitEachFor(GeometricsParser.EachForContext ctx) {
+   @Override public ST visitEachFor(GeometricsParser.EachForContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitEasteregg(GeometricsParser.EastereggContext ctx) {
+   @Override public ST visitEasteregg(GeometricsParser.EastereggContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitAngle(GeometricsParser.AngleContext ctx) {
+   @Override public ST visitAngle(GeometricsParser.AngleContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitTime(GeometricsParser.TimeContext ctx) {
+   @Override public ST visitTime(GeometricsParser.TimeContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override
-   public ST visitPoint(GeometricsParser.PointContext ctx) {
+   @Override public ST visitPoint(GeometricsParser.PointContext ctx) {
       return visitChildren(ctx);
    }
 }

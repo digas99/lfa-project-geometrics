@@ -24,6 +24,7 @@ container ship:
 	start Angle ang -> 0º
 
 	set horizontalLine:	
+		center -> container-center
 		center -> 3,2
 		angle -> ang 
 		width -> 4

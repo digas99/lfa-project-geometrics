@@ -7,25 +7,95 @@ import java.util.Map.HashMap;
 <endif>
 <if(hasFigs)>
 import javax.swing.*;
-<endif>
-<if(hasPoints)>
-import java.awt.Point;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Path2D;
 <endif>
 
-public class <name> {
+public class <name> extends <name> implements <name>{
     <if(hasVars)>
-    static HashMap <String,String> vars = new HashMap<>();
+    static HashMap \<<String,String>\> var_map = new HashMap\<>();
     <endif>
-    
-    public static main void(String[] args) throws Exception{
-        <stats(stats)>;
-    }
 }
 >>
 
+main(stat) ::= <<
+public static main void(String[] args) throws Exception{
+    <stats(stats)>;
+}
+>>
+
+func_paint(stat, board_collision) ::= <<
+public void paint(Graphics g){
+    super.paintComponent(g);
+    <stats(stat)>
+
+    timer.start();
+    
+    @Override
+    public void actionPerformed(ActionEvent e){
+        <stats(stat)>
+
+        <if(board_collision)><board_collision><endif>
+    }
+    repaint();
+}
+>>
+
+board_collision() ::= <<
+if(xRedSquare >= Length_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+
+}else if( xPurpleBlackSquare >= Width_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+
+}else if(xGreenCircle >= Width_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+
+}else if(xRedCircle >= Length_Board-100){
+    velRedSquare = velRedSquare * -1;
+    velPurpleBlackSquare = velPurpleBlackSquare * -1;
+    velGreenCircle  = velGreenCircle  * -1;
+    velRedCircle = velRedCircle * -1;
+}
+>>
 
 stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
+>>
+
+draw(id) ::= <<
+.add(<id>);
+>>
+
+declVar(type, var, value, stat) ::= <<
+<if(!stats(stat))>
+<type> <var><if(value)> = <value><endif>;
+<endif>
+<if(stats(stat))>
+<type> <var> <stats(stat)>;
+<endif>
+>>
+
+declList(type, var) ::= <<
+List \<<type>\> <var> = new List\<>();
+>>
+
+loop(stat, conditional) ::= <<
+while(<conditional>){
+    <stats(stat)>
+}
 >>
 
 conditional(stat, var, stat_true, stat_false) ::= <<
@@ -40,40 +110,58 @@ else{
 <endif>
 >>
 
-declList(type, var) ::= List <type> <var> = new List<>();
+container(stat, id, var) ::= <<
+Graphics2D <var> = (Graphics2D).<id>.create();
+if(<stats(stat)>) 
+<stats(stat)>
+<endif>
 
-declVar(type, var, value) ::= <type> <var><if(value)> = <value><endif>;
+var_op(stat, type, n1, n2, op, var, id) ::= <<
+<stats(stat)>
+<type> <var> = <n1> <op> <n2>;
+<if(id)>var_map.put("<id>", <var>);
 
-add_to_list(<var> <value>) ::= <var>.add(<value>);
-
-get_from_map(<type> <var> <varMap> <value>) ::= <type> <var> = <varMap>.get(<value>);
-
-line_class(type, packageName, name, var) ::= <<
-
-package <packageName>;
-
-public class <type>{
-    <class_vars(type, var)>
-    
-    public <type>(<class_vars(type, var)>){
-        <declVar(type, var, value)>
-    }
-    <class_getVar(type, var)>;
-}
+call_func(name, var) ::= <<
+<name>(<var>);
 >>
 
-class_vars(type, var) ::= private <type> <var>; 
+change_var(var, value) ::= <<
+<var> = <value>;
 
-class_getVar(type, name) ::= <<
-public <type> <var>(){
-    return <var>;
-}
+declFinalVar(type, var, value) ::= <<
+final <type> <var><if(value)> = <value><endif>;
 >>
 
-call_func(name, param) ::= <name>(<param>);
+declPrivVar(type, var, value) ::= <<
+private <type> <var><if(value)> = <value><endif>;
+>>
 
-loop(stat, conditional) ::= <<
-while(<conditional>){
+declNewtypeVar(type, var, value) ::= <<
+<type> <var> = new <type>(<if(value)><value><endif>);
+>>
+
+add_to_list(var, value) ::= <<
+<var>.add(<value>);
+>>
+
+remove_from_list(var, value) ::= <<
+<var>.remove(<value>);
+>>
+
+add_to_map(var, varMap, value) ::= <<
+<var> = <varMap>.put(<var>, <var>);
+
+get_from_map(type, var, varMap, key) ::= <<
+<type> <var> = <varMap>.containsKey(<key>) ? <varMap>.get(<key>) : null;
+>>
+
+call_func2(var, name) ::= <<
+<var>.<name>(<var>);
+>>
+
+declFunc(type, name, var) ::= <<
+public <type> <name>(<type> <var>){
     <stats(stat)>
 }
 >>
+

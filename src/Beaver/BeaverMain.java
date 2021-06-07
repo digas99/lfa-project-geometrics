@@ -1,4 +1,10 @@
 import java.io.IOException;
+import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.List;
+
+import structures.Figure;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
@@ -25,9 +31,28 @@ public class BeaverMain {
             BeaverSemanticAnalyses beaverSemantic = new BeaverSemanticAnalyses();
             boolean semanticCheck = beaverSemantic.visit(tree);
             if (semanticCheck) {
-               System.out.println("\nSemantic passed with no Errors!\nInterpreting Beaver...");
+               System.out.println("\nSemantic passed with no Errors!\nInterpreting Beaver...\n");
                BeaverInterpreter beaverInterpreter = new BeaverInterpreter();
                beaverInterpreter.visit(tree);
+
+               // sort all figures by number of figures
+               List<Figure> sortedByNmrFigures = beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).collect(Collectors.toList());
+               // get all containers
+               List<Figure> containers = beaverInterpreter.containers();
+               System.out.println("");
+               containers.stream().forEach(container -> {
+                  System.out.println("\n");
+                  container.printFamilyTree(0);
+                  System.out.println("");
+                  container.printFamily();
+                  System.out.println("___________________________________________________________");
+               });
+               System.out.println("");
+
+               //sortedByNmrFigures.forEach(figure -> System.out.println(figure.printFigure()));
+
+               // print default sorting
+               beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
             }
          }
       }
@@ -40,4 +65,5 @@ public class BeaverMain {
          System.exit(1);
       }
    }
+
 }

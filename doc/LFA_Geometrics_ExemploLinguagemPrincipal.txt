@@ -1,7 +1,7 @@
 /-  Criacação de variavéis a partir do ficheiro abc.file
 /-  use, Figure, Color e end são palavras reservadas.
 use "abc.file": 		
-	Figure ship -> ship1 
+	Figure ship -> ship1
 	Color myPurple -> lightPurple
 end 
 
