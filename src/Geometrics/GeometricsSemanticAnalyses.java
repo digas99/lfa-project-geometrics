@@ -5,274 +5,285 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
+public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    // grupo 1
-   @Override public Boolean visitProgram(GeometricsParser.ProgramContext ctx) {
+   @Override public String visitProgram(GeometricsParser.ProgramContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitUse(GeometricsParser.UseContext ctx) {
+   @Override public String visitUse(GeometricsParser.UseContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
+   @Override public String visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatVarsInit(GeometricsParser.StatVarsInitContext ctx) {
+   @Override public String visitStatVarsInit(GeometricsParser.StatVarsInitContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatVarsSet(GeometricsParser.StatVarsSetContext ctx) {
+   @Override public String visitStatVarsSet(GeometricsParser.StatVarsSetContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatList(GeometricsParser.StatListContext ctx) {
+   @Override public String visitStatList(GeometricsParser.StatListContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatDraw(GeometricsParser.StatDrawContext ctx) {
+   @Override public String visitStatDraw(GeometricsParser.StatDrawContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatLoop(GeometricsParser.StatLoopContext ctx) {
+   @Override public String visitStatLoop(GeometricsParser.StatLoopContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatConditional(GeometricsParser.StatConditionalContext ctx) {
+   @Override public String visitStatConditional(GeometricsParser.StatConditionalContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
+   @Override public String visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
       return visitChildren(ctx);
    }
 
    // grupo 2
-   @Override public Boolean visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
+   @Override public String visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
+   @Override public String visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitStatContainer(GeometricsParser.StatContainerContext ctx) {
+   @Override public String visitStatContainer(GeometricsParser.StatContainerContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitContainer(GeometricsParser.ContainerContext ctx) {
+   @Override public String visitContainer(GeometricsParser.ContainerContext ctx) {
       return visitChildren(ctx);
    }
+
 //Expr functions start------------------------------------------------------
-   @Override public Boolean visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
+   @Override public String visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
       boolean expr0 = visit(ctx.expr(0));
       boolean expr1 = visit(ctx.expr(1));
       return expr0 && expr1;
    }
 
-   @Override public Boolean visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
+   @Override public String visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
       boolean expr0 = visit(ctx.expr(0));
       boolean expr1 = visit(ctx.expr(1));
       return expr0 && expr1;
    }
 
-   @Override public Boolean visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
+   @Override public String visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
       return visit(ctx.expr());
    }
 
-   @Override public Boolean visitExprId(GeometricsParser.ExprIdContext ctx) {
+   @Override public String visitExprId(GeometricsParser.ExprIdContext ctx) {
       return visit(ctx.identifiers());
    }
 
-   @Override public Boolean visitExprUnary(GeometricsParser.ExprUnaryContext ctx) {
+   @Override public String visitExprUnary(GeometricsParser.ExprUnaryContext ctx) {
       return visit(ctx.expr());
    }
 
-   @Override public Boolean visitExprPower(GeometricsParser.ExprPowerContext ctx) {
+   @Override public String visitExprPower(GeometricsParser.ExprPowerContext ctx) {
       boolean expr0 = visit(ctx.expr(0));
       boolean expr1 = visit(ctx.expr(1));
       return expr0 && expr1;
    }
    // grupo 1
-   @Override public Boolean visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
+   @Override public String visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
       String n = ctx.NUMBER().getText();
       return isNumber(n) || n.equals("pi");
    }
 
-   @Override public Boolean visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
+   @Override public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
+   @Override public String visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
       return visit(ctx.point());
    }
 
-   @Override public Boolean visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
+   @Override public String visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
       return visit(ctx.expr());
    }
 
-   @Override public Boolean visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
+   @Override public String visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
       return visitChildren(ctx);
    }
   //Expr functions end------------------------------------------------------
-   @Override public Boolean visitIdProp(GeometricsParser.IdPropContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitIdProp(GeometricsParser.IdPropContext ctx) {
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      String type = getType(ctx.ID(0).getText());
+      if (type != null) {
+         String[] propsList = propsAssoc.get(type);
+         String prop = ctx.ID(1).getText();
+         if (!contains(propsList, prop))
+            throwError(line, col, String.format(notPropOfFigureErrorMessage, prop, type));
+      }
+      throwError(line, col, String.format(notInitVarErrorMessage, type));
+      return type;
+
    }
 
-   @Override public Boolean visitId(GeometricsParser.IdContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitId(GeometricsParser.IdContext ctx) {
+      return getType(ctx.ID().getText());
    }
 
-   @Override public Boolean visitPointsId(GeometricsParser.PointsIdContext ctx) {
+   @Override public String visitPointsId(GeometricsParser.PointsIdContext ctx) {
       return visit(ctx.identifiers());
    }
 
-   @Override public Boolean visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
+   @Override public String visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
+   @Override public String visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
+   @Override public String visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
       return visitChildren(ctx);
    }
    
    // grupo 2
-   @Override public Boolean visitBoolLogicOps(GeometricsParser.BoolLogicOpsContext ctx) {
+   @Override public String visitBoolLogicOps(GeometricsParser.BoolLogicOpsContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
+   @Override public String visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
+   @Override public String visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsInit(GeometricsParser.VarsInitContext ctx) {
+   @Override public String visitVarsInit(GeometricsParser.VarsInitContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
+   @Override public String visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
+   @Override public String visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
+   @Override public String visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
+   @Override public String visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsInitFunc(GeometricsParser.VarsInitFuncContext ctx) {
+   @Override public String visitVarsInitFunc(GeometricsParser.VarsInitFuncContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitInlineSet(GeometricsParser.InlineSetContext ctx) {
+   @Override public String visitInlineSet(GeometricsParser.InlineSetContext ctx) {
       return visitChildren(ctx);
    }
    
    // grupo 1
-   @Override public Boolean visitBlockSet(GeometricsParser.BlockSetContext ctx) {
+   @Override public String visitBlockSet(GeometricsParser.BlockSetContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitAttribs(GeometricsParser.AttribsContext ctx) {
+   @Override public String visitAttribs(GeometricsParser.AttribsContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitFuncCall(GeometricsParser.FuncCallContext ctx) {
+   @Override public String visitFuncCall(GeometricsParser.FuncCallContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
+   @Override public String visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
+   @Override public String visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitColorId(GeometricsParser.ColorIdContext ctx) {
+   @Override public String visitColorId(GeometricsParser.ColorIdContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitColorHex(GeometricsParser.ColorHexContext ctx) {
+   @Override public String visitColorHex(GeometricsParser.ColorHexContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitColorRGB(GeometricsParser.ColorRGBContext ctx) {
+   @Override public String visitColorRGB(GeometricsParser.ColorRGBContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitListAdd(GeometricsParser.ListAddContext ctx) {
+   @Override public String visitListAdd(GeometricsParser.ListAddContext ctx) {
       return visitChildren(ctx);
    }
    
    // grupo 2
-   @Override public Boolean visitListRemove(GeometricsParser.ListRemoveContext ctx) {
+   @Override public String visitListRemove(GeometricsParser.ListRemoveContext ctx) {
       return visitChildren(ctx);
    }
    //If function
-   @Override public Boolean visitConditional(GeometricsParser.ConditionalContext ctx) {
+   @Override public String visitConditional(GeometricsParser.ConditionalContext ctx) {
       return visitChildren(ctx);
    }
    //Loop functions start -----------------------------------------
-   @Override public Boolean visitLoop(GeometricsParser.LoopContext ctx) {
+   @Override public String visitLoop(GeometricsParser.LoopContext ctx) {
       return visitChildren(ctx);
       //Verify time and loopSpecifics(eachtime,while,for)
    }
 
-   @Override public Boolean visitEachTime(GeometricsParser.EachTimeContext ctx) {
+   @Override public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
       return visit(ctx.stats());
       //Verify stats
       //Verify stop(interruption trigger)
    }
 
-   @Override public Boolean visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      Boolean bologic = visit(ctx.booleanlogic());
-      Boolean stat = visit(ctx.stats());
-      return bologic && stat;
+   @Override public String visitEachWhile(GeometricsParser.EachWhileContext ctx) {
+      String bologic = visit(ctx.booleanlogic());
+      String stat = visit(ctx.stats());
+      return null;
       //Verify booleanLogic and stats
       //Verify stop(interruption trigger)
    }
 
-   @Override public Boolean visitEachFor(GeometricsParser.EachForContext ctx) {
-      Boolean expr0 = visit(ctx.expr(0));
-      Boolean expr1 = visit(ctx.expr(1));
-      Boolean stat = visit(ctx.stats());
+   @Override public String visitEachFor(GeometricsParser.EachForContext ctx) {
+      String expr0 = visit(ctx.expr(0));
+      String expr1 = visit(ctx.expr(1));
+      String stat = visit(ctx.stats());
       
-      return expr0 && expr1 && stat;
+      return null;
       //Verify ID, 2 expr and stats
       //Verify stop(interruption trigger)
    }
    //Loop functions end -----------------------------------------
-   @Override public Boolean visitEasteregg(GeometricsParser.EastereggContext ctx) {
+   @Override public String visitEasteregg(GeometricsParser.EastereggContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public Boolean visitAngle(GeometricsParser.AngleContext ctx) {
+   @Override public String visitAngle(GeometricsParser.AngleContext ctx) {
       return visit(ctx.expr());
    }
 
-   @Override public Boolean visitTime(GeometricsParser.TimeContext ctx) {
-      String n = ctx.NUMBER().getText();
-      return isNumber(n);
+   @Override public String visitTime(GeometricsParser.TimeContext ctx) {
+      return visit(ctx.expr());
    }
 
-   @Override public Boolean visitPoint(GeometricsParser.PointContext ctx) {
+   @Override public String visitPoint(GeometricsParser.PointContext ctx) {
       boolean expr0 = visit(ctx.expr(0));
       boolean expr1 = visit(ctx.expr(1));
-      return expr0 && expr1;
+      return expr0 && expr1; 
    }
 
    private static boolean isNumber(String val) {
@@ -283,4 +294,106 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
       }
       return true;
    }
+
+   private static boolean allTrue(boolean[] values) {
+      return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
+   }
+
+   private static boolean allTrue(List<Boolean> values) {
+      return values.stream().allMatch(val -> val);
+   }
+
+   private static boolean anyTrue(boolean[] values) {
+      return IntStream.range(0, values.length).mapToObj(i -> values[i]).anyMatch(val -> val);
+   }
+
+   private static boolean anyTrue(List<Boolean> values) {
+      return values.stream().anyMatch(val -> val);
+   }
+
+   private static boolean someTrue(boolean[] values) {
+      return !allTrue(values) && !noneTrue(values);
+   }
+
+   private static boolean someTrue(List<Boolean> values) {
+      return !allTrue(values) && !noneTrue(values);
+   }
+
+   private static boolean noneTrue(boolean[] values) {
+      return !anyTrue(values);
+   }
+
+   private static boolean noneTrue(List<Boolean> values) {
+      return !anyTrue(values);
+   }
+
+   private static void throwWarning(int line, int col, String message) {
+      System.err.printf("Warning@%d:%d -> %s\n", line, col, message);
+   }
+
+   private static void throwError(int line, int col, String message) {
+      System.err.printf("Error@%d:%d -> %s\n", line, col, message);
+   }
+
+   private String getType(String var) {
+      if (varsPoint.contains(var))
+         return "Point";
+      if (isRectangle.contains(var))
+         return "Rectangle";
+      if (isCircle.contains(var))
+         return "Circle";
+      if (isLine.contains(var))
+         return "Line";
+      if (isTriangle.contains(var))
+         return "Triangle";
+      if (isVar.contains(var))
+         return "Var";
+      if (isPallete.contains(var))
+         return "Pallete";
+      if (isColor.contains(var))
+         return "Color";
+      if (isFigure.contains(var))
+         return "Figure";
+      return null;
+   }
+
+   private static boolean contains(String[] arr, String target) {
+      for (String s : arr) {
+         if (s.equals(target))
+            return true;
+      }
+      return false;
+   }
+   static private String notInitVarErrorMessage = "Variable %s might have not been initialized!";
+   static private String notValidColorCodeErrorMessage = "%s is not a valid color code!";
+   static private String notAFigureErrorMessage = "%s is not a Figure!";
+   static private String notPropOfFigureErrorMessage = "%s is not a valid property of %s!";
+   static private String notValueOfPropErrorMessage = "Invalid value for property %s!";
+   static private String notVarOfPropErrorMessage = "Invalid variable for property!";
+   static private String multVarInitWarningMessage = "Variable %s was initialized multiple times!";
+   static private String notVarTypeNumberErrorMessage = "%s is not a variable of type Number!";
+   static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s";
+
+
+   private List<String> vars = new ArrayList<>();
+   private List<String> varsColor = new ArrayList<>();
+   private List<String> varsPoint = new ArrayList<>();
+   private List<String> varsRectangle = new ArrayList<>();
+   private List<String> varsCircle = new ArrayList<>();
+   private List<String> varsLine = new ArrayList<>();
+   private List<String> varsTriangle = new ArrayList<>();
+   private List<String> varsPallete = new ArrayList<>();
+   private List<String> varsFigure = new ArrayList<>();
+   private HashMap<String, List<String>> palletes = new HashMap<>();
+   private String currentVar;
+   private String currentPallete;
+   private int openFigures = 0;
+
+   private HashMap<String, String[]> propsAssoc = new HashMap<>();
+   static private String[] pointProps = {"x", "y"};
+   static private String[] rectangleProps = {"filled", "collide", "visibility", "color", "border", "width", "height", "center", "angle", "size"};
+   static private String[] circleProps = {"filled", "collide", "visibility", "color", "border", "diameter", "radius", "center", "startingPoint", "endingPoint"};
+   static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint", "length"};
+   static private String[] triangleProps = {"filled", "collide", "visibility", "color", "border", "p0", "p1", "p2"};
+   static private String[] figureProps = {"filled", "collide", "visibility", "color", "border", "center"};
 }
