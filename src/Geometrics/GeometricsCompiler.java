@@ -90,7 +90,20 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
-      return doMath(ctx.expr(0), ctx.expr(1), ctx.op.getText());
+      ST calc = template.getInstanceOf("var_op");
+      calc.add("type", visit(varsInitSpecifics));
+      calc.add("var", visit(varsInit).ID());
+      calc.add("n1", ctx.expr(0));
+      calc.add("op", ctx.op.getText());
+      calc.add("n2", ctx.expr(1));
+      calc.add("value", doMath(ctx, n2, op));
+
+      ST addMap = template.getInstanceOf("add_to_map");
+      addMap.add("var", visit(varsInit).ID());
+      addMap.add("varMap", map);
+      addMap.add("value", Double.toString(toString(doMath(ctx.expr(0), ctx.expr(1), ctx.op.getText()))));
+      calc.add("stat", addMap);
+      return calc;
    }
 
    @Override
@@ -106,7 +119,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST addMap = template.getInstanceOf("add_to_map");
       addMap.add("var", visit(varsInit).ID());
       addMap.add("varMap", map);
-      addMap.add("value", doMath(ctx.expr(0), ctx.expr(1), ctx.op.getText()));
+      addMap.add("value", Double.toString(doMath(ctx.expr(0), ctx.expr(1), ctx.op.getText())));
       calc.add("stat", addMap);
       return calc;
    }
@@ -339,7 +352,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    private STGroup template = new STGroupFile("template.stg");
 
-   public Integer doMath(int n1, int n2, String op) {
+   private Double doMath(int n1, int n2, String op) {
       switch (op) {
          case "+":
             return n1 + n2;
