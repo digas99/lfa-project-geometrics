@@ -3,7 +3,7 @@ module(name, stat, hasVars, hasList, hasPoints, hasFig) ::= <<
 import java.util.List.*;
 <endif>
 <if(hasVars)>
-import java.util.Map.HashMap;
+import java.util.HashMap;
 <endif>
 <if(hasFigs)>
 import javax.swing.*;
@@ -14,12 +14,14 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 <endif>
 
-public class <name> extends <name> implements <name>{
+public class <name> extends JPanel implements ActionListener{
     <if(hasVars)>
     static HashMap \<<String,String>\> var_map = new HashMap\<>();
     <endif>
 }
 >>
+
+
 
 main(stat) ::= <<
 public static main void(String[] args) throws Exception{
@@ -27,7 +29,7 @@ public static main void(String[] args) throws Exception{
 }
 >>
 
-func_paint(stat, board_collision) ::= <<
+func_paint(stat1, stat2, board_collision) ::= <<
 public void paint(Graphics g){
     super.paintComponent(g);
     <stats(stat)>
@@ -115,11 +117,13 @@ Graphics2D <var> = (Graphics2D).<id>.create();
 if(<stats(stat)>) 
 <stats(stat)>
 <endif>
+>>
 
-var_op(stat, type, n1, n2, op, var, id) ::= <<
-<stats(stat)>
+var_op(stat, type, n1, n2, op, var, value) ::= <<
 <type> <var> = <n1> <op> <n2>;
-<if(id)>var_map.put("<id>", <var>);
+add_to_map;
+<stats(stat)>
+>>
 
 call_func(name, var) ::= <<
 <name>(<var>);
@@ -149,7 +153,7 @@ remove_from_list(var, value) ::= <<
 >>
 
 add_to_map(var, varMap, value) ::= <<
-<var> = <varMap>.put(<var>, <var>);
+<varMap>.put(<var>, <value>);
 
 get_from_map(type, var, varMap, key) ::= <<
 <type> <var> = <varMap>.containsKey(<key>) ? <varMap>.get(<key>) : null;
