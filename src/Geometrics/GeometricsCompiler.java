@@ -1,13 +1,7 @@
 public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
-<<<<<<< HEAD
-   // grupo2 Mariana
-   @Override
-   public ST visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
-=======
    // grupo 1
    @Override public ST visitProgram(GeometricsParser.ProgramContext ctx) {
->>>>>>> 75506b3ea0ffc56d239d3e3f6a21fe21c5944829
       return visitChildren(ctx);
    }
 
@@ -88,14 +82,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
-<<<<<<< HEAD
-   // grupo2 Leandro
-   @Override
-   public ST visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
-=======
    // grupo 1
    @Override public ST visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
->>>>>>> 75506b3ea0ffc56d239d3e3f6a21fe21c5944829
       return visitChildren(ctx);
    }
 
@@ -152,13 +140,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
-<<<<<<< HEAD
-   // grupo2 Leandro
-   @Override
-   public ST visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
-=======
    @Override public ST visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
->>>>>>> 75506b3ea0ffc56d239d3e3f6a21fe21c5944829
       return visitChildren(ctx);
    }
 
@@ -227,14 +209,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    @Override public ST visitListRemove(GeometricsParser.ListRemoveContext ctx) {
       return visitChildren(ctx);
    }
-
-<<<<<<< HEAD
-   // grupo2 Mariana
-   @Override
-   public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
-=======
+   
    @Override public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
->>>>>>> 75506b3ea0ffc56d239d3e3f6a21fe21c5944829
       return visitChildren(ctx);
    }
 
