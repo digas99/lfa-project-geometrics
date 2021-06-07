@@ -59,32 +59,39 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
-      return visitChildren(ctx);
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
    }
 
    @Override public Boolean visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
-      return visitChildren(ctx);
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
    }
 
    @Override public Boolean visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr());
    }
 
    @Override public Boolean visitExprId(GeometricsParser.ExprIdContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.identifiers());
    }
 
    @Override public Boolean visitExprUnary(GeometricsParser.ExprUnaryContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr());
    }
 
    @Override public Boolean visitExprPower(GeometricsParser.ExprPowerContext ctx) {
-      return visitChildren(ctx);
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
    }
 
    // grupo 1
    @Override public Boolean visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
-      return visitChildren(ctx);
+      String n = ctx.NUMBER().getText();
+      return isNumber(n) || n.equals("pi");
    }
 
    @Override public Boolean visitIdProp(GeometricsParser.IdPropContext ctx) {
@@ -96,7 +103,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitPointsId(GeometricsParser.PointsIdContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.identifiers());
    }
 
    @Override public Boolean visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
@@ -108,7 +115,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.point());
    }
 
    @Override public Boolean visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
@@ -235,14 +242,26 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<Boolean> {
    }
 
    @Override public Boolean visitAngle(GeometricsParser.AngleContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr());
    }
 
    @Override public Boolean visitTime(GeometricsParser.TimeContext ctx) {
-      return visitChildren(ctx);
+      String n = ctx.NUMBER().getText();
+      return isNumber(n);
    }
 
    @Override public Boolean visitPoint(GeometricsParser.PointContext ctx) {
-      return visitChildren(ctx);
+      boolean expr0 = visit(ctx.expr(0));
+      boolean expr1 = visit(ctx.expr(1));
+      return expr0 && expr1;
+   }
+
+   private static boolean isNumber(String val) {
+      try {
+         Integer.parseInt(val);
+      } catch(NumberFormatException e) {
+         return false;
+      }
+      return true;
    }
 }
