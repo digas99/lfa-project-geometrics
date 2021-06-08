@@ -52,6 +52,6 @@ public class Rectangle extends Figure {
 	}
 
 	@Override public String toString() {
-        return String.format("%s [%s] \nColor: %s; \nBorder: %.2f %s; \nCenter: %s; \nThickness: %.2f; \nWidth: %.2f; \nHeight: %.2f; \nAngle: %.2f; \n%s; \n%s; \n%s; \n%s; \nContains [%d] Figures\n", this.getClass().getName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.width, this.height, this.angle, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.collide() ? "Collides" : "!Collides", this.visibility() ? "Visible" : "!Visible", this.figures().size());
+        return String.format("%s [%s] Color: %s; Border: %.2f %s; Center: %s; Thickness: %.2f; Width: %.2f; Height: %.2f; Angle: %s; %s; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.width, this.height, this.angle, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.collide() ? "Collides" : "!Collides", this.visibility() ? "Visible" : "!Visible", this.figures().size());
 	}
 }

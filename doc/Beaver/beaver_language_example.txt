@@ -26,7 +26,7 @@ Rectangle square =>
 	filled true
 >>
 
-Number n => 0 >>
+Number n => 12 >>
 
 Point c => n,0 >>
 
@@ -58,5 +58,13 @@ square contains =>
 		p0 10, 2
 		p1 12, 2
 		p2 10, 2
+	>>
+
+	triangle contains =>
+		Rectangle rect =>
+			center c[x], triangle[center][y]
+			size 20, 40
+			filled false
+		>>
 	>>
 >>

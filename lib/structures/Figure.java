@@ -122,6 +122,15 @@ public class Figure {
         this.figures.add(f);
     }
 
+    public void removeFigure(String figureId) {
+        int index = -1;
+        for (int i=0; i<this.figures.size(); i++) {
+            if (this.figures.get(i).id().equals(figureId))
+                index = i;
+        }
+        this.figures.remove(index);
+    }
+
     public List<Figure> figures(){
         return this.figures;
     }
@@ -144,7 +153,7 @@ public class Figure {
         for (int i=0; i<level; i++) {
             System.out.print(" ");
         }
-        System.out.printf("-%s\n", this.id);
+        System.out.printf("-"+(level == 0 ? "[%s]" : "%s")+"\n", this.id);
         level++;
         for (Figure child : this.figures) {
             child.printFamilyTree(level);
