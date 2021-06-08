@@ -24,14 +24,14 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       String path = ctx.STRING().getText();
       File file = new File(path);
       if (!file.exists() || !file.isFile()) {
-         throwError(line, col, String.format(fileDoesNotExit, path));
+         throwError(line, col, String.format(fileDoesNotExitErrorMessage, path));
          path = null;
       }
       else {
          String[] split = path.split(".");
          // check for Beaver file extension
          if (!split[split.length-1].equals("bvr")) {
-            throwError(line, col, String.format(fileNotValid, path));
+            throwError(line, col, String.format(fileNotValidErrorMessage, path));
             path = null;
          }
       }
@@ -47,31 +47,39 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitStatVarsInit(GeometricsParser.StatVarsInitContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.varsInit());
    }
 
    @Override public String visitStatVarsSet(GeometricsParser.StatVarsSetContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.varsSet());
    }
 
    @Override public String visitStatList(GeometricsParser.StatListContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.list());
    }
 
    @Override public String visitStatDraw(GeometricsParser.StatDrawContext ctx) {
-      return visitChildren(ctx);
+      // check if they are all figures
+      if (!allTrue(ctx.ID().stream().map(id -> {
+         String var = id.getText();
+         boolean valid = contains(figureTypes, getType(var));
+         if (!valid)
+            throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notAFigureErrorMessage, var));
+      }).collect(Collectors.toList())))
+         return null;
+      return "draw";
    }
 
    @Override public String visitStatLoop(GeometricsParser.StatLoopContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.loop());
    }
 
    @Override public String visitStatConditional(GeometricsParser.StatConditionalContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.conditional());
    }
 
    @Override public String visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.funCall());
    }
 
    // grupo 2
@@ -123,7 +131,8 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
    // grupo 1
    @Override public String visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
-      
+      return visitChildren(ctx);   
+   }
 
    @Override public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
       return visitChildren(ctx);
@@ -202,10 +211,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override public String visitVarsInit(GeometricsParser.VarsInitContext ctx) {
       return visitChildren(ctx);
    }
 
@@ -464,6 +469,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    private String currentPallete;
    private int openFigures = 0;
 
+   static private String[] figureTypes = {"Figure", "Rectangle", "Circle", "Triangle", "Line"};
    private HashMap<String, String[]> propsAssoc = new HashMap<>();
    static private String[] pointProps = {"x", "y"};
    static private String[] rectangleProps = {"filled", "collide", "visibility", "color", "border", "width", "height", "center", "angle", "size"};

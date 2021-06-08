@@ -235,11 +235,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    }
 
    @Override
-   public ST visitVarsInit(GeometricsParser.VarsInitContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
    public ST visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
       return visitChildren(ctx);
    }

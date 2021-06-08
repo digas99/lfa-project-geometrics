@@ -9,7 +9,7 @@ useAttribs	: (FIGURE|color) ID '->' ID NEWLINE* ;
 // End use
 
 // Begin stats
-stats	: varsInit						#statVarsInit
+stats	: 'start' varsInit NEWLINE*		#statVarsInit
 		| varsSet						#statVarsSet
 		| list							#statList
 		| 'draw' ID	(',' ID)* NEWLINE*	#statDraw
@@ -64,14 +64,12 @@ booleanLogic	: booleanLogic op=('or' | 'and' | 'different'
 // End boolean logic
 
 // Begin vars initialization
-varsInit	: 'start' varsInitSpecifics NEWLINE* ;
-
-varsInitSpecifics	: (OBJECT | FIGURE) ID											#varsOnlyInit
-					| FIGURE value='List' ID										#varsInitList
-					| OBJECT ID '->' attribs										#varsInitObject
-					| FIGURE ID blockSet											#varsInitFigure
-					| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'	#varsInitFunc
-					;
+varsInit	: (OBJECT | FIGURE) ID											#varsOnlyInit
+			| FIGURE value='List' ID										#varsInitList
+			| OBJECT ID '->' attribs										#varsInitObject
+			| FIGURE ID blockSet											#varsInitFigure
+			| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'	#varsInitFunc
+			;
 
 inlineSet	: ID '->' attribs NEWLINE* ;
 
