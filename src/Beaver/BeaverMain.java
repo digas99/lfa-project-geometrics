@@ -39,7 +39,6 @@ public class BeaverMain {
                List<Figure> sortedByNmrFigures = beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).collect(Collectors.toList());
                // get all containers
                List<Figure> containers = beaverInterpreter.containers();
-               System.out.println("");
                containers.stream().forEach(container -> {
                   System.out.println("\n");
                   container.printFamilyTree(0);

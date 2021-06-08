@@ -61,6 +61,14 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    public String visitStatsSet(BeaverParser.StatsSetContext ctx) {
       String figure = ctx.FIGURE().getText();
       String id = ctx.ID().getText();
+
+      // check if there is already a figure with this id
+      // if so, then remove it
+      boolean figureBeingReplaced = figures.containsKey(id);
+      if (figureBeingReplaced) {
+         figures.remove(id);
+      }
+
       // figure properties
       Color color = new Color(new RGB(255, 255, 255));
       Color borderColor = new Color(new RGB(0, 0, 0));
@@ -117,7 +125,6 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
                break;
             case "angle":
                String[] angleSplit = value.split("r");
-               Arrays.asList(angleSplit).forEach(a -> System.out.print(a+" "));
                if (angleSplit.length > 1)
                   angle = new Angle(Double.parseDouble(angleSplit[0]));
                else
@@ -191,8 +198,14 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
       }
 
       // if there is a figure above, then this figure belongs to it
-      if (!openFigures.empty())
-         openFigures.peek().addFigure(f);
+      if (!openFigures.empty()) {
+         Figure parent = openFigures.peek();
+         // if figure f is suppose to replace some other that already exists
+         // with the same id, then remove old one first from parent figure
+         if (figureBeingReplaced)
+            parent.removeFigure(id);
+         parent.addFigure(f);
+      }
 
       figures.put(id, f);
 
@@ -299,12 +312,28 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    public String visitIdProp(BeaverParser.IdPropContext ctx) {
       String id = ctx.ID(0).getText();
       String prop = ctx.ID(1).getText();
-      Figure figure = figures.get(id);
+      Object figure;
+      if (pointVars.containsKey(id))
+         figure = (Point) pointVars.get(id);
+      else
+         figure = (Figure) figures.get(id);
       Class c = figure.getClass();
-      Method wantedPropertyMethod = Arrays.asList(c.getMethods()).stream().filter(method -> method.getName().equals(prop)).collect(Collectors.toList()).get(0);
+      Method wantedPropertyMethod = getMethodFromClass(c, prop);
       String methodReturn = "";
+      Object targetObject;
       try {
-         methodReturn = wantedPropertyMethod.invoke(figure).toString();
+         targetObject = wantedPropertyMethod.invoke(figure);
+         methodReturn = targetObject.toString();
+
+         if (ctx.ID(2) != null) {
+            c = targetObject.getClass();
+            Method thirdIdMethod = getMethodFromClass(c, ctx.ID(2).getText());
+            try {
+               methodReturn = thirdIdMethod.invoke(targetObject).toString();
+            } catch (IllegalAccessException | InvocationTargetException e) {
+               System.err.println(e);
+            }
+         }
       } catch (IllegalAccessException | InvocationTargetException e) {
          System.err.println(e);
       }
@@ -411,6 +440,10 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
    @Override public String visitAngle(BeaverParser.AngleContext ctx) {
       return visit(ctx.expr())+(ctx.type.getText().equals("rad") ? "rad" : "");
+   }
+
+   private Method getMethodFromClass(Class c, String methodName) {
+      return Arrays.asList(c.getMethods()).stream().filter(method -> method.getName().equals(methodName)).collect(Collectors.toList()).get(0);
    }
 
    private Stack<Figure> openFigures = new Stack<>();

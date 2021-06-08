@@ -38,8 +38,8 @@ pointsExpr	: pointsExpr op=('++' | '--') pointsExpr	#pointsExprCalc
 			| 'container-center'						#pointsCenter
 			;
 
-identifiers	: ID				#id
-			| ID '[' ID ']'		#idProp
+identifiers	: ID						#id
+			| ID '[' ID ']'('['ID']')?	#idProp
 			;
 			
 color 	: '#'(ID|NUMBER)									#colorHex

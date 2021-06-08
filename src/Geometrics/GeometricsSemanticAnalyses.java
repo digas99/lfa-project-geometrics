@@ -5,15 +5,41 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import java.io.File;
+
 public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    // grupo 1
    @Override public String visitProgram(GeometricsParser.ProgramContext ctx) {
-      return visitChildren(ctx);
+      List<String> values = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
+      values.addAll(ctx.use().stream().map(use -> visit(use)).collect(Collectors.toList()));
+      values.add(visit(ctx.time()));
+      return anyNull(values) ? null : ctx.STRING().getText();
    }
 
    @Override public String visitUse(GeometricsParser.UseContext ctx) {
-      return visitChildren(ctx);
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      // check if file is file exists
+      String path = ctx.STRING().getText();
+      File file = new File(path);
+      if (!file.exists() || !file.isFile()) {
+         throwError(line, col, String.format(fileDoesNotExit, path));
+         path = null;
+      }
+      else {
+         String[] split = path.split(".");
+         // check for Beaver file extension
+         if (!split[split.length-1].equals("bvr")) {
+            throwError(line, col, String.format(fileNotValid, path));
+            path = null;
+         }
+      }
+
+      List<String> values = ctx.useAttribs().stream().map(attr -> visit(attrib)).collect(Collectos.toList());
+      values.add(path);
+
+      return anyNull(values) ? null : path;
    }
 
    @Override public String visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
@@ -97,9 +123,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
    // grupo 1
    @Override public String visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
-      String n = ctx.NUMBER().getText();
-      return isNumber(n) || n.equals("pi");
-   }
+      
 
    @Override public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
       return visitChildren(ctx);
@@ -126,8 +150,24 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
          String prop = ctx.ID(1).getText();
          if (!contains(propsList, prop))
             throwError(line, col, String.format(notPropOfFigureErrorMessage, prop, type));
+         else {
+            if (ctx.ID(2) != null) {
+               // if var[prop] is not a point
+               if (!contains(propsAsPointsExpr, prop)) {
+                  throwError(line, col, String.format(notAPointErrorMessage, var+"["+prop+"]"));
+               // otherwise, check if the third ID is a point property 
+               else {
+                  String thirdId = ctx.ID(2).getText();
+                  if (!contains(pointProps, thirdId)) {
+                     throwError(line, col, String.format(notPropOfFigureErrorMessage, thirdId, "Point"));
+                     type = null;
+                  }
+               }
+            }
+         }
       }
-      throwError(line, col, String.format(notInitVarErrorMessage, type));
+      else
+         throwError(line, col, String.format(notInitVarErrorMessage, type));
       return type;
 
    }
@@ -295,19 +335,35 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return true;
    }
 
+   private static boolean allNull(List<String> values) {
+      return values.stream().allMatch(val -> val == null);
+   }
+
+   private static boolean allNull(String[] values) {
+      return allNull(Arrays.asList(values));
+   }
+
    private static boolean allTrue(boolean[] values) {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
    }
 
-   private static boolean allTrue(List<Boolean> values) {
+   private static boolean allTrue(List<String> values) {
       return values.stream().allMatch(val -> val);
+   }
+
+   private static boolean anyNull(List<String> values) {
+      return values.stream().anyMatch(val -> val == null);
+   }
+
+   private static boolean anyNull(String[] values) {
+      return anyNull(Arrays.asList(values));
    }
 
    private static boolean anyTrue(boolean[] values) {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).anyMatch(val -> val);
    }
 
-   private static boolean anyTrue(List<Boolean> values) {
+   private static boolean anyTrue(List<String> values) {
       return values.stream().anyMatch(val -> val);
    }
 
@@ -315,16 +371,32 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allTrue(values) && !noneTrue(values);
    }
 
-   private static boolean someTrue(List<Boolean> values) {
+   private static boolean someTrue(List<String> values) {
       return !allTrue(values) && !noneTrue(values);
+   }
+
+   private static boolean someNull(String[] values) {
+      return !allNull(values) && !noneNull(values);
+   }
+
+   private static boolean someNull(List<String> values) {
+      return !allNull(values) && !noneNull(values);
    }
 
    private static boolean noneTrue(boolean[] values) {
       return !anyTrue(values);
    }
 
-   private static boolean noneTrue(List<Boolean> values) {
+   private static boolean noneTrue(List<String> values) {
       return !anyTrue(values);
+   }
+
+   private static boolean noneNull(String[] values) {
+      return !anyNull(values);
+   }
+
+   private static boolean noneNull(List<String> values) {
+      return !anyNull(values);
    }
 
    private static void throwWarning(int line, int col, String message) {
@@ -364,6 +436,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       }
       return false;
    }
+
    static private String notInitVarErrorMessage = "Variable %s might have not been initialized!";
    static private String notValidColorCodeErrorMessage = "%s is not a valid color code!";
    static private String notAFigureErrorMessage = "%s is not a Figure!";
@@ -372,8 +445,10 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    static private String notVarOfPropErrorMessage = "Invalid variable for property!";
    static private String multVarInitWarningMessage = "Variable %s was initialized multiple times!";
    static private String notVarTypeNumberErrorMessage = "%s is not a variable of type Number!";
-   static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s";
-
+   static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s!";
+   static private String notAPointErrorMessage = "Variable %s is not a Point";
+   static private String fileDoesNotExitErrorMessage = "File %s is invalid or doesn't exist!";
+   static private String fileNotValidErrorMessage = "%s is not a valid Beaver File!";
 
    private List<String> vars = new ArrayList<>();
    private List<String> varsColor = new ArrayList<>();
@@ -396,4 +471,11 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint", "length"};
    static private String[] triangleProps = {"filled", "collide", "visibility", "color", "border", "p0", "p1", "p2"};
    static private String[] figureProps = {"filled", "collide", "visibility", "color", "border", "center"};
+
+   static private String[] propsAsTruthVal = {"filled", "visibility", "collide"};
+   static private String[] propsAsExpr = {"center", "width", "height", "diameter", "radius", "color", "x", "y"};
+   static private String[] propsAsPointsExpr = {"center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
+   static private String[] propsAsColor = {"color"};
+   static private String[] propsAsExprColor = {"border"};
+   static private String[] propsAsAngle = {"angle"};
 }
