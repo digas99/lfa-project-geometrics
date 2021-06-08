@@ -150,8 +150,24 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
          String prop = ctx.ID(1).getText();
          if (!contains(propsList, prop))
             throwError(line, col, String.format(notPropOfFigureErrorMessage, prop, type));
+         else {
+            if (ctx.ID(2) != null) {
+               // if var[prop] is not a point
+               if (!contains(propsAsPointsExpr, prop)) {
+                  throwError(line, col, String.format(notAPointErrorMessage, var+"["+prop+"]"));
+               // otherwise, check if the third ID is a point property 
+               else {
+                  String thirdId = ctx.ID(2).getText();
+                  if (!contains(pointProps, thirdId)) {
+                     throwError(line, col, String.format(notPropOfFigureErrorMessage, thirdId, "Point"));
+                     type = null;
+                  }
+               }
+            }
+         }
       }
-      throwError(line, col, String.format(notInitVarErrorMessage, type));
+      else
+         throwError(line, col, String.format(notInitVarErrorMessage, type));
       return type;
 
    }
@@ -430,8 +446,9 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    static private String multVarInitWarningMessage = "Variable %s was initialized multiple times!";
    static private String notVarTypeNumberErrorMessage = "%s is not a variable of type Number!";
    static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s!";
-   static private String fileDoesNotExit = "File %s is invalid or doesn't exist!";
-   static private String fileNotValid = "%s is not a valid Beaver File!";
+   static private String notAPointErrorMessage = "Variable %s is not a Point";
+   static private String fileDoesNotExitErrorMessage = "File %s is invalid or doesn't exist!";
+   static private String fileNotValidErrorMessage = "%s is not a valid Beaver File!";
 
    private List<String> vars = new ArrayList<>();
    private List<String> varsColor = new ArrayList<>();
@@ -454,4 +471,11 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    static private String[] lineProps = {"filled", "collide", "visibility", "color", "border", "angle", "center", "startingPoint", "endingPoint", "length"};
    static private String[] triangleProps = {"filled", "collide", "visibility", "color", "border", "p0", "p1", "p2"};
    static private String[] figureProps = {"filled", "collide", "visibility", "color", "border", "center"};
+
+   static private String[] propsAsTruthVal = {"filled", "visibility", "collide"};
+   static private String[] propsAsExpr = {"center", "width", "height", "diameter", "radius", "color", "x", "y"};
+   static private String[] propsAsPointsExpr = {"center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
+   static private String[] propsAsColor = {"color"};
+   static private String[] propsAsExprColor = {"border"};
+   static private String[] propsAsAngle = {"angle"};
 }

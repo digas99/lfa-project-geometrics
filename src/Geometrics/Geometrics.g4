@@ -36,7 +36,7 @@ expr	: expr op=('*' | '/') expr			#exprMultDiv
 		;
 // End expr
 
-identifiers	: ID ID		#idProp
+identifiers	: ID ID	ID?	#idProp
 			| ID		#id
 			;
 
