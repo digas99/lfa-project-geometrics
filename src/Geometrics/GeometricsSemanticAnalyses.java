@@ -5,15 +5,41 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import java.io.File;
+
 public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    // grupo 1
    @Override public String visitProgram(GeometricsParser.ProgramContext ctx) {
-      String use = visit(ctx.use());
+      List<String> values = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
+      values.addAll(ctx.use().stream().map(use -> visit(use)).collect(Collectors.toList()));
+      values.add(visit(ctx.time()));
+      return anyNull(values) ? null : ctx.STRING().getText();
    }
 
    @Override public String visitUse(GeometricsParser.UseContext ctx) {
-      return visitChildren(ctx);
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      // check if file is file exists
+      String path = ctx.STRING().getText();
+      File file = new File(path);
+      if (!file.exists() || !file.isFile()) {
+         throwError(line, col, String.format(fileDoesNotExit, path));
+         path = null;
+      }
+      else {
+         String[] split = path.split(".");
+         // check for Beaver file extension
+         if (!split[split.length-1].equals("bvr")) {
+            throwError(line, col, String.format(fileNotValid, path));
+            path = null;
+         }
+      }
+
+      List<String> values = ctx.useAttribs().stream().map(attr -> visit(attrib)).collect(Collectos.toList());
+      values.add(path);
+
+      return anyNull(values) ? null : path;
    }
 
    @Override public String visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
@@ -305,7 +331,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
    }
 
-   private static boolean allTrue(List<Boolean> values) {
+   private static boolean allTrue(List<String> values) {
       return values.stream().allMatch(val -> val);
    }
 
@@ -321,7 +347,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).anyMatch(val -> val);
    }
 
-   private static boolean anyTrue(List<Boolean> values) {
+   private static boolean anyTrue(List<String> values) {
       return values.stream().anyMatch(val -> val);
    }
 
@@ -329,7 +355,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allTrue(values) && !noneTrue(values);
    }
 
-   private static boolean someTrue(List<Boolean> values) {
+   private static boolean someTrue(List<String> values) {
       return !allTrue(values) && !noneTrue(values);
    }
 
@@ -337,7 +363,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allNull(values) && !noneNull(values);
    }
 
-   private static boolean someNull(String<Boolean> values) {
+   private static boolean someNull(List<String> values) {
       return !allNull(values) && !noneNull(values);
    }
 
@@ -345,7 +371,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !anyTrue(values);
    }
 
-   private static boolean noneTrue(List<Boolean> values) {
+   private static boolean noneTrue(List<String> values) {
       return !anyTrue(values);
    }
 
@@ -353,7 +379,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !anyNull(values);
    }
 
-   private static boolean noneNull(String<Boolean> values) {
+   private static boolean noneNull(List<String> values) {
       return !anyNull(values);
    }
 
@@ -403,8 +429,9 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    static private String notVarOfPropErrorMessage = "Invalid variable for property!";
    static private String multVarInitWarningMessage = "Variable %s was initialized multiple times!";
    static private String notVarTypeNumberErrorMessage = "%s is not a variable of type Number!";
-   static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s";
-
+   static private String colorNotInPalleteErrorMessage = "Variable %s is not in %s!";
+   static private String fileDoesNotExit = "File %s is invalid or doesn't exist!";
+   static private String fileNotValid = "%s is not a valid Beaver File!";
 
    private List<String> vars = new ArrayList<>();
    private List<String> varsColor = new ArrayList<>();
