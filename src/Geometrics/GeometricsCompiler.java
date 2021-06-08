@@ -141,9 +141,30 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprPower(GeometricsParser.ExprPowerContext ctx) {
-      if(ctx.value.getText() == '-'){
-         return 
+      ST calc = template.getInstanceOf("var_op");
+      calc.add("type", visit(varsInitSpecifics));
+      calc.add("var", visit(varsInit).ID());
+      calc.add("n1", ctx.expr(0));
+      calc.add("op", ctx.value.getText());
+      calc.add("n2", ctx.expr(1));
+
+      Double res;
+
+      if (ctx.value.getText() == '-') {
+         ctx.expr(1) = -ctx.expr(1);
+         res = Math.pow(ctx.expr(0), ctx.expr(1));
+         calc.add("value", res);
+      } else {
+         res = Math.pow(ctx.expr(0), ctx.expr(1));
+         calc.add("value", res);
       }
+
+      ST addMap = template.getInstanceOf("add_to_map");
+      addMap.add("var", visit(varsInit).ID());
+      addMap.add("varMap", map);
+      addMap.add("value", Double.toString(res));
+      calc.add("stat", addMap);
+      return calc;
    }
 
    // grupo 1
