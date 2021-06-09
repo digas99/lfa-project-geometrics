@@ -131,11 +131,18 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
    // grupo 1
    @Override public String visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
-      return visitChildren(ctx);   
+      String n = ctx.NUMBER().getText();
+      if(!isNumber(n))
+         return null;
+      return n;
    }
 
    @Override public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
-      return visitChildren(ctx);
+      String expr0 = visit(ctx.pointsExpr(0).getText());
+      String expr1 = visit(ctx.pointsExpr(1).getText());
+      if(expr0 == null || expr1 == null)
+         return null;
+      return expr0 + ";" + expr1;
    }
 
    @Override public String visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
@@ -194,7 +201,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr());
    }
 
    @Override public String visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
