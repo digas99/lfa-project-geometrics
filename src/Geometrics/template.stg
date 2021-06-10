@@ -170,5 +170,13 @@ public <type> <name>(<type> <var>){
 >>
 
 center(var) ::= <<
-<name>.setLocationRelativeTo(null);
+Point2D center = new Point2D((int) <var>.getCenterX(), <var>.getCenterY());
+>>
+
+number(value)::= <<
+<value>;
+>>
+
+to_the_power(type, var, value1, value2)::= <<
+<type> <var> = Math.pow(<value1>, <value2>);
 >>

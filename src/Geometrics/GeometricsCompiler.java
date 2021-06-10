@@ -1,8 +1,9 @@
 import java.util.HashMap;
-
+import Structures.*;
 import org.stringtemplate.v4.*;
 
 public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
+   int numVars = 0;
 
    // grupo 1
    @Override
@@ -141,30 +142,12 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprPower(GeometricsParser.ExprPowerContext ctx) {
-      ST calc = template.getInstanceOf("var_op");
-      calc.add("type", visit(varsInitSpecifics));
-      calc.add("var", visit(varsInit).ID());
-      calc.add("n1", ctx.expr(0));
-      calc.add("op", ctx.value.getText());
-      calc.add("n2", ctx.expr(1));
-
-      Double res;
-
-      if (ctx.value.getText() == '-') {
-         ctx.expr(1) = -ctx.expr(1);
-         res = Math.pow(ctx.expr(0), ctx.expr(1));
-         calc.add("value", res);
-      } else {
-         res = Math.pow(ctx.expr(0), ctx.expr(1));
-         calc.add("value", res);
-      }
-
-      ST addMap = template.getInstanceOf("add_to_map");
-      addMap.add("var", visit(varsInit).ID());
-      addMap.add("varMap", map);
-      addMap.add("value", Double.toString(res));
-      calc.add("stat", addMap);
-      return calc;
+      ST power = template.getInstanceOf("to_the_power");
+      power.add("type", "Dobule");
+      power.add("var", newVar());
+      power.add("value1", ctx.expr(0));
+      power.add("value2", ctx.expr(1));
+      return power;
    }
 
    // grupo 1
@@ -175,7 +158,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitIdProp(GeometricsParser.IdPropContext ctx) {
-      return visitChildren(ctx);
+      ST number = template.getText();
+      if (map.containsKey(ctx.ID().getText())) {
+         number.add("number", map.get(ctx.ID().getText()));
+      }
+      return number;
    }
 
    @Override
@@ -190,11 +177,14 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
-      return visitChildren(ctx);
+      ST cent = template.getInstanceOf("center");
+      cent.add("center", );
+      return center;
    }
 
    @Override
    public ST visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
+
       return visitChildren(ctx);
    }
 
@@ -231,6 +221,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
+      return visitChildren(ctx);
+   }
+
+   @Override
+   public ST visitVarsInit(GeometricsParser.VarsInitContext ctx) {
       return visitChildren(ctx);
    }
 
@@ -368,20 +363,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    private STGroup template = new STGroupFile("template.stg");
 
-   private Double doMath(int n1, int n2, String op) {
-      switch (op) {
-         case "+":
-            return n1 + n2;
-         case "-":
-            return n1 - n2;
-         case "*":
-            return n1 * n2;
-         case "/":
-            return n1 / n2;
-         default:
-            return null;
-      }
+   private String newVar() {
+      numVars++;
+      return "var" + numVars;
    }
 
    HashMap<String, String> map = new HashMap<>();
+   HAshMap<String, Point> point_map = new HashMap<>();
 }
