@@ -41,7 +41,7 @@ identifiers	: ID ID	ID?	#idProp
 			;
 
 // Begin pointsExpr
-pointsExpr	: pointsExpr ('+' | '-') pointsExpr					#pointsExprCalc
+pointsExpr	: pointsExpr op=('+' | '-') pointsExpr					#pointsExprCalc
 			| identifiers										#pointsId
 			| point												#pointsExprPoint
 			| 'container-center'								#pointsCenter
