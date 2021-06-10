@@ -36,7 +36,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
          }
       }
 
-      List<String> values = ctx.useAttribs().stream().map(attr -> visit(attrib)).collect(Collectos.toList());
+      List<String> values = ctx.useAttribs().stream().map(attr -> visit(attr)).collect(Collectors.toList());
       values.add(path);
 
       return anyNull(values) ? null : path;
@@ -65,6 +65,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
          boolean valid = contains(figureTypes, getType(var));
          if (!valid)
             throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notAFigureErrorMessage, var));
+         return valid;
       }).collect(Collectors.toList())))
          return null;
       return "draw";
@@ -79,7 +80,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
-      return visit(ctx.funCall());
+      return visit(ctx.funcCall());
    }
 
    // grupo 2
@@ -153,7 +154,8 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    @Override public String visitIdProp(GeometricsParser.IdPropContext ctx) {
       int line = ctx.getStart().getLine();
       int col = ctx.getStart().getCharPositionInLine();
-      String type = getType(ctx.ID(0).getText());
+      String var = ctx.ID(0).getText();
+      String type = getType(var);
       if (type != null) {
          String[] propsList = propsAssoc.get(type);
          String prop = ctx.ID(1).getText();
@@ -162,7 +164,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
          else {
             if (ctx.ID(2) != null) {
                // if var[prop] is not a point
-               if (!contains(propsAsPointsExpr, prop)) {
+               if (!contains(propsAsPointsExpr, prop))
                   throwError(line, col, String.format(notAPointErrorMessage, var+"["+prop+"]"));
                // otherwise, check if the third ID is a point property 
                else {
@@ -352,7 +354,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
    }
 
-   private static boolean allTrue(List<String> values) {
+   private static boolean allTrue(List<Boolean> values) {
       return values.stream().allMatch(val -> val);
    }
 
@@ -368,7 +370,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).anyMatch(val -> val);
    }
 
-   private static boolean anyTrue(List<String> values) {
+   private static boolean anyTrue(List<Boolean> values) {
       return values.stream().anyMatch(val -> val);
    }
 
@@ -376,7 +378,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allTrue(values) && !noneTrue(values);
    }
 
-   private static boolean someTrue(List<String> values) {
+   private static boolean someTrue(List<Boolean> values) {
       return !allTrue(values) && !noneTrue(values);
    }
 
@@ -392,7 +394,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !anyTrue(values);
    }
 
-   private static boolean noneTrue(List<String> values) {
+   private static boolean noneTrue(List<Boolean> values) {
       return !anyTrue(values);
    }
 
