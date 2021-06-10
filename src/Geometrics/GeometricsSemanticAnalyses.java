@@ -102,15 +102,15 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
 //Expr functions start------------------------------------------------------
    @Override public String visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
-      boolean expr0 = visit(ctx.expr(0));
-      boolean expr1 = visit(ctx.expr(1));
-      return expr0 && expr1;
+      String expr0 = visit(ctx.expr(0));
+      String expr1 = visit(ctx.expr(1));
+      return null;
    }
 
    @Override public String visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
-      boolean expr0 = visit(ctx.expr(0));
-      boolean expr1 = visit(ctx.expr(1));
-      return expr0 && expr1;
+      String expr0 = visit(ctx.expr(0));
+      String expr1 = visit(ctx.expr(1));
+      return null;
    }
 
    @Override public String visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
@@ -126,9 +126,9 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitExprPower(GeometricsParser.ExprPowerContext ctx) {
-      boolean expr0 = visit(ctx.expr(0));
-      boolean expr1 = visit(ctx.expr(1));
-      return expr0 && expr1;
+      String expr0 = visit(ctx.expr(0));
+      String expr1 = visit(ctx.expr(1));
+      return null;
    }
    // grupo 1
    @Override public String visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
@@ -151,7 +151,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
-      return visit(ctx.booleanLogic());
+      return visit(ctx.expr());
    }
 
    @Override public String visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
@@ -299,14 +299,15 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      return visit(ctx.stats());
+      //return visit(ctx.stats());
+      return null;
       //Verify stats
       //Verify stop(interruption trigger)
    }
 
    @Override public String visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      String bologic = visit(ctx.booleanlogic());
-      String stat = visit(ctx.stats());
+     // String bologic = visit(ctx.booleanlogic());
+      //String stat = visit(ctx.stats());
       return null;
       //Verify booleanLogic and stats
       //Verify stop(interruption trigger)
@@ -315,7 +316,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    @Override public String visitEachFor(GeometricsParser.EachForContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
-      String stat = visit(ctx.stats());
+     // String stat = visit(ctx.stats());
       
       return null;
       //Verify ID, 2 expr and stats
@@ -335,9 +336,9 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitPoint(GeometricsParser.PointContext ctx) {
-      boolean expr0 = visit(ctx.expr(0));
-      boolean expr1 = visit(ctx.expr(1));
-      return expr0 && expr1; 
+     // boolean expr0 = visit(ctx.expr(0));
+      //boolean expr1 = visit(ctx.expr(1));
+      return null; 
    }
 
    private static boolean isNumber(String val) {
