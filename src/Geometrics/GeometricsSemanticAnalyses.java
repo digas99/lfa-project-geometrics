@@ -151,7 +151,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
-      return visit(ctx.expr());
+      return visit(ctx.booleanLogic());
    }
 
    @Override public String visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
@@ -199,15 +199,15 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
-      return visitChildren(ctx);
+      return "container-center";
    }
 
    @Override public String visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
-      return visit(ctx.expr());
+      return visit(ctx.booleanLogic());
    }
 
    @Override public String visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.booleanLogic());
    }
    
    // grupo 2
@@ -424,21 +424,21 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    private String getType(String var) {
       if (varsPoint.contains(var))
          return "Point";
-      if (isRectangle.contains(var))
+      if (varsRectangle.contains(var))
          return "Rectangle";
-      if (isCircle.contains(var))
+      if (varsCircle.contains(var))
          return "Circle";
-      if (isLine.contains(var))
+      if (varsLine.contains(var))
          return "Line";
-      if (isTriangle.contains(var))
+      if (varsTriangle.contains(var))
          return "Triangle";
-      if (isVar.contains(var))
+      if (vars.contains(var))
          return "Var";
-      if (isPallete.contains(var))
+      if (varsPallete.contains(var))
          return "Pallete";
-      if (isColor.contains(var))
+      if (varsColor.contains(var))
          return "Color";
-      if (isFigure.contains(var))
+      if (varsFigure.contains(var))
          return "Figure";
       return null;
    }
