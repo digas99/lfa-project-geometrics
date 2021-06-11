@@ -9,16 +9,16 @@ useAttribs	: (FIGURE|color) ID '->' ID NEWLINE* ;
 // End use
 
 // Begin stats
-stats	: 'start' varsInit NEWLINE*		#statVarsInit
-		| varsSet						#statVarsSet
-		| list							#statList
+stats	: 'start' varsInit NEWLINE*			#statVarsInit
+		| varsSet				#statVarsSet
+		| list					#statList
 		| 'draw' ID	(',' ID)* NEWLINE*	#statDraw
-		| loop							#statLoop
-		| conditional					#statConditional
-		| funcCall						#statFuncCall
-		| easteregg						#statEasterEgg
+		| loop					#statLoop
+		| conditional				#statConditional
+		| funcCall				#statFuncCall
+		| easteregg				#statEasterEgg
 		| 'write' (ID | STRING)			#statConsoleLog
-		| container						#statContainer
+		| container				#statContainer
 		;
 
 // Begin container
@@ -27,25 +27,25 @@ container	: 'container' ID ':' stats+ 'end' ;
 
 // Begin expr
 expr	: expr op=('*' | '/') expr			#exprMultDiv
-		| expr op=('+' | '-') expr			#exprAddSub
-		| NUMBER							#exprNumber
-		| identifiers						#exprId
-		| '(' expr ')'						#exprParentesis
-		| value=('+'|'-') (expr)			#exprUnary
+		| expr op=('+' | '-') expr		#exprAddSub
+		| NUMBER				#exprNumber
+		| identifiers				#exprId
+		| '(' expr ')'				#exprParentesis
+		| value=('+'|'-') (expr)		#exprUnary
 		| expr '^' value=('+'|'-')? expr	#exprPower
 		;
 // End expr
 
 identifiers	: ID ID	ID?	#idProp
-			| ID		#id
+		| ID		#id
 			;
 
 // Begin pointsExpr
-pointsExpr	: pointsExpr op=('+' | '-') pointsExpr					#pointsExprCalc
-			| identifiers										#pointsId
-			| point												#pointsExprPoint
-			| 'container-center'								#pointsCenter
-			;
+pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
+		| identifiers				#pointsId
+		| point					#pointsExprPoint
+		| 'container-center'			#pointsCenter
+		;
 
 // End pointsExpr
 
@@ -55,19 +55,19 @@ booleanLogic	: booleanLogic op=('or' | 'and' | 'different'
 					| 'equals' | 'greater' | 'lower' | 'greater'
 					| 'greater equal' | 'lower equal'
 					| '|' | '&' | '!' | '=' | '>' | '<' | '>=' | '<=') booleanLogic	#boolLogicOps
-				| expr																#boolLogicExpr
-				| '(' booleanLogic ')'												#boolLogicParentesis			
-				| 'not' booleanLogic												#boolLogicNot
-				| ID 'collides' ID													#boolLogicCollides
-				| TRUTHVAL															#boolLogicTruthval
+				| expr									#boolLogicExpr
+				| '(' booleanLogic ')'							#boolLogicParentesis			
+				| 'not' booleanLogic							#boolLogicNot
+				| ID 'collides' ID							#boolLogicCollides
+				| TRUTHVAL								#boolLogicTruthval
 				;
 // End boolean logic
 
 // Begin vars initialization
-varsInit	: (OBJECT | FIGURE) ID											#varsOnlyInit
-			| FIGURE value='List' ID										#varsInitList
-			| OBJECT ID '->' attribs										#varsInitObject
-			| FIGURE ID blockSet											#varsInitFigure
+varsInit	: (OBJECT | FIGURE) ID							#varsOnlyInit
+			| FIGURE value='List' ID					#varsInitList
+			| OBJECT ID '->' attribs					#varsInitObject
+			| FIGURE ID blockSet						#varsInitFigure
 			| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'	#varsInitFunc
 			;
 
@@ -84,7 +84,7 @@ funcCall	: 'call' ID ('with' (expr | STRING) (',' (expr | STRING))* )? ;
 
 // Begin vars set
 varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
-		| 'set' ID '->' expr						#varsSetExpr
+		| 'set' ID '->' expr				#varsSetExpr
 		| 'set' ID ('*' | '/' | '+' | '-') expr		#varsSetCalc
 		;
 
@@ -92,8 +92,8 @@ varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
 
 // in color, the properties are #xxxxx and rgb
 // falta implementar ação com pallete
-color 	: ID						#colorId 
-		| '#'(ID|NUMBER)			#colorHex
+color 	: ID					#colorId 
+		| '#'(ID|NUMBER)		#colorHex
 		| expr ',' expr ',' expr	#colorRGB
 		;
 
@@ -101,7 +101,7 @@ color 	: ID						#colorId
 
 // Begin list
 list	: ID 'add' ID (first='first')?		#listAdd
-		| ID 'remove' (expr | STRING)		#listRemove
+		| ID 'remove' (expr | STRING)	#listRemove
 		;
 // End list
 
@@ -112,10 +112,10 @@ conditional	: 'if' booleanLogic ':' (stats* | stop='stop') 'end' ;
 // Begin loop
 loop	: 'each' (time | ID) loopSpecifics 'end' ;
 
-loopSpecifics	: ':' (stats+ | 'stop')										#eachTime
-				| 'until' booleanLogic ':' (stats+ | 'stop')				#eachWhile
-				| 'with' ID 'from' expr 'to' expr ':' (stats+ | 'stop') 	#eachFor
-				;
+loopSpecifics	: ':' (stats+ | 'stop')						#eachTime
+		| 'until' booleanLogic ':' (stats+ | 'stop')			#eachWhile
+		| 'with' ID 'from' expr 'to' expr ':' (stats+ | 'stop') 	#eachFor
+		;
 
 // Begin easteregg
 easteregg	: 'where is' ID '?' ; 
