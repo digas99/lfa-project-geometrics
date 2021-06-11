@@ -59,7 +59,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
-      return visitChildren(ctx);
+      ST func = template.getInstanceOf("call_func");
+      func.add("name", ctx.ID());
+      for (int i = 0; i < ctx.expr().size() - 1; i++) {
+         func.add("value", ctx.expr(i) + ",");
+      }
+      func.add("value", ctx.expr(ctx.expr().size() - 1));
+      return func;
    }
 
    // grupo 2
@@ -184,8 +190,19 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
-
-      return visitChildren(ctx);
+      ST calcP;
+      if (ctx.op.getText() == "+") {
+         calcP = template.getInstanceOf("sumPoints");
+         calcP.add("var", newVar());
+         calcP.add("p0", ctx.pointsExpr(0));
+         calcP.add("p1", ctx.pointsExpr(1));
+      } else if (ctx.op.getText() == "-") {
+         calcP = template.getInstanceOf("subPoints");
+         calcP.add("var", newVar());
+         calcP.add("p0", ctx.pointsExpr(0));
+         calcP.add("p1", ctx.pointsExpr(1));
+      }
+      return calcP;
    }
 
    @Override
@@ -307,18 +324,40 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitListAdd(GeometricsParser.ListAddContext ctx) {
-      return visitChildren(ctx);
+      ST addList = template.getInstanceOf("add_to_list");
+      addList.add("var", ctx.ID(0));
+      addList.add("value", ctx.ID(1));
+      return addList;
    }
 
    // grupo 2
    @Override
    public ST visitListRemove(GeometricsParser.ListRemoveContext ctx) {
+      ST remList = template.getInstanceOf("remove_from_list");
+      remList.add("var", ctx.ID());
+      remList.add("value", ctx.expr());
       return visitChildren(ctx);
    }
 
    @Override
    public ST visitConditional(GeometricsParser.ConditionalContext ctx) {
-      return visitChildren(ctx);
+      ST conditional = template.getInstanceOf("conditional");
+      for (int i = 0; i < ctx.stats().size(); i++) {
+         conditional.add("stat", visit(stats(i)).render());
+      }
+      consditional.add("var", ctx.booleanLogic());
+      if (ctx.booleanLogic()) {
+         consditional.add("stat_true", ctx.stats());
+         if (ctx.stop()) {
+            conditional.add("break", " ");
+         }
+      } else {
+         consditional.add("stat_false", ctx.stats());
+         if (ctx.stop()) {
+            conditional.add("break", " ");
+         }
+      }
+      return conditional;
    }
 
    @Override

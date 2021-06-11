@@ -1,4 +1,4 @@
-module(name, stat, hasVars, hasList, hasPoints, hasFig) ::= <<
+module(name, stat, hasVars, hasList, hasPoints, hasFig, hasMath) ::= <<
 <if(hasList)>
 import java.util.List.*;
 <endif>
@@ -12,6 +12,9 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
+<endif>
+<if(hasMath)>
+import java.Math.*;
 <endif>
 
 public class <name> extends JPanel implements ActionListener{
@@ -100,14 +103,20 @@ while(<conditional>){
 }
 >>
 
-conditional(stat, var, stat_true, stat_false) ::= <<
+conditional(stat, var, stat_true, stat_false, break) ::= <<
 <stats(stat)>
 if(<var>){
     <stat_true>
+    <if(break)>
+    break;
+    <endif>
 }
 <if(stat_false)>
 else{
     <stat_false>
+    <if(break)>
+    break;
+    <endif>
 }
 <endif>
 >>
@@ -125,8 +134,8 @@ add_to_map;
 <stats(stat)>
 >>
 
-call_func(name, var) ::= <<
-<name>(<var>);
+call_func(name, values) ::= <<
+<name>(<values>);
 >>
 
 change_var(var, value) ::= <<
@@ -180,3 +189,9 @@ number(value)::= <<
 to_the_power(type, var, value1, value2)::= <<
 <type> <var> = Math.pow(<value1>, <value2>);
 >>
+
+sumPoints(var, p1, p0) ::= <<
+Point <var> = sum(<p0>, <p1>);
+
+subPoints(var, p1, p0) ::= <<
+Point <var> = sub(<p0>, <p1>);
