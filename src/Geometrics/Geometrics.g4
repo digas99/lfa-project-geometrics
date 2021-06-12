@@ -9,31 +9,32 @@ useAttribs	: (FIGURE|color) ID '->' ID NEWLINE* ;
 // End use
 
 // Begin stats
-stats	: 'start' varsInit NEWLINE*			#statVarsInit
-		| varsSet				#statVarsSet
-		| list					#statList
-		| 'draw' ID	(',' ID)* NEWLINE*	#statDraw
-		| loop					#statLoop
-		| conditional				#statConditional
-		| funcCall				#statFuncCall
-		| easteregg				#statEasterEgg
-		| 'write' (ID | STRING)			#statConsoleLog
-		| container				#statContainer
-		;
+stats	: 'start' varsInit NEWLINE*		#statVarsInit
+	| varsSet				#statVarsSet
+	| list					#statList
+	| 'draw' ID	(',' ID)* NEWLINE*	#statDraw
+	| loop					#statLoop
+	| conditional				#statConditional
+	| funcCall				#statFuncCall
+	| easteregg				#statEasterEgg
+	| 'write' (ID | STRING)			#statConsoleLog
+	| container				#statContainer
+	;
 
 // Begin container
 container	: 'container' ID ':' stats+ 'end' ;
 // End container
 
 // Begin expr
-expr	: expr op=('*' | '/') expr			#exprMultDiv
-		| expr op=('+' | '-') expr		#exprAddSub
-		| NUMBER				#exprNumber
-		| identifiers				#exprId
-		| '(' expr ')'				#exprParentesis
-		| value=('+'|'-') (expr)		#exprUnary
-		| expr '^' value=('+'|'-')? expr	#exprPower
-		;
+expr returns[String var = null]
+	: expr op=('*' | '/') expr		#exprMultDiv
+	| expr op=('+' | '-') expr		#exprAddSub
+	| NUMBER				#exprNumber
+	| identifiers				#exprId
+	| '(' expr ')'				#exprParentesis
+	| value=('+'|'-') (expr)		#exprUnary
+	| expr '^' value=('+'|'-')? expr	#exprPower
+	;
 // End expr
 
 identifiers	: ID ID	ID?	#idProp
@@ -41,7 +42,8 @@ identifiers	: ID ID	ID?	#idProp
 			;
 
 // Begin pointsExpr
-pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
+pointsExpr returns[String var = null]
+		: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
 		| identifiers				#pointsId
 		| point					#pointsExprPoint
 		| 'container-center'			#pointsCenter
@@ -51,25 +53,26 @@ pointsExpr	: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
 
 // Begin boolean logic
 // different is equivalent to xor
-booleanLogic	: booleanLogic op=('or' | 'and' | 'different'
-					| 'equals' | 'greater' | 'lower' | 'greater'
-					| 'greater equal' | 'lower equal'
-					| '|' | '&' | '!' | '=' | '>' | '<' | '>=' | '<=') booleanLogic	#boolLogicOps
-				| expr									#boolLogicExpr
-				| '(' booleanLogic ')'							#boolLogicParentesis			
-				| 'not' booleanLogic							#boolLogicNot
-				| ID 'collides' ID							#boolLogicCollides
-				| TRUTHVAL								#boolLogicTruthval
-				;
+booleanLogic returns [String var = null]
+		: booleanLogic op=('or' | 'and' | 'different'
+			| 'equals' | 'greater' | 'lower' | 'greater'
+			| 'greater equal' | 'lower equal'
+			| '|' | '&' | '!' | '=' | '>' | '<' | '>=' | '<=') booleanLogic	#boolLogicOps
+		| expr									#boolLogicExpr
+		| '(' booleanLogic ')'							#boolLogicParentesis			
+		| 'not' booleanLogic							#boolLogicNot
+		| ID 'collides' ID							#boolLogicCollides
+		| TRUTHVAL								#boolLogicTruthval
+		;
 // End boolean logic
 
 // Begin vars initialization
-varsInit	: (OBJECT | FIGURE) ID							#varsOnlyInit
-			| FIGURE value='List' ID					#varsInitList
-			| OBJECT ID '->' attribs					#varsInitObject
-			| FIGURE ID blockSet						#varsInitFigure
-			| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'	#varsInitFunc
-			;
+varsInit	: (OBJECT | FIGURE) ID						#varsOnlyInit
+		| FIGURE value='List' ID					#varsInitList
+		| OBJECT ID '->' attribs					#varsInitObject
+		| FIGURE ID blockSet						#varsInitFigure
+		| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'	#varsInitFunc
+		;
 
 inlineSet	: ID '->' attribs NEWLINE* ;
 
@@ -106,8 +109,10 @@ list	: ID 'add' ID (first='first')?		#listAdd
 // End list
 
 // Begin conditional
-conditional	: 'if' booleanLogic ':' (stats* | stop='stop') 'end' ;
+conditional	: 'if' booleanLogic ':' blockStats* 'end' ;
 // End conditional
+
+blockStats	: stats | 'stop' ;
 
 // Begin loop
 loop	: 'each' (time | ID) loopSpecifics 'end' ;
@@ -121,12 +126,12 @@ loopSpecifics	: ':' (stats+ | 'stop')						#eachTime
 easteregg	: 'where is' ID '?' ; 
 // End easteregg
 
-angle : expr ('º' | 'deg' | 'rad') ;
-time : expr ('ms'|'s'); 
+angle : expr type=('º' | 'deg' | 'rad') ;
+time : expr type=('ms'|'s'); 
 point : expr ',' expr ;
 
-FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle';
-OBJECT : 'Text' | 'Point' | 'Line' | 'Number' |  'Angle' | 'Time';
+FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle' | 'Line' ;
+OBJECT : 'Text' | 'Point' | 'Number' |  'Angle' | 'Time';
 TRUTHVAL : 'true' | 'false';
 ID: [a-zA-Z0-9]+;	
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
