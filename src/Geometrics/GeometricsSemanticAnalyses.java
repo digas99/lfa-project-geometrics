@@ -139,8 +139,8 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
-      String expr0 = visit(ctx.pointsExpr(0).getText());
-      String expr1 = visit(ctx.pointsExpr(1).getText());
+      String expr0 = visit(ctx.pointsExpr(0));
+      String expr1 = visit(ctx.pointsExpr(1));
       if(expr0 == null || expr1 == null)
          return null;
       return expr0 + ";" + expr1;

@@ -1,0 +1,215 @@
+/- Two Ships 
+/- add rand ?
+/- add radius e diameter? And take out width from keyword circle.
+/- It's written in a complex way on purpose, for testing purposes.
+/- Add () to arithmetics?
+/- Should we really use containers?
+/- board default and final size is 1000*1000 ?
+/- Vou assumir que o ponto (0,0) do board é o canto superior esquerdo.
+/- Temos que adicionar filled às propriedades das figuras, exceto linhas
+/- Não sei se estou a fazer bem em relação a figuras compostas. Como damos nome?
+/- Height is missing
+
+/-  Criacação de variavéis a partir do ficheiro stickman.bvr;
+/-  use, Figure, Color e end são palavras reservadas.
+use "ship.bvr": 		
+	Figure ship -> Goku
+	Color myPurple -> lightPurple
+end 
+
+/- Inicialização do board com nome à escolha
+/- Board é palavra reservada
+Board "Geometrics"
+
+
+/- Inicialização de uma String txt com ship
+/- A String não está a ser utilizada neste programa
+/- serve apenas para demonstração
+/- Text é palavra reservada. -> representa atribuição
+/- at é palavra reservada.
+start Text txt -> "This is Vegeta" at 2,3
+
+
+start Figure List Vegeta
+
+
+/- -----------------------------------------  Making Ship Vegeta -------------------------------------------------
+
+
+/- Inicializaçáo da variavél goal
+/- Line,set,display,width,thickness,posX,color,collision,exposed,true,white
+/- definição das propriedades de goal
+/- Height was missing
+/- Container is a rectangle
+
+container containerVegeta:
+	center -> 500,500
+	width  -> 500
+	height -> 500 
+
+	start Rectangle body
+		set body:
+			display -> exposed
+			thickness -> 4
+			width -> 200
+			heihgt -> 200
+			center -> containerVegeta center
+			angle -> 0
+			color -> black
+			collision -> true
+			depth -> 1
+			filled -> true
+		end
+
+	/- to test arithmetic
+	start Point pointForTriangle -> body center + body height/-2*-1 - body width/2, body center + body height/4-1-1   	
+ 
+	start Triangle head
+		set head: 
+			display -> exposed
+			thickness -> 2
+			p0 -> pointForTriangle
+			p1 -> pointForTriangle x + body width, pointForTriangle y + body height
+			p2 -> head p0 x + body width/1+1, 100  
+			color -> black
+			collision -> true
+			depth -> 1
+			filled -> false
+		end
+
+	/- to test arithmetic
+	start Number centerRightEdgeBodyX -> containerVegeta center + body width/-2+4-pi+pi
+
+	start Line rightArm
+		set rightArm:
+			display -> exposed
+			thickness -> head thickness
+			startingPoint -> centerRightEdgeBodyX, containerVegeta center y
+			endingPoint -> rightArm startingPoint x + 50, containerVegeta center y - 50
+			color -> green
+			collision -> false
+			depth -> 1
+		end
+
+	start Line leftArm
+		set leftArm:
+			display -> rightArm display
+			width -> 4
+			thickness -> 2
+			startingPoint -> right arm startingPoint x - body width, right arm startingPoint y 
+			endingPoint -> rightArm endingPoint x - body width - 50 , right arm endingPoint y
+			color -> black
+			collision -> true
+			depth -> 1
+		end
+	
+	start Circle rightLeg 
+		set rightLeg:
+			display -> exposed
+			diamter -> 10
+			thickness -> 2
+			startingPoint -> containerVegeta center x + body width/4, containerVegeta center y - body height/2
+			endingPoint -> rightLeg startingPoint x, container center y + 10   
+			color -> black
+			collision -> true
+			depth -> 1
+			filled -> false
+		end
+
+	start Circle leftLeg
+		set leftLeg:
+			display -> exposed
+			width -> 4
+			thickness -> 2
+			center -> leftArm center x, rightArm center y -   
+			angle -> - -45º 
+			color -> black
+			collision -> true
+			depth -> 1
+			filled -> false
+		end
+/- ----------------------------------------------------------------------------------------------
+
+Vegeta add body
+Vegeta add head
+Vegeta add rightArm
+Vegeta add leftArm
+Vegeta add rightLeg
+Vegeta add leftLeg
+
+set Vegeta pos -> board center  
+
+start Task vegetaName:
+	write "Vegeta" at body center
+end
+
+start Line goal:
+	display -> exposed
+	width -> 1000
+	thickness -> 2
+	color -> red
+	collision -> true
+	depth -> 5
+end
+
+/- Isto é possível?
+draw Vegeta board center 
+draw goal
+
+start Time time -> 1000 ms
+
+/- Angle,º,deg,pi,rad são palavras reservadas
+/- 180º ou 180 deg ou 2pi rad ou 1 rad
+start Angle ang -> rand
+
+each time:
+	set ship posY -> 1
+	
+	if Vegeta collides goal:
+		set ship rotate -> ang
+		call vegetaName 
+	end
+
+	if Vegeta collides board:
+		set ship rotate -> ang
+	end
+
+	draw Vegeta
+end
+
+start Figure List Bulma
+Bulma add body
+Bulma add head
+Bulma add rightArm
+Bulma add leftArm
+Bulma add rightLeg
+Bulma add leftLeg
+
+/- Isto é possível?
+set Bulma body:
+	color -> purple
+
+
+/- Conceito de função 
+/- Task e with são palavras reservadas
+start Task sum with x,y:
+	set sum -> x+y
+	start Number n
+end
+
+/- start Number n -> call sum with 1,2 + 3 / 2
+
+
+/- QUE É QUE EU FAÇO COM ISTO????????
+each time with i from 0 to 100: /- i é inteiro
+
+end
+
+
+/- Devolve a localização atual de ship
+/- where is é palavra reservada 
+where is Vegeta?
+
+/- Fecho do programa(com atraso)
+/- close é palavra reservada
+close 3000 ms
