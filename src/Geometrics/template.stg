@@ -12,9 +12,9 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
-<if(hasMath)>
+
 import java.Math.*;
-<endif>
+
 import structures.*;
 public class <name> extends JPanel implements ActionListener{
     <if(hasVars)>
@@ -80,10 +80,6 @@ stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
 
-draw(id) ::= <<
-.add(<id>);
->>
-
 declVar(type, var, value, stat) ::= <<
 <if(stat)><stats(stat)><endif>
 <type> <var><if(value)> = <value><endif>;
@@ -106,8 +102,9 @@ if(<var>){
 }
 >>
 
-container(id, var) ::= <<
+container(id, var, stat) ::= <<
 Graphics2D <var> = (Graphics2D).<id>.create();
+<if(stats(stat))><stats(stat)><endif>
 >>
 
 call_func(name, values) ::= <<
@@ -154,7 +151,8 @@ number(value)::= <<
 <value>;
 >>
 
-to_the_power(type, var, value1, value2)::= <<
+to_the_power(type, var, value1, value2, stat)::= <<
+<if(stat)><stats(stat)><endif>
 <type> <var> = Math.pow(<value1>, <value2>);
 >>
 
@@ -169,4 +167,24 @@ not_bool(value) ::= <<
 print(stat, value) ::= <<
 <if(stat)><stats(stat)><endif>
 System.out.println(<value>);
+>>
+
+draw(var) ::= << 
+<var>.draw();
+>>
+
+filled(var, fig) ::= <<
+<var>.fill(<fig>);
+>>
+
+get_id(value) ::= <<
+<value>
+>>
+
+id_Prop(type, val1, val2) ::= <<
+<type> <val1> <if(val2)><val2><endif>;
+>>
+
+parentesis(value) ::= <<
+\(<value>)
 >>
