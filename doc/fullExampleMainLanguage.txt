@@ -1,6 +1,5 @@
-/- Two Ships 
 /- add rand ?
-/- add radius e diameter? And take out width from keyword circle.
+/- add radius and/or diameter? And take out width from keyword circle.
 /- It's written in a complex way on purpose, for testing purposes.
 /- Add () to arithmetics?
 /- Should we really use containers?
@@ -17,28 +16,20 @@ use "ship.bvr":
 	Color myPurple -> lightPurple
 end 
 
-/- Inicialização do board com nome à escolha
-/- Board é palavra reservada
+/- É para fazer isto?
+board: 
+          width -> ...
+          height -> ...
+          collision -> ... 
+          color -> ...
+		  title -> Geometrics
+
+end
+
 Board "Geometrics"
-
-
-/- Inicialização de uma String txt com ship
-/- A String não está a ser utilizada neste programa
-/- serve apenas para demonstração
-/- Text é palavra reservada. -> representa atribuição
-/- at é palavra reservada.
-start Text txt -> "This is Vegeta" at 2,3
-
-
-start Figure List Vegeta
-
 
 /- -----------------------------------------  Making Ship Vegeta -------------------------------------------------
 
-
-/- Inicializaçáo da variavél goal
-/- Line,set,display,width,thickness,posX,color,collision,exposed,true,white
-/- definição das propriedades de goal
 /- Height was missing
 /- Container is a rectangle
 
@@ -54,7 +45,7 @@ container containerVegeta:
 			width -> 200
 			heihgt -> 200
 			center -> containerVegeta center
-			angle -> 0
+			angle -> 0 deg
 			color -> black
 			collision -> true
 			depth -> 1
@@ -121,14 +112,17 @@ container containerVegeta:
 			display -> exposed
 			width -> 4
 			thickness -> 2
-			center -> leftArm center x, rightArm center y -   
-			angle -> - -45º 
+			startingPoint -> rightLeg startingPoint x - containerVegeta x/2, rightLeg startingPoint y 
+			endingPoint -> rightLeg endingPoint x,   
+			 
 			color -> black
 			collision -> true
 			depth -> 1
 			filled -> false
 		end
 /- ----------------------------------------------------------------------------------------------
+
+start Figure List Vegeta
 
 Vegeta add body
 Vegeta add head
@@ -139,8 +133,13 @@ Vegeta add leftLeg
 
 set Vegeta pos -> board center  
 
+/- Assim está sem localização, tinhamos falado de meter um at
+/- mas meti o at na Task em baixo
+start Text txtVegeta -> "Vegeta"
+
+/- Posso fazer assim? write está a receber uma variavel.
 start Task vegetaName:
-	write "Vegeta" at body center
+	write txtVegeta at Vegeta body center
 end
 
 start Line goal:
@@ -158,24 +157,28 @@ draw goal
 
 start Time time -> 1000 ms
 
-/- Angle,º,deg,pi,rad são palavras reservadas
-/- 180º ou 180 deg ou 2pi rad ou 1 rad
-start Angle ang -> rand
+/- rand? between
+start Angle angVegeta -> rand deg
 
 each time:
-	set ship posY -> 1
-	
+
+	set Vegeta posY -> 1
+
 	if Vegeta collides goal:
-		set ship rotate -> ang
-		call vegetaName 
+		set Vegeta rotate -> angVegeta
+		call vegetaName
+		set Vegeta posY -> -1 
 	end
 
 	if Vegeta collides board:
-		set ship rotate -> ang
+		set Vegeta rotate -> angVegeta
+		set Vegeta posY -> 1
 	end
 
 	draw Vegeta
 end
+
+/- ----------------------------------------------------------------------------------------------
 
 start Figure List Bulma
 Bulma add body
@@ -194,22 +197,55 @@ set Bulma body:
 /- Task e with são palavras reservadas
 start Task sum with x,y:
 	set sum -> x+y
-	start Number n
 end
 
-/- start Number n -> call sum with 1,2 + 3 / 2
-
-
-/- QUE É QUE EU FAÇO COM ISTO????????
-each time with i from 0 to 100: /- i é inteiro
-
+start Task sub with x,y:
+	set sum -> x-y
 end
 
+start Number nBulma -> call sub with board center, 250
 
-/- Devolve a localização atual de ship
-/- where is é palavra reservada 
+/- Isto é possível???? por causa da ,
+set Bulma pos -> nBulma, call sub with nBulma, 250
+
+
+each time with i from 0 to 100: 
+	set Bulma posY -> 1
+
+	/- Posso fazer isto? Seria para mudar a cor de tudo o que está na lista
+	if i = 50: /- equals
+		set Bulma color -> rand
+	end
+	if Bulma collides goal
+		set Bulma posY -> -1
+		set Bulma rotate -> 45 deg
+	end
+
+	if Bulma collides board
+		set Bulma posY -> 1
+		set Bulma rotate -> pi/4 rad
+	end
+
+	draw Bulma
+end
+
+/- ----------------------------------------------------------------------------------------------
+
+start Number nGoku -> call sum with board center, 250
+
+set Goku pos -> nGoku, board center - 250
+
+each time:
+	set Goku posY -> 1
+
+	if Goku collides goal
+		set Goku posY -> -1
+		set Goku rotate -> 90º
+	end
+
+	draw Goku
+end
+
 where is Vegeta?
 
-/- Fecho do programa(com atraso)
-/- close é palavra reservada
 close 3000 ms
