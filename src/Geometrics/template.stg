@@ -184,7 +184,3 @@ get_id(value) ::= <<
 id_Prop(type, val1, val2) ::= <<
 <type> <val1> <if(val2)><val2><endif>;
 >>
-
-parentesis(value) ::= <<
-\(<value>)
->>

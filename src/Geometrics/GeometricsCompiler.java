@@ -131,9 +131,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
-      ST par = template.getInstanceOf("parentesis");
-      par.add("value", visit(ctx.expr()));
-      return par;
+      return visit(ctx.expr());
    }
 
    @Override
@@ -247,9 +245,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
-      ST par = template.getInstanceOf("parentesis");
-      par.add("value", visit(ctx.booleanLogic()));
-      return par;
+      return visit(ctx.booleanLogic());
    }
 
    @Override
