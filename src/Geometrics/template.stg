@@ -3,7 +3,8 @@ module(name, stat, hasVars, hasList, hasPoints, hasMath) ::= <<
 import java.util.List.*;
 <endif>
 <if(hasVars)>
-import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 <endif>
 import javax.swing.*;
 import java.awt.*;
@@ -17,12 +18,12 @@ import java.Math.*;
 import structures.*;
 public class <name> extends JPanel implements ActionListener{
     <if(hasVars)>
-    static HashMap \<String,Figure\> varsFigure = new HashMap\<>();
-    static HashMap \<String,String>\> varsLabel = new HashMap\<>();
-    static HashMap \<String,Double\> varsNumber = new HashMap\<>();
-    static HashMap \<String,Time>\> varsTime = new HashMap\<>();
-    static HashMap \<String,Angle\> varsAngle = new HashMap\<>();
-    static HashMap \<String,Point\> varsPoint = new HashMap\<>();
+    static List\<Figure> varsFigure = new ArrayList\<>();
+    static List\<String> varsLabel = new ArrayList\<>();
+    static List\<Double> varsNumber = new ArrayList\<>();
+    static List\<Time> varsTime = new ArrayList\<>();
+    static List\<Angle> varsAngle = new ArrayList\<>();
+    static List\<structures.Point> varsPoint = new ArrayList\<>();
     <endif>
 
     public static void main(String[] args) throws Exception{
@@ -103,14 +104,6 @@ conditional(stat, var, stat_true, stat_false, break) ::= <<
 if(<var>){
     <stat_true>
 }
-<if(stat_false)>
-else{
-    <stat_false>
-    <if(break)>
-    break;
-    <endif>
-}
-<endif>
 >>
 
 container(id, var) ::= <<
@@ -125,8 +118,9 @@ change_var(var, value) ::= <<
 <var> = <value>;
 >>
 
-add_to_list(var, value) ::= <<
-<var>.add(<value>);
+add_to_list(var, varList, value, type) ::= <<
+<if(type)><declVar(type, var, value, "")><endif>
+<varList>.add(<var>);
 >>
 
 remove_from_list(var, value) ::= <<
@@ -134,7 +128,7 @@ remove_from_list(var, value) ::= <<
 >>
 
 add_to_map(var, varMap, value, type) ::= <<
-<declVar(type, var, value)>
+<if(type)><declVar(type, var, value, "")><endif>
 <varMap>.put(<var>, <value>);
 >>
 
@@ -170,4 +164,9 @@ Point <var> = <type>(<p0>, <p1>);
 
 not_bool(value) ::= <<
 !<value>
+>>
+
+print(stat, value) ::= <<
+<if(stat)><stats(stat)><endif>
+System.out.println(<value>);
 >>

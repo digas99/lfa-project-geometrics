@@ -20,6 +20,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST module = template.getInstanceOf("module");
       module.add("name", this.className);
       ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
+      if (hasVars)
+         module.add("hasVars", hasVars);
       return module;
    }
 
@@ -35,17 +37,12 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitStatVarsInit(GeometricsParser.StatVarsInitContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.varsInit());
    }
 
    @Override
    public ST visitStatVarsSet(GeometricsParser.StatVarsSetContext ctx) {
-      /*
-       * ST vars = template.getInstanceOf("declNewTypeVar"); vars.add("type", );
-       * vars.add("var", visit(varSet).ID()); vars.add("value", visit(varSet)); return
-       * vars;
-       */
-      return null;
+      return visit(ctx.varsSet());
    }
 
    @Override
@@ -81,7 +78,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
-      return visitChildren(ctx);
+      ST print = template.getInstanceOf("print");
+      print.add("value", ctx.ID() != null ? ctx.ID().getText() : ctx.STRING().getText());
+      return print;
    }
 
    @Override
@@ -107,10 +106,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ctx.var = newExprVar();
       declVar.add("stat", visit(ctx.expr(0)));
       declVar.add("stat", visit(ctx.expr(1)));
-      declVar.add("type", "boolean");
+      declVar.add("type", "double");
       declVar.add("var", ctx.var);
       declVar.add("value", ctx.expr(0).var);
-      declVar.add("value", symbAssoc.get(ctx.op.getText()));
+      String op = ctx.op.getText();
+      declVar.add("value", symbAssoc.containsKey(op) ? symbAssoc.get(op) : op);
       declVar.add("value", ctx.expr(1).var);
       return declVar;
    }
@@ -121,10 +121,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ctx.var = newExprVar();
       declVar.add("stat", visit(ctx.expr(0)));
       declVar.add("stat", visit(ctx.expr(1)));
-      declVar.add("type", "boolean");
+      declVar.add("type", "double");
       declVar.add("var", ctx.var);
       declVar.add("value", ctx.expr(0).var);
-      declVar.add("value", symbAssoc.get(ctx.op.getText()));
+      String op = ctx.op.getText();
+      declVar.add("value", symbAssoc.containsKey(op) ? symbAssoc.get(op) : op);
       declVar.add("value", ctx.expr(1).var);
       return declVar;
    }
@@ -147,7 +148,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    @Override
    public ST visitExprPower(GeometricsParser.ExprPowerContext ctx) {
       ST power = template.getInstanceOf("to_the_power");
-      power.add("type", "Dobule");
+      power.add("type", "double");
       power.add("var", newExprVar());
       power.add("value1", ctx.expr(0));
       power.add("value2", ctx.expr(1));
@@ -157,7 +158,12 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    // grupo 1
    @Override
    public ST visitExprNumber(GeometricsParser.ExprNumberContext ctx) {
-      return visitChildren(ctx);
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newExprVar();
+      declVar.add("type", "double");
+      declVar.add("var", ctx.var);
+      declVar.add("value", ctx.NUMBER().getText());
+      return declVar;
    }
 
    @Override
@@ -257,43 +263,42 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
-      ST addToMap = template.getInstanceOf("add_to_map");
-      String type, map, var, value;
-      if (ctx.OBJECT() != null) {
-         type = ctx.OBJECT().getText();
-         switch (type) {
-            case "Text":
-               map = "varsLabel";
-               value = null;
-               break;
-            case "Point":
-               map = "varsPoint";
-               value = null;
-               break;
-            case "Number":
-               map = "varsNumber";
-               value = "0";
-               break;
-            case "Angle":
-               map = "varsAngle";
-               value = null;
-               break;
-            case "Time":
-               map = "varsTime";
-               value = null;
-               break;
-         }
-      } else {
-         type = ctx.FIGURE().getText();
-         map = "varsFigure";
-         value = null;
-      }
+      // ST addToList = template.getInstanceOf("add_to_list");
+      // String type, map = null;
+      // if (ctx.OBJECT() != null) {
+      //    type = ctx.OBJECT().getText();
+      //    switch (type) {
+      //       case "Text":
+      //          map = "varsLabel";
+      //          break;
+      //       case "Point":
+      //          map = "varsPoint";
+      //          break;
+      //       case "Number":
+      //          map = "varsNumber";
+      //          break;
+      //       case "Angle":
+      //          map = "varsAngle";
+      //          break;
+      //       case "Time":
+      //          map = "varsTime";
+      //          break;
+      //    }
+      // } else {
+      //    type = ctx.FIGURE().getText();
+      //    map = "varsFigure";
+      // }
 
-      addToMap.add("type", type);
-      addToMap.add("varMap", map);
-      addToMap.add("var", ctx.ID().getText());
-      addToMap.add("value", value);
-      return addToMap;
+      // hasVars = true;
+      // addToList.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type): type);
+      // addToList.add("varList", map);
+      // addToList.add("var", ctx.ID().getText());
+      // return addToList;
+      ST decl = template.getInstanceOf("declVar");
+      String type = ctx.OBJECT() != null ? ctx.OBJECT().getText() : ctx.FIGURE().getText();
+      decl.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type) : type);
+      decl.add("var", ctx.ID().getText());
+      return decl;
    }
 
    @Override
@@ -303,10 +308,20 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
-      ST objIn = template.getInstanceOf("declVar");
+      ST decl = template.getInstanceOf("declVar");
 
-      String type;
-      return visitChildren(ctx);
+      String type = ctx.OBJECT().getText();
+      decl.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type) : type);
+      decl.add("var", ctx.ID().getText());
+
+      switch (type) {
+         case "Number":
+            decl.add("stat", visit(ctx.attribs()));
+            decl.add("value", ctx.attribs().var);
+            break;
+      }
+
+      return decl;
    }
 
    @Override
@@ -332,7 +347,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitAttribs(GeometricsParser.AttribsContext ctx) {
-      return visitChildren(ctx);
+      if (ctx.expr() != null) {
+         ST visitExpr = visit(ctx.expr());
+         ctx.var = ctx.expr().var;
+         return visitExpr;
+      }
+
+      return null;
    }
 
    @Override
@@ -407,7 +428,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST stats = template.getInstanceOf("stats");
       if (ctx.stats() != null)
          stats.add("stat", visit(ctx.stats()));
-      else
+      else if (ctx.stop != null)
          stats.add("stat", "break;");
       return stats;
    }
@@ -469,12 +490,14 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return "varBoolExpr" + boolExprVars;
    }
 
-   int exprVars = 0;
-   int pointExprVars = 0;
-   int boolExprVars = 0;
-   Map<String, String> symbAssoc = Map.ofEntries(entry("or", "||"), entry("and", "&&"), entry("diffente", "^"),
+   boolean hasVars = false;
+   private int exprVars = 0;
+   private int pointExprVars = 0;
+   private int boolExprVars = 0;
+   private Map<String, String> symbAssoc = Map.ofEntries(entry("or", "||"), entry("and", "&&"), entry("diffente", "^"),
          entry("equals", "=="), entry("greater", ">"), entry("lower", "<"), entry("greater equal", ">="),
          entry("lower equal", "<="), entry("|", "||"), entry("&", "&&"), entry("!", "!="), entry("=", "=="));
-   HashMap<String, String> map = new HashMap<>();
-   HashMap<String, Point> point_map = new HashMap<>();
+   private Map<String, String> typesAssoc = Map.ofEntries(entry("Text", "String"), entry("Number", "double"));
+   private HashMap<String, String> map = new HashMap<>();
+   private HashMap<String, Point> point_map = new HashMap<>();
 }
