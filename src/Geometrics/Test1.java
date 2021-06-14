@@ -25,7 +25,7 @@ public class Test1 extends JPanel implements ActionListener{
             double varExpr2 = varExpr3+varExpr4;
 
             double varExpr5 = 3;
-            double varExpr1 = /varExpr5;
+            double varExpr1 = varExpr2/varExpr5;
             double n = varExpr1;double varExpr8 = 5;
 
             double varExpr9 = 1;

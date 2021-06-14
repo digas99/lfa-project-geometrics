@@ -131,7 +131,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
-      return visit(ctx.expr());
+      ST visit = visit(ctx.expr());
+      ctx.var = ctx.expr().var;
+      return visit;
    }
 
    @Override
