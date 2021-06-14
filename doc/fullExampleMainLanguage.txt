@@ -1,3 +1,6 @@
+/- This is only to consider when compiler is done
+
+
 /- add rand ?
 /- add radius and/or diameter? And take out width from keyword circle.
 /- It's written in a complex way on purpose, for testing purposes.
@@ -122,16 +125,8 @@ container containerVegeta:
 		end
 /- ----------------------------------------------------------------------------------------------
 
-start Figure List Vegeta
 
-Vegeta add body
-Vegeta add head
-Vegeta add rightArm
-Vegeta add leftArm
-Vegeta add rightLeg
-Vegeta add leftLeg
-
-set Vegeta pos -> board center  
+set containerVegeta pos -> board center  
 
 /- Assim está sem localização, tinhamos falado de meter um at
 /- mas meti o at na Task em baixo
@@ -157,17 +152,17 @@ draw goal
 
 start Time time -> 1000 ms
 
-/- rand? between
+/- rand? between two values
 start Angle angVegeta -> rand deg
 
 each time:
 
-	set Vegeta posY -> 1
+	set containerVegeta posY -> 1
 
-	if Vegeta collides goal:
-		set Vegeta rotate -> angVegeta
+	if containerVegeta collides goal:
+		set containerVegeta rotate -> angVegeta
 		call vegetaName
-		set Vegeta posY -> -1 
+		set containerVegeta posY -> -1 
 	end
 
 	if Vegeta collides board:
@@ -188,13 +183,11 @@ Bulma add leftArm
 Bulma add rightLeg
 Bulma add leftLeg
 
-/- Isto é possível?
+/- Seria interessante se fosse possível mudar a cor de todas as figuras na lista
 set Bulma body:
 	color -> purple
 
 
-/- Conceito de função 
-/- Task e with são palavras reservadas
 start Task sum with x,y:
 	set sum -> x+y
 end
@@ -205,7 +198,7 @@ end
 
 start Number nBulma -> call sub with board center, 250
 
-/- Isto é possível???? por causa da ,
+/- Temos que ver se isto é possível por causa da ,
 set Bulma pos -> nBulma, call sub with nBulma, 250
 
 

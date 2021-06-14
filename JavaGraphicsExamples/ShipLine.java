@@ -8,8 +8,8 @@ import java.lang.Math;
 public class ShipLine extends JPanel implements ActionListener {
 
 
-    final int Width_Board = 1000;
-    final int Length_Board = 1000;  
+    final static int Width_Board = 1000;
+    final static int Height_Board = 1000;  
     Timer timer = new Timer(5,this);
     int velShipBody = 1;
     double angle = 0.0;
@@ -37,9 +37,7 @@ public class ShipLine extends JPanel implements ActionListener {
         Point2D pointTopRightRect = new Point2D.Double(pointTopLeftRect.getX()+ShipBody.getWidth(),pointTopLeftRect.getY());
 
         Polygon triangle =  new Polygon();
-        // This logic puts the triangle on top of rect(or any other figure)
-        // it's made by me, so I'm not sure if it works for everything. 
-        // Bottom left(in this case) point of triangle
+
         triangle.addPoint((int)pointTopLeftRect.getX(),(int)pointTopLeftRect.getY());
         // Bottom right(in this case) point of triangle
         triangle.addPoint((int)pointTopRightRect.getX(),(int)pointTopRightRect.getY());
@@ -47,7 +45,7 @@ public class ShipLine extends JPanel implements ActionListener {
         triangle.addPoint(((int)pointTopLeftRect.getX()+(int)pointTopRightRect.getX())/2, 
                          (int)pointTopLeftRect.getY()-(int)HeightTriangle);
 
-        //containerShip.setColor(new Color(r,gr,b));
+        
         containerShip.setColor(new Color(r,gr,b));
         //This is thickness
         containerShip.setStroke(new BasicStroke(10));
@@ -91,7 +89,7 @@ public class ShipLine extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
  
-        // This moves Rect and triangle at the same time because they share xShipBody
+        
         xShipBody -= velShipBody;
 
         if( xShipBody == Width_Board-200){ 
@@ -106,7 +104,7 @@ public class ShipLine extends JPanel implements ActionListener {
         ShipLine n = new ShipLine();
         JFrame frame1 = new JFrame();
         frame1.setTitle("Geometrics");
-        frame1.setSize(new Dimension(1000,1000));
+        frame1.setSize(new Dimension(Width_Board,Height_Board));
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.add(n);
         frame1.setLocationRelativeTo(null);

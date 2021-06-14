@@ -90,13 +90,12 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitContainer(GeometricsParser.ContainerContext ctx) {
-      // ST container = template.getInstanceOf("container");
-      // container.add("var", ctx.ID());
-      // container.add("id", );
-      // for(int i = 0; i < ctx.stats().size(); i++){
-      // container.add("stat", visit(stats).render());
-      // }
-      // return container;
+      /*
+       * ST container = template.getInstanceOf("container"); container.add("var",
+       * ctx.ID().getText()); container.add("id", ); for(int i = 0; i <
+       * ctx.stats().size(); i++){ container.add("stat", visit(stats).render()); }
+       * return container;
+       */
       return null;
    }
 
@@ -132,7 +131,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprParentesis(GeometricsParser.ExprParentesisContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.expr());
    }
 
    @Override
@@ -142,16 +141,37 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprUnary(GeometricsParser.ExprUnaryContext ctx) {
-      return visitChildren(ctx);
+      ST unu = template.getInstanceOf("declVar");
+      ctx.var = newExprVar();
+      unu.add("stat", visit(ctx.expr()));
+      unu.add("type", "double");
+      unu.add("var", ctx.var);
+      if (ctx.value.getText() == "-") {
+         unu.add("value", "-" + ctx.expr().var);
+      } else {
+         unu.add("value", ctx.expr().var);
+      }
+      return unu;
    }
 
    @Override
    public ST visitExprPower(GeometricsParser.ExprPowerContext ctx) {
       ST power = template.getInstanceOf("to_the_power");
+      ctx.var = newExprVar();
+      power.add("stat", visit(ctx.expr(0)));
+      power.add("stat", visit(ctx.expr(1)));
       power.add("type", "double");
-      power.add("var", newExprVar());
-      power.add("value1", ctx.expr(0));
-      power.add("value2", ctx.expr(1));
+      power.add("var", ctx.var);
+      power.add("value1", ctx.expr(0).var);
+      if (ctx.value != null) {
+         if (ctx.value.getText() == "-") {
+            power.add("value2", "-" + ctx.expr(1).var);
+         } else {
+            power.add("value2", ctx.expr(1).var);
+         }
+      } else {
+         power.add("value2", ctx.expr(1).var);
+      }
       return power;
    }
 
@@ -166,8 +186,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return declVar;
    }
 
+   // todo
    @Override
-   public ST visitId(GeometricsParser.IdContext ctx) {
+   public ST visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
       return visitChildren(ctx);
    }
 
@@ -211,7 +232,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitBoolLogicParentesis(GeometricsParser.BoolLogicParentesisContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.booleanLogic());
    }
 
    @Override
@@ -256,31 +277,32 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       // ST addToList = template.getInstanceOf("add_to_list");
       // String type, map = null;
       // if (ctx.OBJECT() != null) {
-      //    type = ctx.OBJECT().getText();
-      //    switch (type) {
-      //       case "Text":
-      //          map = "varsLabel";
-      //          break;
-      //       case "Point":
-      //          map = "varsPoint";
-      //          break;
-      //       case "Number":
-      //          map = "varsNumber";
-      //          break;
-      //       case "Angle":
-      //          map = "varsAngle";
-      //          break;
-      //       case "Time":
-      //          map = "varsTime";
-      //          break;
-      //    }
+      // type = ctx.OBJECT().getText();
+      // switch (type) {
+      // case "Text":
+      // map = "varsLabel";
+      // break;
+      // case "Point":
+      // map = "varsPoint";
+      // break;
+      // case "Number":
+      // map = "varsNumber";
+      // break;
+      // case "Angle":
+      // map = "varsAngle";
+      // break;
+      // case "Time":
+      // map = "varsTime";
+      // break;
+      // }
       // } else {
-      //    type = ctx.FIGURE().getText();
-      //    map = "varsFigure";
+      // type = ctx.FIGURE().getText();
+      // map = "varsFigure";
       // }
 
       // hasVars = true;
-      // addToList.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type): type);
+      // addToList.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type):
+      // type);
       // addToList.add("varList", map);
       // addToList.add("var", ctx.ID().getText());
       // return addToList;
