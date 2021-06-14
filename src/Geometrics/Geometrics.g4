@@ -37,9 +37,7 @@ expr returns[String var = null]
 	;
 // End expr
 
-identifiers	: ID ID	ID?	#idProp
-		| ID		#id
-		;
+identifiers	: ID (' ' ID)*	#id ;
 
 // Begin pointsExpr
 pointsExpr returns[String var = null]

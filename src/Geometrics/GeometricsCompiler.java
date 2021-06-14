@@ -167,16 +167,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    }
 
    @Override
-   public ST visitIdProp(GeometricsParser.IdPropContext ctx) {
-      // ST number = template.getText();
-      // if (map.containsKey(ctx.ID().getText())) {
-      // number.add("number", map.get(ctx.ID().getText()));
-      // }
-      // return number;
-      return null;
-   }
-
-   @Override
    public ST visitId(GeometricsParser.IdContext ctx) {
       return visitChildren(ctx);
    }
