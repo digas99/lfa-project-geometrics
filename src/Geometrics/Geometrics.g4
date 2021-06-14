@@ -37,7 +37,7 @@ expr returns[String var = null]
 	;
 // End expr
 
-identifiers	: ID (' ' ID)* ;
+identifiers	: ID* ;
 
 // Begin pointsExpr
 pointsExpr returns[String var = null]
