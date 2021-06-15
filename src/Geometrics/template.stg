@@ -13,7 +13,7 @@ import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 
-import java.Math.*;
+import java.lang.Math;
 
 import structures.*;
 public class <name> extends JPanel implements ActionListener{
@@ -26,27 +26,31 @@ public class <name> extends JPanel implements ActionListener{
     static List\<structures.Point> varsPoint = new ArrayList\<>();
     <endif>
 
-    public static void main(String[] args) throws Exception{
+    static final int Width_Board = 1000;
+    static final int Height_Board = 1000;
+
+    public void paint(Graphics g){
+        super.paintComponent(g);
         <stats(stat)>
     }
-}
->>
 
-func_paint(stat1, stat2, board_collision) ::= <<
-public void paint(Graphics g){
-    super.paintComponent(g);
-    <stats(stat)>
-
-    timer.start();
-    
     @Override
-    public void actionPerformed(ActionEvent e){
-        <stats(stat)>
-
-        <if(board_collision)><board_collision><endif>
+    public void actionPerformed(ActionEvent e) {
+        repaint();
     }
-    repaint();
+
+    public static void main(String[] args) throws Exception{
+        <name> n = new <name>();
+        JFrame frame1 = new JFrame();
+        frame1.setTitle("Geometrics");
+        frame1.setSize(new Dimension(Width_Board,Height_Board));
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.add(n);
+        frame1.setLocationRelativeTo(null);
+        frame1.setVisible(true);
+    }
 }
+
 >>
 
 board_collision() ::= <<
