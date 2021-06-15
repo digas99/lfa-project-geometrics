@@ -364,15 +364,17 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
    //Loop functions end -----------------------------------------
    @Override public String visitEasteregg(GeometricsParser.EastereggContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.ID());
    }
 
    @Override public String visitAngle(GeometricsParser.AngleContext ctx) {
       return visit(ctx.expr());
+      //verificar se o angulo é menor ou maior que 360 no caso de ser º ou deg e se é maior ou menor que 2pi caso rad?
    }
 
    @Override public String visitTime(GeometricsParser.TimeContext ctx) {
       return visit(ctx.expr());
+      //verificar se tempo é positivo ?
    }
 
    @Override public String visitPoint(GeometricsParser.PointContext ctx) {
