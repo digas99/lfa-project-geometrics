@@ -1,6 +1,7 @@
 module(name, stat, boardName, hasVars, hasList, hasPoints, hasMath) ::= <<
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +15,7 @@ import structures.*;
 public class <name> extends JPanel implements ActionListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
-    List\<Figure> figures = new ArrayList<>();
+    List\<Figure> figures = new ArrayList\<>();
 
     public void paint(Graphics g){
         super.paintComponent(g);
@@ -38,6 +39,12 @@ public class <name> extends JPanel implements ActionListener{
     }
 }
 
+>>
+
+callMain(class, args, stat) ::= <<
+String[] <class>MainArgs = {<args>};
+<class>.main(<class>MainArgs);
+<if(stat)><stats(stat)><endif>
 >>
 
 board_collision() ::= <<

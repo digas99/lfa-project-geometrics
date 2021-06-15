@@ -23,6 +23,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST module = template.getInstanceOf("module");
       module.add("name", this.className);
       module.add("boardName", ctx.STRING().getText());
+
+      if (ctx.use().size() > 0) {
+         module.add("stat", visit(ctx.use(0)));
+      }
+
       ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
       if (hasVars)
          module.add("hasVars", hasVars);
@@ -32,13 +37,21 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitUse(GeometricsParser.UseContext ctx) {
-      src.BeaverMain.main(ctx.STRING().getText());
-      return visitChildren(ctx);
+      ST main = template.getInstanceOf("callMain");
+      main.add("class", "BeaverMain");
+      main.add("args", ctx.STRING().getText());
+      ctx.useAttribs().stream().forEach(attrib -> main.add("stat", visit(attrib)));
+      return main;
    }
 
    @Override
    public ST visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
-      return visitChildren(ctx);
+      ST addList = template.getInstanceOf("add_to_list");
+      addList.add("type", ctx.FIGURE().getText());
+      addList.add("var", ctx.ID(0).getText());
+      addList.add("varList", "figures");
+      addList.add("value", "BeaverMain.getContainer(\""+ctx.ID(1).getText()+"\")");
+      return addList;
    }
 
    @Override

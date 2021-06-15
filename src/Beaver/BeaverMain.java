@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
 public class BeaverMain {
+
    public static void main(String[] args) {
       try {
          CharStream input = CharStreams.fromStream(new FileInputStream(new File(args[0])));
@@ -40,15 +42,15 @@ public class BeaverMain {
                // sort all figures by number of figures
                List<Figure> sortedByNmrFigures = beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).collect(Collectors.toList());
                // get all containers
-               List<Figure> containers = beaverInterpreter.containers();
-               containers.stream().forEach(container -> {
-                  System.out.println("\n");
-                  container.printFamilyTree(0);
-                  System.out.println("");
-                  container.printFamily();
-                  System.out.println("___________________________________________________________");
-               });
-               System.out.println("");
+               containers = beaverInterpreter.containers();
+               // containers.stream().forEach(container -> {
+               //    System.out.println("\n");
+               //    container.printFamilyTree(0);
+               //    System.out.println("");
+               //    container.printFamily();
+               //    System.out.println("___________________________________________________________");
+               // });
+               // System.out.println("");
 
                //sortedByNmrFigures.forEach(figure -> System.out.println(figure.printFigure()));
 
@@ -65,6 +67,20 @@ public class BeaverMain {
          e.printStackTrace();
          System.exit(1);
       }
+   }
+
+   private static List<Figure> containers = new ArrayList<>();
+
+   public static List<Figure> getContainers() {
+      return containers;
+   }
+
+   public static Figure getContainer(String id) {
+      for (Figure f : containers) {
+         if (f.id().equals(id))
+            return f;
+      }
+      return null;
    }
 
 }

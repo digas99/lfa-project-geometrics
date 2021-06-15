@@ -31,7 +31,7 @@ if [ $isInPath = false ]; then
 	fi
 
 	if [[ $proceed = y || $setNewPath = y ]]; then
-		{ echo ""; echo "# CLASSPATH setup for CT-LFA-g14 project Geometrics 2021"; echo "export CLASSPATH=\"\${CLASSPATH}.:`pwd`/lib:.:`pwd`/src:\"";} >> $targetPath
+		{ echo ""; echo "# CLASSPATH setup for CT-LFA-g14 project Geometrics 2021"; echo "export CLASSPATH=\"\${CLASSPATH}.:`pwd`/lib:\"";} >> $targetPath
 		exec bash # reload .bashrc within the same terminal
 	else
 		echo "Aborted. No changes were made."
