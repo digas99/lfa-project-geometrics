@@ -15,17 +15,29 @@ public class Test1 extends JPanel implements ActionListener{
     public void paint(Graphics g){
         super.paintComponent(g);
         System.out.println("this is a test");
+        double varExpr1 = 10;
+        double a = varExpr1;
+        double varExpr3 = 5;
+
+        double varExpr5 = a;
+
+        double varExpr6 = 2;
+        double varExpr4 = varExpr5/varExpr6;
+        double varExpr2 = varExpr3+varExpr4;
+        double b = varExpr2;
+        double varExpr8 = a;
+        double varExpr7 = varExpr8;
+
+        double varExpr10 = b;
+        double varExpr9 = varExpr10;
+        boolean varBoolExpr2 = varExpr7==varExpr9;
+
         boolean varBoolExpr3 = true;
-
-        boolean varBoolExpr4 = false;
-        boolean varBoolExpr2 = varBoolExpr3||varBoolExpr4;
-
-        boolean varBoolExpr5 = true;
-        boolean varBoolExpr1 = varBoolExpr2&&varBoolExpr5;
+        boolean varBoolExpr1 = varBoolExpr2&&varBoolExpr3;
         if(varBoolExpr1){
-            structures.Point varExpr1 = n.center();
-            structures.Point n3 = varExpr1;double varExpr2 = n.center().x();
-            double n3x = varExpr2;
+            structures.Point varExpr11 = n.center();
+            structures.Point n3 = varExpr11;double varExpr12 = n.center().x();
+            double n3x = varExpr12;String string = "this is a string";
         }
     }
 

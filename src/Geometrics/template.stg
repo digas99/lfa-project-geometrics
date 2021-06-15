@@ -17,15 +17,6 @@ import java.lang.Math;
 
 import structures.*;
 public class <name> extends JPanel implements ActionListener{
-    <if(hasVars)>
-    static List\<Figure> varsFigure = new ArrayList\<>();
-    static List\<String> varsLabel = new ArrayList\<>();
-    static List\<Double> varsNumber = new ArrayList\<>();
-    static List\<Time> varsTime = new ArrayList\<>();
-    static List\<Angle> varsAngle = new ArrayList\<>();
-    static List\<structures.Point> varsPoint = new ArrayList\<>();
-    <endif>
-
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
 

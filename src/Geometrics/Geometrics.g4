@@ -129,7 +129,7 @@ time : expr type=('ms'|'s');
 point : expr ',' expr ;
 
 FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle' | 'Line' ;
-OBJECT : 'Text' | 'Point' | 'Number' |  'Angle' | 'Time';
+OBJECT : 'Label' | 'Point' | 'Number' | 'Angle' | 'Time';
 TRUTHVAL : 'true' | 'false';
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
 ID: [a-zA-Z0-9]+;	

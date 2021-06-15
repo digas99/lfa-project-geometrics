@@ -150,10 +150,14 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       String[] functions = visit.render().split("\\.");
       String lastFunc = functions[functions.length-1].split("\\(\\)")[0];
       String type = "";
-      for (List<String> funcList : funcTypesAssoc.keySet()) {
-         if (funcList.contains(lastFunc))
-            type = funcTypesAssoc.get(funcList);
+      if (functions.length > 1) {
+         for (List<String> funcList : funcTypesAssoc.keySet()) {
+            if (funcList.contains(lastFunc))
+               type = funcTypesAssoc.get(funcList);
+         }
       }
+      else
+         type = varsTypes.get(visit.render());
       declVar.add("type", type); 
       declVar.add("var", ctx.var);
       return declVar;
@@ -253,7 +257,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitBoolLogicExpr(GeometricsParser.BoolLogicExprContext ctx) {
-      return visit(ctx.expr());
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newExprVar();
+      declVar.add("type", "double");
+      declVar.add("var", ctx.var);
+      declVar.add("stat", visit(ctx.expr()));
+      declVar.add("value", ctx.expr().var);
+      return declVar;
    }
 
    @Override
@@ -300,42 +310,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
-      // ST addToList = template.getInstanceOf("add_to_list");
-      // String type, map = null;
-      // if (ctx.OBJECT() != null) {
-      // type = ctx.OBJECT().getText();
-      // switch (type) {
-      // case "Text":
-      // map = "varsLabel";
-      // break;
-      // case "Point":
-      // map = "varsPoint";
-      // break;
-      // case "Number":
-      // map = "varsNumber";
-      // break;
-      // case "Angle":
-      // map = "varsAngle";
-      // break;
-      // case "Time":
-      // map = "varsTime";
-      // break;
-      // }
-      // } else {
-      // type = ctx.FIGURE().getText();
-      // map = "varsFigure";
-      // }
-
-      // hasVars = true;
-      // addToList.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type):
-      // type);
-      // addToList.add("varList", map);
-      // addToList.add("var", ctx.ID().getText());
-      // return addToList;
       ST decl = template.getInstanceOf("declVar");
       String type = ctx.OBJECT() != null ? ctx.OBJECT().getText() : ctx.FIGURE().getText();
-      decl.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type) : type);
-      decl.add("var", ctx.ID().getText());
+      String convertedType = typesAssoc.containsKey(type) ? typesAssoc.get(type) : type;
+      String var = ctx.ID().getText();
+      decl.add("type", convertedType);
+      decl.add("var", var);
+      varsTypes.put(var, convertedType);
       return decl;
    }
 
@@ -349,10 +330,27 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST decl = template.getInstanceOf("declVar");
 
       String type = ctx.OBJECT().getText();
-      decl.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type) : type);
-      decl.add("var", ctx.ID().getText());
-      decl.add("stat", visit(ctx.attribs()));
-      decl.add("value", ctx.attribs().var);
+      String convertedType = typesAssoc.containsKey(type) ? typesAssoc.get(type) : type; 
+      String var = ctx.ID().getText();
+      decl.add("type", convertedType);
+      decl.add("var", var);
+      varsTypes.put(var, convertedType);
+
+      String value = "";
+      switch(type) {
+         case "Number":
+            decl.add("stat", visit(ctx.attribs()));
+            value = ctx.attribs().var;
+            break;
+         case "Label":
+            value = visit(ctx.attribs()).render();
+            break;
+         case "Point":
+            decl.add("stat", visit(ctx.attribs()));
+            value = ctx.attribs().var;
+            break;
+      }
+      decl.add("value", value);
 
       return decl;
    }
@@ -384,6 +382,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          ST visitExpr = visit(ctx.expr());
          ctx.var = ctx.expr().var;
          return visitExpr;
+      }
+      else if (ctx.STRING() != null) {
+         ST stats = template.getInstanceOf("stats");
+         stats.add("stat", ctx.STRING().getText());
+         return stats;
       }
 
       return null;
@@ -541,7 +544,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       entry("!", "!="),
       entry("=", "=="));
    private Map<String, String> typesAssoc = Map.ofEntries(
-      entry("Text", "String"),
+      entry("Label", "String"),
       entry("Number", "double"),
       entry("Point", "structures.Point"));
    private Map<List<String>, String> funcTypesAssoc = Map.ofEntries(
@@ -550,4 +553,5 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       entry(Arrays.asList("filled", "visibility", "collide"), "boolean"),
       entry(Arrays.asList("color"), "Color"),
       entry(Arrays.asList("angle"), "Angle"));
+   private HashMap<String, String> varsTypes = new HashMap<>();
 }
