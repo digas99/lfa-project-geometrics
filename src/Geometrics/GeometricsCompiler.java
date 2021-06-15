@@ -32,6 +32,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitUse(GeometricsParser.UseContext ctx) {
+      src.BeaverMain.main(ctx.STRING().getText());
       return visitChildren(ctx);
    }
 

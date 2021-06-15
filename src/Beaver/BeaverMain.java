@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+
 import java.util.stream.Collectors;
 import java.util.Comparator;
 import java.util.List;
@@ -11,8 +14,7 @@ import org.antlr.v4.runtime.tree.*;
 public class BeaverMain {
    public static void main(String[] args) {
       try {
-         // create a CharStream that reads from standard input:
-         CharStream input = CharStreams.fromStream(System.in);
+         CharStream input = CharStreams.fromStream(new FileInputStream(new File(args[0])));
          // create a lexer that feeds off of input CharStream:
          BeaverLexer lexer = new BeaverLexer(input);
          // create a buffer of tokens pulled from the lexer:
