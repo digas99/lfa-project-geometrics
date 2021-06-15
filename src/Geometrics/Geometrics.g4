@@ -37,9 +37,7 @@ expr returns[String var = null]
 	;
 // End expr
 
-identifiers	: ID ID	ID?	#idProp
-		| ID		#id
-			;
+identifiers	: ID+ ;
 
 // Begin pointsExpr
 pointsExpr returns[String var = null]
@@ -78,7 +76,7 @@ inlineSet	: ID '->' attribs NEWLINE* ;
 
 blockSet : ':' inlineSet+ 'end' ;
 
-attribs	: (STRING | expr | angle | time | pointsExpr | funcCall | TRUTHVAL) NEWLINE*;
+attribs	returns [String var = null]: (STRING | expr | angle | time | pointsExpr | funcCall | TRUTHVAL) NEWLINE*;
 // End vars initialization
 
 // Begin func call
@@ -112,7 +110,7 @@ list	: ID 'add' ID (first='first')?		#listAdd
 conditional	: 'if' booleanLogic ':' blockStats* 'end' ;
 // End conditional
 
-blockStats	: stats | 'stop' ;
+blockStats	: stats | stop='stop' | NEWLINE ;
 
 // Begin loop
 loop	: 'each' (time | ID) loopSpecifics 'end' ;
@@ -131,10 +129,10 @@ time : expr type=('ms'|'s');
 point : expr ',' expr ;
 
 FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle' | 'Line' ;
-OBJECT : 'Text' | 'Point' | 'Number' |  'Angle' | 'Time';
+OBJECT : 'Label' | 'Point' | 'Number' | 'Angle' | 'Time';
 TRUTHVAL : 'true' | 'false';
-ID: [a-zA-Z0-9]+;	
 NUMBER : [0-9]+('.' [0-9]+)? | 'pi'; 
+ID: [a-zA-Z0-9]+;	
 NEWLINE : '\r'? '\n';
 STRING: '"' .*? '"';
 WS	: [ \t\n\r]+ -> skip;

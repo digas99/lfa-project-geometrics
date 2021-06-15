@@ -1,51 +1,50 @@
-module(name, stat, hasVars, hasList, hasPoints, hasMath) ::= <<
-<if(hasList)>
-import java.util.List.*;
-<endif>
-<if(hasVars)>
-import java.util.HashMap;
-<endif>
+module(name, stat, boardName, hasVars, hasList, hasPoints, hasMath) ::= <<
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
-<if(hasMath)>
-import java.Math.*;
-<endif>
+
+import java.lang.Math;
+
 import structures.*;
 public class <name> extends JPanel implements ActionListener{
-    <if(hasVars)>
-    static HashMap \<String,Figure\> varsFigure = new HashMap\<>();
-    static HashMap \<String,String>\> varsLabel = new HashMap\<>();
-    static HashMap \<String,Double\> varsNumber = new HashMap\<>();
-    static HashMap \<String,Time>\> varsTime = new HashMap\<>();
-    static HashMap \<String,Angle\> varsAngle = new HashMap\<>();
-    static HashMap \<String,Point\> varsPoint = new HashMap\<>();
-    <endif>
+    static final int Width_Board = 1000;
+    static final int Height_Board = 1000;
+    List\<Figure> figures = new ArrayList\<>();
+
+    public void paint(Graphics g){
+        super.paintComponent(g);
+        <stats(stat)>
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
+    }
 
     public static void main(String[] args) throws Exception{
-        <stats(stat)>
+        <name> n = new <name>();
+        JFrame frame1 = new JFrame();
+        frame1.setTitle(<boardName>);
+        frame1.setSize(new Dimension(Width_Board,Height_Board));
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.add(n);
+        frame1.setLocationRelativeTo(null);
+        frame1.setVisible(true);
     }
 }
+
 >>
 
-func_paint(stat1, stat2, board_collision) ::= <<
-public void paint(Graphics g){
-    super.paintComponent(g);
-    <stats(stat)>
-
-    timer.start();
-    
-    @Override
-    public void actionPerformed(ActionEvent e){
-        <stats(stat)>
-
-        <if(board_collision)><board_collision><endif>
-    }
-    repaint();
-}
+callMain(class, args, stat) ::= <<
+String[] <class>MainArgs = {<args>};
+<class>.main(<class>MainArgs);
+<if(stat)><stats(stat)><endif>
 >>
 
 board_collision() ::= <<
@@ -79,8 +78,8 @@ stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
 
-draw(id) ::= <<
-.add(<id>);
+stats_line(stat) ::= <<
+<if(stat)><stat><endif>
 >>
 
 declVar(type, var, value, stat) ::= <<
@@ -103,18 +102,11 @@ conditional(stat, var, stat_true, stat_false, break) ::= <<
 if(<var>){
     <stat_true>
 }
-<if(stat_false)>
-else{
-    <stat_false>
-    <if(break)>
-    break;
-    <endif>
-}
-<endif>
 >>
 
-container(id, var) ::= <<
+container(id, var, stat) ::= <<
 Graphics2D <var> = (Graphics2D).<id>.create();
+<if(stats(stat))><stats(stat)><endif>
 >>
 
 call_func(name, values) ::= <<
@@ -125,8 +117,9 @@ change_var(var, value) ::= <<
 <var> = <value>;
 >>
 
-add_to_list(var, value) ::= <<
-<var>.add(<value>);
+add_to_list(var, varList, value, type) ::= <<
+<if(type)><declVar(type, var, value, "")><endif>
+<varList>.add(<var>);
 >>
 
 remove_from_list(var, value) ::= <<
@@ -134,7 +127,7 @@ remove_from_list(var, value) ::= <<
 >>
 
 add_to_map(var, varMap, value, type) ::= <<
-<declVar(type, var, value)>
+<if(type)><declVar(type, var, value, "")><endif>
 <varMap>.put(<var>, <value>);
 >>
 
@@ -160,7 +153,8 @@ number(value)::= <<
 <value>;
 >>
 
-to_the_power(type, var, value1, value2)::= <<
+to_the_power(type, var, value1, value2, stat)::= <<
+<if(stat)><stats(stat)><endif>
 <type> <var> = Math.pow(<value1>, <value2>);
 >>
 
@@ -170,4 +164,25 @@ Point <var> = <type>(<p0>, <p1>);
 
 not_bool(value) ::= <<
 !<value>
+>>
+
+print(stat, value) ::= <<
+<if(stat)><stats(stat)><endif>
+System.out.println(<value>);
+>>
+
+draw(var) ::= << 
+<var>.draw();
+>>
+
+filled(var, fig) ::= <<
+<var>.fill(<fig>);
+>>
+
+get_id(value) ::= <<
+<value>
+>>
+
+id_Prop(type, val1, val2) ::= <<
+<type> <val1> <if(val2)><val2><endif>;
 >>

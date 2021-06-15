@@ -26,7 +26,7 @@ public class GeometricsMain {
             // System.out.println(tree.toStringTree(parser));
             GeometricsCompiler compiler = new GeometricsCompiler(args[1]);
             String finalContent = compiler.visit(tree).render();
-            FileWriter writer = new FileWriter(args[1] + ".java");
+            FileWriter writer = new FileWriter("../Beaver/"+args[1] + ".java");
             writer.write(finalContent);
             writer.close();
          }
