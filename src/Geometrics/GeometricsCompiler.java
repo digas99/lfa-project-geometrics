@@ -1,6 +1,9 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static java.util.Map.entry;
+
+import java.util.Arrays;
 
 import structures.*;
 
@@ -19,6 +22,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    public ST visitProgram(GeometricsParser.ProgramContext ctx) {
       ST module = template.getInstanceOf("module");
       module.add("name", this.className);
+      module.add("boardName", ctx.STRING().getText());
       ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
       if (hasVars)
          module.add("hasVars", hasVars);
@@ -139,8 +143,20 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprId(GeometricsParser.ExprIdContext ctx) {
+      ST declVar = template.getInstanceOf("declVar");
       ctx.var = newExprVar();
-      return visit(ctx.identifiers());
+      ST visit = visit(ctx.identifiers());
+      declVar.add("value", visit);
+      String[] functions = visit.render().split("\\.");
+      String lastFunc = functions[functions.length-1].split("\\(\\)")[0];
+      String type = "";
+      for (List<String> funcList : funcTypesAssoc.keySet()) {
+         if (funcList.contains(lastFunc))
+            type = funcTypesAssoc.get(funcList);
+      }
+      declVar.add("type", type); 
+      declVar.add("var", ctx.var);
+      return declVar;
    }
 
    @Override
@@ -193,11 +209,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    // todo
    @Override
    public ST visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
-      ST stats = template.getInstanceOf("stats");
+      ST stats = template.getInstanceOf("stats_line");
       stats.add("stat", ctx.ID(0).getText());
       for (int i = 1; i < ctx.ID().size(); i++) {
          stats.add("stat", ".");
-         stats.add("stat", ctx.ID(i).getText());
+         stats.add("stat", ctx.ID(i).getText()+"()");
       }
       return stats;
    }
@@ -335,13 +351,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       String type = ctx.OBJECT().getText();
       decl.add("type", typesAssoc.containsKey(type) ? typesAssoc.get(type) : type);
       decl.add("var", ctx.ID().getText());
-
-      switch (type) {
-         case "Number":
-            decl.add("stat", visit(ctx.attribs()));
-            decl.add("value", ctx.attribs().var);
-            break;
-      }
+      decl.add("stat", visit(ctx.attribs()));
+      decl.add("value", ctx.attribs().var);
 
       return decl;
    }
@@ -516,10 +527,27 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    private int exprVars = 0;
    private int pointExprVars = 0;
    private int boolExprVars = 0;
-   private Map<String, String> symbAssoc = Map.ofEntries(entry("or", "||"), entry("and", "&&"), entry("diffente", "^"),
-         entry("equals", "=="), entry("greater", ">"), entry("lower", "<"), entry("greater equal", ">="),
-         entry("lower equal", "<="), entry("|", "||"), entry("&", "&&"), entry("!", "!="), entry("=", "=="));
-   private Map<String, String> typesAssoc = Map.ofEntries(entry("Text", "String"), entry("Number", "double"));
-   private HashMap<String, String> map = new HashMap<>();
-   private HashMap<String, Point> point_map = new HashMap<>();
+   private Map<String, String> symbAssoc = Map.ofEntries(
+      entry("or", "||"),
+      entry("and", "&&"),
+      entry("diffente", "^"),
+      entry("equals", "=="),
+      entry("greater", ">"),
+      entry("lower", "<"),
+      entry("greater equal", ">="),
+      entry("lower equal", "<="),
+      entry("|", "||"),
+      entry("&", "&&"),
+      entry("!", "!="),
+      entry("=", "=="));
+   private Map<String, String> typesAssoc = Map.ofEntries(
+      entry("Text", "String"),
+      entry("Number", "double"),
+      entry("Point", "structures.Point"));
+   private Map<List<String>, String> funcTypesAssoc = Map.ofEntries(
+      entry(Arrays.asList("width", "height", "diameter", "radius", "x", "y"), "double"),
+      entry(Arrays.asList("center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"), "structures.Point"),
+      entry(Arrays.asList("filled", "visibility", "collide"), "boolean"),
+      entry(Arrays.asList("color"), "Color"),
+      entry(Arrays.asList("angle"), "Angle"));
 }

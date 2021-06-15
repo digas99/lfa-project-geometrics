@@ -1,4 +1,4 @@
-module(name, stat, hasVars, hasList, hasPoints, hasMath) ::= <<
+module(name, stat, boardName, hasVars, hasList, hasPoints, hasMath) ::= <<
 <if(hasList)>
 import java.util.List.*;
 <endif>
@@ -42,7 +42,7 @@ public class <name> extends JPanel implements ActionListener{
     public static void main(String[] args) throws Exception{
         <name> n = new <name>();
         JFrame frame1 = new JFrame();
-        frame1.setTitle("Geometrics");
+        frame1.setTitle(<boardName>);
         frame1.setSize(new Dimension(Width_Board,Height_Board));
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.add(n);
@@ -82,6 +82,10 @@ if(xRedSquare >= Length_Board-100){
 
 stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
+>>
+
+stats_line(stat) ::= <<
+<if(stat)><stat><endif>
 >>
 
 declVar(type, var, value, stat) ::= <<
