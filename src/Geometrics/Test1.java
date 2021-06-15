@@ -19,21 +19,6 @@ public class Test1 extends JPanel implements ActionListener{
         boolean varBoolExpr5 = true;
         boolean varBoolExpr1 = varBoolExpr2&&varBoolExpr5;
         if(varBoolExpr1){
-            double varExpr3 = 1;
-
-            double varExpr4 = 3;
-            double varExpr2 = varExpr3+varExpr4;
-
-            double varExpr5 = 3;
-            double varExpr1 = varExpr2/varExpr5;
-            double n = varExpr1;double varExpr8 = 5;
-
-            double varExpr9 = 1;
-            double varExpr7 = Math.pow(varExpr8, varExpr9);
-
-            double varExpr10 = 3;
-            double varExpr6 = Math.pow(varExpr7, varExpr10);
-            double n2 = varExpr6;
         }
     }
 }

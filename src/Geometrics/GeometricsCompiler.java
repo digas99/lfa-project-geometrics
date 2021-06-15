@@ -22,6 +22,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
       if (hasVars)
          module.add("hasVars", hasVars);
+
       return module;
    }
 
@@ -138,6 +139,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitExprId(GeometricsParser.ExprIdContext ctx) {
+      ctx.var = newExprVar();
       return visit(ctx.identifiers());
    }
 
@@ -191,7 +193,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    // todo
    @Override
    public ST visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
-      return visitChildren(ctx);
+      ST stats = template.getInstanceOf("stats");
+      stats.add("stat", ctx.ID(0).getText());
+      for (int i = 1; i < ctx.ID().size(); i++) {
+         stats.add("stat", ".");
+         stats.add("stat", ctx.ID(i).getText());
+      }
+      return stats;
    }
 
    @Override
