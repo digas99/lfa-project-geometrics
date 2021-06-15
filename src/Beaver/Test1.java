@@ -20,8 +20,11 @@ public class Test1 extends JPanel implements ActionListener{
         super.paintComponent(g);
         String[] BeaverMainMainArgs = {"../../doc/Beaver/working/flags.bvr"};
         BeaverMain.main(BeaverMainMainArgs);
-        structures.Rectangle flag1 = (structures.Rectangle) BeaverMain.getContainer("japanese");
+        structures.Figure flag1 = BeaverMain.getContainer("japanese");
         figures.add(flag1);
+
+        structures.Figure sphere = BeaverMain.getContainer("armilarSphere");
+        figures.add(sphere);
         System.out.println("this is a test");
         double varExpr1 = 10;
         double a = varExpr1;

@@ -47,7 +47,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    @Override
    public ST visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
       ST addList = template.getInstanceOf("add_to_list");
-      addList.add("type", ctx.FIGURE().getText());
+      String type = "structures."+ctx.FIGURE().getText();
+      addList.add("type", type);
       addList.add("var", ctx.ID(0).getText());
       addList.add("varList", "figures");
       addList.add("value", "BeaverMain.getContainer(\""+ctx.ID(1).getText()+"\")");
