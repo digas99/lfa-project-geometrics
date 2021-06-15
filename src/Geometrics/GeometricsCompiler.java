@@ -372,6 +372,20 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
+      String type = ctx.FIGURE().getText();
+      String var = ctx.ID().getText();
+      ST figureMaking = template.getInstanceOf("figureMaking");
+      figureMaking.add("type",type);
+      figureMaking.add("var",var);
+      figureMaking.add("properties", visit(ctx.blockSet()));
+
+      switch(type){
+         case "Rectangle":
+            ST rectangleMaking = template.getInstanceOf("rectangleMaking");
+            rectangleMaking.add("var", var);
+            figureMaking.add("stat", rectangleMaking.render());
+            break;
+      }
       return visitChildren(ctx);
    }
 
@@ -382,13 +396,20 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitInlineSet(GeometricsParser.InlineSetContext ctx) {
+      // ordernar InLineSet tendo em conta o construtor
+      // (add blank construtor)
       return visitChildren(ctx);
    }
 
    // grupo 1
    @Override
    public ST visitBlockSet(GeometricsParser.BlockSetContext ctx) {
-      return visitChildren(ctx);
+      ST stats = template.getInstanceOf("stats"); 
+      for(int i=0; i<ctx.inlineSet().size(); i++){
+         stats.add("stat", ",");
+         stats.add("stat", ctx.inlineSet(i));
+      }
+      return stats;
    }
 
    @Override
