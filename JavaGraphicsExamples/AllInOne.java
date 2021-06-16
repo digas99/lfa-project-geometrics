@@ -2,11 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.concurrent.TimeUnit;
 
-public class AllInOne extends JPanel implements ActionListener {
 
-    final int Width_Board = 1000;
-    final int Length_Board = 1000;
+public class AllInOne extends JPanel implements ActionListener,KeyListener {
+
+    private static final int Width_Board = 1000;
+    private static final int Height_Board = 1000;
     private Timer timer = new Timer(30, this); // (ms,ActionListener)
     private int xRedSquare = 0;
     private int xPurpleBlackSquare = 500;
@@ -17,6 +19,11 @@ public class AllInOne extends JPanel implements ActionListener {
     private int velGreenCircle = 1;
     private int velRedCircle = 1;
     private double angle = 0.0;
+    private static double delayClose = 300;
+    //These can be initiated inside paint
+    private int depthGreenCircle = 0;
+    private int depthRedCircle = 0;
+   
 
     /////////////// --------------------------------Two rectangles
     /////////////// interaction--------------------------------------------------------------------------
@@ -122,11 +129,21 @@ public class AllInOne extends JPanel implements ActionListener {
         // no longer update/use it. It's good pratice to use dispose, it's safer to
         // close,
         // but only when you are sure.
-        containerRedSquare.dispose();
-        containerPurpleBlackSquare.dispose();
+        //containerRedSquare.dispose();
+        //containerPurpleBlackSquare.dispose();
 
-        /////////////// -------------- ------------------Two circles
-        /////////////// interaction--------------------------------------------------------------------------
+        /////////////// -------------- ------------------Two circles interaction -------------------------
+
+        Graphics2D containerRedCircle = (Graphics2D) g.create();
+
+        Shape circle2 = new Ellipse2D.Float(xRedCircle, 100.0f, 100.0f, 100.0f);
+
+        containerRedCircle.setPaint(Color.RED);
+        //This is to erase shape, the color that is above fill or draw
+        //will be the color of the shape, it doesn't really erase it
+        //containerRedCircle.setPaint(containerRedCircle.getBackground());
+        containerRedCircle.fill(circle2);
+        depthRedCircle = 1;
 
         Graphics2D containerGreenCircle = (Graphics2D) g.create();
 
@@ -135,14 +152,8 @@ public class AllInOne extends JPanel implements ActionListener {
 
         containerGreenCircle.setPaint(Color.GREEN);
         containerGreenCircle.fill(circle);
-        containerGreenCircle.dispose();
-
-        Graphics2D containerRedCircle = (Graphics2D) g.create();
-
-        Shape circle2 = new Ellipse2D.Float(xRedCircle, 100.0f, 100.0f, 100.0f);
-
-        containerRedCircle.setPaint(Color.RED);
-        containerRedCircle.fill(circle2);
+        depthGreenCircle = 2;
+        //containerGreenCircle.dispose();
 
         // intersects() only accepts rectangles. so I'll create
         // rectangle that encloses the circle using getBounds().
@@ -150,27 +161,62 @@ public class AllInOne extends JPanel implements ActionListener {
         // If you want to see it add containerRedCircle.draw(rect3);
         Rectangle rect3 = new Rectangle(circle.getBounds());
 
+        /////////////// -------------- ------------------Two circles interaction -------------------------        
+
         // Circles move away from each other after intersecting
         // velGreenCircle =0 && velRedCircle=0 to make it more smooth
         if (circle2.intersects(rect3)) {
+            //This is for hangling depth
+            /*if(depthRedCircle > depthGreenCircle){
+                containerRedCircle.fill(circle2);
+            }
+            else{
+                containerGreenCircle.fill(circle); 
+            }*/
             velGreenCircle = 0;
             velRedCircle = 0;
             velGreenCircle -= 1;
             velRedCircle -= 1;
         }
 
+        if (xRedSquare >= Height_Board - getWidth() * 0.10 ) {
+            velRedSquare = velRedSquare * -1;
+            velPurpleBlackSquare = velPurpleBlackSquare * -1;
+            velGreenCircle = velGreenCircle * -1;
+            velRedCircle = velRedCircle * -1;
+
+        } else if (xPurpleBlackSquare >= getWidth() * 0.10) {
+            velRedSquare = velRedSquare * -1;
+            velPurpleBlackSquare = velPurpleBlackSquare * -1;
+            velGreenCircle = velGreenCircle * -1;
+            velRedCircle = velRedCircle * -1;
+
+        } else if (xGreenCircle >= getWidth() - getWidth() * 0.10) {
+            velRedSquare = velRedSquare * -1;
+            velPurpleBlackSquare = velPurpleBlackSquare * -1;
+            velGreenCircle = velGreenCircle * -1;
+            velRedCircle = velRedCircle * -1;
+
+        } else if (xRedCircle >= getWidth() - getWidth() * 0.10) {
+            velRedSquare = velRedSquare * -1;
+            velPurpleBlackSquare = velPurpleBlackSquare * -1;
+            velGreenCircle = velGreenCircle * -1;
+            velRedCircle = velRedCircle * -1;
+        }
+
         containerRedCircle.dispose();
+        containerRedSquare.dispose();
+        containerPurpleBlackSquare.dispose();
+        containerGreenCircle.dispose();
 
         timer.start();
     }
 
-    // This calls the paint method. If you can, put the logic here,
-    // but sometimes it's not possible.
     @Override
     public void actionPerformed(ActionEvent e) {
 
         // This makes the redSquare(rect) go down,
-        // because xRedSquare is in y coordinate on line52
+        // because xRedSquare is in y coordinate
         xRedSquare += velRedSquare;
 
         xPurpleBlackSquare -= velPurpleBlackSquare;
@@ -178,53 +224,57 @@ public class AllInOne extends JPanel implements ActionListener {
         xGreenCircle += velGreenCircle;
         xRedCircle -= velRedCircle;
 
-        // This is so that board has collision.
-        // Java is stupid so the -100 is because size of board includes borders of
-        // board.
-        // With this logic figures go the opposite way.
-        if (xRedSquare >= Length_Board - 100) {
-            velRedSquare = velRedSquare * -1;
-            velPurpleBlackSquare = velPurpleBlackSquare * -1;
-            velGreenCircle = velGreenCircle * -1;
-            velRedCircle = velRedCircle * -1;
-
-        } else if (xPurpleBlackSquare >= Width_Board - 100) {
-            velRedSquare = velRedSquare * -1;
-            velPurpleBlackSquare = velPurpleBlackSquare * -1;
-            velGreenCircle = velGreenCircle * -1;
-            velRedCircle = velRedCircle * -1;
-
-        } else if (xGreenCircle >= Width_Board - 100) {
-            velRedSquare = velRedSquare * -1;
-            velPurpleBlackSquare = velPurpleBlackSquare * -1;
-            velGreenCircle = velGreenCircle * -1;
-            velRedCircle = velRedCircle * -1;
-
-        } else if (xRedCircle >= Length_Board - 100) {
-            velRedSquare = velRedSquare * -1;
-            velPurpleBlackSquare = velPurpleBlackSquare * -1;
-            velGreenCircle = velGreenCircle * -1;
-            velRedCircle = velRedCircle * -1;
-        }
-
-        // This will call the paint function. Paint function can't/shouldn't be refer to
-        // directly, in any case.
-        // Without this things don't move!!
         repaint();
-
     }
+
+  
+    /* //Trying to add delay exit of program
+        //Not being used as of this version
+    public static void wait(int ms){
+        try{
+            Thread.sleep(ms);
+        }
+        catch(InterruptedException ex){
+            Thread.currentThread().interrupt();
+        }
+    }*/
+
+    //For interaction
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if(key == KeyEvent.VK_UP){
+        timer.stop();
+        }
+        if(key == KeyEvent.VK_DOWN){
+        timer.start(); 
+        }  
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e){
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e){
+    }
+
 
     public static void main(String[] args) {
         AllInOne n = new AllInOne();
         JFrame frame1 = new JFrame();
         frame1.setTitle("Geometrics");
-        frame1.setSize(1000, 1000);
+        frame1.setSize(Width_Board, Height_Board);
         frame1.setVisible(true);
         // centers the board to the center of screen
         frame1.setLocationRelativeTo(null);
         // program stops running after closing it on the X at the top right
         // otherwise you have to close it on the terminal
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.add(n);
+        frame1.addKeyListener(n);
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
     }
 }
+
+
