@@ -71,34 +71,6 @@ rectangleMaking(var)::= <<
     <endif>
 >>
 
-
-board_collision() ::= <<
-if(xRedSquare >= Length_Board-100){
-    velRedSquare = velRedSquare * -1;
-    velPurpleBlackSquare = velPurpleBlackSquare * -1;
-    velGreenCircle  = velGreenCircle  * -1;
-    velRedCircle = velRedCircle * -1;
-
-}else if( xPurpleBlackSquare >= Width_Board-100){
-    velRedSquare = velRedSquare * -1;
-    velPurpleBlackSquare = velPurpleBlackSquare * -1;
-    velGreenCircle  = velGreenCircle  * -1;
-    velRedCircle = velRedCircle * -1;
-
-}else if(xGreenCircle >= Width_Board-100){
-    velRedSquare = velRedSquare * -1;
-    velPurpleBlackSquare = velPurpleBlackSquare * -1;
-    velGreenCircle  = velGreenCircle  * -1;
-    velRedCircle = velRedCircle * -1;
-
-}else if(xRedCircle >= Length_Board-100){
-    velRedSquare = velRedSquare * -1;
-    velPurpleBlackSquare = velPurpleBlackSquare * -1;
-    velGreenCircle  = velGreenCircle  * -1;
-    velRedCircle = velRedCircle * -1;
-}
->>
-
 stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
@@ -160,22 +132,8 @@ get_from_map(type, var, varMap, key) ::= <<
 <type> <var> = <varMap>.containsKey(<key>) ? <varMap>.get(<key>) : null;
 >>
 
-call_func2(var, name) ::= <<
-<var>.<name>(<var>);
->>
-
-declFunc(type, name, var) ::= <<
-public <type> <name>(<type> <var>){
-    <stats(stat)>
-}
->>
-
 center(var) ::= <<
 Point2D center = new Point2D((int) <var>.getCenterX(), <var>.getCenterY());
->>
-
-number(value)::= <<
-<value>;
 >>
 
 to_the_power(type, var, value1, value2, stat)::= <<
@@ -202,12 +160,4 @@ draw(var) ::= <<
 
 filled(var, fig) ::= <<
 <var>.fill(<fig>);
->>
-
-get_id(value) ::= <<
-<value>
->>
-
-id_Prop(type, val1, val2) ::= <<
-<type> <val1> <if(val2)><val2><endif>;
 >>
