@@ -1,3 +1,8 @@
+use "../../doc/Beaver/working/flags.bvr" :
+	Figure flag1 -> japanese
+	Figure sphere -> armilarSphere
+end
+
 Board "Test"
 
 write "this is a test"
@@ -13,5 +18,22 @@ if a equals b and true:
 	/- start Number n2 -> 5 ^ -1 ^ 3
 	/- try number with exponencial
 end
+
+start Rectangle rec:
+	display -> exposed
+	width -> 400
+	thickness -> 2
+	height -> 400
+	angle -> 0 deg
+	center -> 0,0
+	color -> red
+	collision -> true
+	depth -> 1
+	filled -> true
+end 
+
+draw rec
+
+
 
 close 3000 ms

@@ -1,24 +1,23 @@
 module(name, stat, boardName, hasVars, hasList, hasPoints, hasMath) ::= <<
-<if(hasList)>
-import java.util.List.*;
-<endif>
-<if(hasVars)>
 import java.util.List;
 import java.util.ArrayList;
-<endif>
+import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
-
+import org.antlr.v4.runtime.misc.Pair;
 import java.lang.Math;
 
 import structures.*;
 public class <name> extends JPanel implements ActionListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
+    HashMap<String,Pair> positions = new HashMap<>();
+    HashMap<String,structures.Angle> angles = new HashMap<>();
+    List\<Figure> figures = new ArrayList\<>();
 
     public void paint(Graphics g){
         super.paintComponent(g);
@@ -43,6 +42,35 @@ public class <name> extends JPanel implements ActionListener{
 }
 
 >>
+
+callMain(class, args, stat) ::= <<
+String[] <class>MainArgs = {<args>};
+<class>.main(<class>MainArgs);
+<if(stat)><stats(stat)><endif>
+>>
+
+figureProperty(var,action,value) ::= <<
+    <var>.<action>(<value>);
+>>
+
+figureMaking(type,stat,var,properties)::= <<
+    <type><var>Figure=new<type>(<properties>);
+    Graphics2D <var>Graphics = (Graphics2D) g.create();
+    <if(stat)><stats(stat)><endif>
+>>
+
+<!O color só recebe valores RGB!>
+rectangleMaking(var)::= <<
+    Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.width(),<var>Figure.height());
+    Rectangle <var>Bounds = <var>.getBounds(); 
+    <if(<color>)><var>.setColor(new Color(<var>Figure.color().rgb().toString()));<endif>
+    <if(<thickness>)><var>.setStroke(new BasicStroke(<var>Figure.thickness()));<endif>
+    <if(<angle>)><var>Graphics.translate((int)<var>.getCenterX(),(int) <var>.getCenterY());
+    <var>Graphics.rotate(angles.get("<var>").degree());
+    <var>Graphics.translate((int) -<var>.getCenterX(), (int) -<var>.getCenterY());
+    <endif>
+>>
+
 
 board_collision() ::= <<
 if(xRedSquare >= Length_Board-100){
