@@ -100,7 +100,6 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
 
         containerPurpleBlackSquare.translate((int) rect2.getCenterX(), (int) rect2.getCenterY());
         containerPurpleBlackSquare.rotate(angle);
-        // ~3 hours to find out I needed this line
         containerPurpleBlackSquare.translate((int) -rect2.getCenterX(), (int) -rect2.getCenterY());
         containerPurpleBlackSquare.fill(rect2);
 
