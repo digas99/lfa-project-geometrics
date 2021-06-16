@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.util.concurrent.TimeUnit;
-
 
 public class AllInOne extends JPanel implements ActionListener,KeyListener {
 
@@ -19,14 +17,12 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
     private int velGreenCircle = 1;
     private int velRedCircle = 1;
     private double angle = 0.0;
-    private static double delayClose = 300;
     //These can be initiated inside paint
     private int depthGreenCircle = 0;
     private int depthRedCircle = 0;
    
 
-    /////////////// --------------------------------Two rectangles
-    /////////////// interaction--------------------------------------------------------------------------
+    /////////////// --------------------------------Two rectangles------------------
 
     // Need a PaintMethod
     public void paint(Graphics g) {
@@ -131,7 +127,7 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         //containerRedSquare.dispose();
         //containerPurpleBlackSquare.dispose();
 
-        /////////////// -------------- ------------------Two circles interaction -------------------------
+        /////////////// -------------- ------------------Two circles -------------------------
 
         Graphics2D containerRedCircle = (Graphics2D) g.create();
 
@@ -160,6 +156,18 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         // If you want to see it add containerRedCircle.draw(rect3);
         Rectangle rect3 = new Rectangle(circle.getBounds());
 
+        Graphics2D testingChangingOrigin = (Graphics2D)g.create();
+
+        Rectangle2D recOrigin = new Rectangle2D.Double(500,500,200,200);
+        testingChangingOrigin.draw(recOrigin);
+
+        //This translate doesn't need cast to int because it's 2D
+        testingChangingOrigin.translate(recOrigin.getCenterX(),recOrigin.getCenterY());
+        Rectangle2D recInsideRec = new Rectangle2D.Double(0,0,50,50);
+        containerRedSquare.translate((int) -rect.getCenterX(), (int) -rect.getCenterY());
+        testingChangingOrigin.draw(recInsideRec);
+
+
         /////////////// -------------- ------------------Two circles interaction -------------------------        
 
         // Circles move away from each other after intersecting
@@ -178,13 +186,13 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
             velRedCircle -= 1;
         }
 
-        if (xRedSquare >= Height_Board - getWidth() * 0.10 ) {
+        if (xRedSquare >= getWidth() - getWidth() * 0.10 ) {
             velRedSquare = velRedSquare * -1;
             velPurpleBlackSquare = velPurpleBlackSquare * -1;
             velGreenCircle = velGreenCircle * -1;
             velRedCircle = velRedCircle * -1;
 
-        } else if (xPurpleBlackSquare >= getWidth() * 0.10) {
+        } else if (xPurpleBlackSquare >= getWidth() - getWidth() * 0.10) {
             velRedSquare = velRedSquare * -1;
             velPurpleBlackSquare = velPurpleBlackSquare * -1;
             velGreenCircle = velGreenCircle * -1;
@@ -207,6 +215,7 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         containerRedSquare.dispose();
         containerPurpleBlackSquare.dispose();
         containerGreenCircle.dispose();
+        testingChangingOrigin.dispose();
 
         timer.start();
     }
