@@ -10,15 +10,15 @@ useAttribs	: (FIGURE|color) ID '->' ID NEWLINE* ;
 
 // Begin stats
 stats	: 'start' varsInit NEWLINE*		#statVarsInit
-	| varsSet				#statVarsSet
-	| list					#statList
-	| 'draw' ID	(',' ID)* NEWLINE*	#statDraw
-	| loop					#statLoop
-	| conditional				#statConditional
-	| funcCall				#statFuncCall
-	| easteregg				#statEasterEgg
-	| 'write' (ID | STRING)			#statConsoleLog
-	| container				#statContainer
+	| varsSet							#statVarsSet
+	| list								#statList
+	| 'draw' ID	(',' ID)* NEWLINE*		#statDraw
+	| loop								#statLoop
+	| conditional						#statConditional
+	| funcCall							#statFuncCall
+	| easteregg							#statEasterEgg
+	| 'write' (ID | STRING)				#statConsoleLog
+	| container							#statContainer
 	;
 
 // Begin container
@@ -27,12 +27,12 @@ container	: 'container' ID ':' stats+ 'end' ;
 
 // Begin expr
 expr returns[String var = null]
-	: expr op=('*' | '/') expr		#exprMultDiv
-	| expr op=('+' | '-') expr		#exprAddSub
-	| NUMBER				#exprNumber
-	| identifiers				#exprId
-	| '(' expr ')'				#exprParentesis
-	| value=('+'|'-') (expr)		#exprUnary
+	: expr op=('*' | '/') expr			#exprMultDiv
+	| expr op=('+' | '-') expr			#exprAddSub
+	| NUMBER							#exprNumber
+	| identifiers						#exprId
+	| '(' expr ')'						#exprParentesis
+	| value=('+'|'-') (expr)			#exprUnary
 	| expr '^' value=('+'|'-')? expr	#exprPower
 	;
 // End expr
@@ -41,10 +41,10 @@ identifiers	: ID+ ;
 
 // Begin pointsExpr
 pointsExpr returns[String var = null]
-		: pointsExpr op=('+' | '-') pointsExpr	#pointsExprCalc
-		| identifiers				#pointsId
-		| point					#pointsExprPoint
-		| 'container-center'			#pointsCenter
+		: pointsExpr op=('+' | '-') pointsExpr		#pointsExprCalc
+		| identifiers								#pointsId
+		| point										#pointsExprPoint
+		| 'container-center'						#pointsCenter
 		;
 
 // End pointsExpr
@@ -56,20 +56,20 @@ booleanLogic returns [String var = null]
 			| 'equals' | 'greater' | 'lower' | 'greater'
 			| 'greater equal' | 'lower equal'
 			| '|' | '&' | '!' | '=' | '>' | '<' | '>=' | '<=') booleanLogic	#boolLogicOps
-		| expr									#boolLogicExpr
-		| '(' booleanLogic ')'							#boolLogicParentesis			
-		| 'not' booleanLogic							#boolLogicNot
-		| ID 'collides' ID							#boolLogicCollides
-		| TRUTHVAL								#boolLogicTruthval
+		| expr																#boolLogicExpr
+		| '(' booleanLogic ')'												#boolLogicParentesis			
+		| 'not' booleanLogic												#boolLogicNot
+		| ID 'collides' ID													#boolLogicCollides
+		| TRUTHVAL															#boolLogicTruthval
 		;
 // End boolean logic
 
 // Begin vars initialization
-varsInit	: (OBJECT | FIGURE) ID						#varsOnlyInit
-		| FIGURE value='List' ID					#varsInitList
-		| OBJECT ID '->' attribs					#varsInitObject
-		| FIGURE ID blockSet						#varsInitFigure
-		| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'	#varsInitFunc
+varsInit: (OBJECT | FIGURE) ID												#varsOnlyInit
+		| FIGURE value='List' ID											#varsInitList
+		| OBJECT ID '->' attribs											#varsInitObject
+		| FIGURE ID blockSet												#varsInitFigure
+		| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'		#varsInitFunc
 		;
 
 inlineSet	: ID '->' attribs NEWLINE* ;
@@ -85,7 +85,7 @@ funcCall	: 'call' ID ('with' (expr | STRING) (',' (expr | STRING))* )? ;
 
 // Begin vars set
 varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
-		| 'set' ID '->' expr				#varsSetExpr
+		| 'set' ID '->' expr						#varsSetExpr
 		| 'set' ID ('*' | '/' | '+' | '-') expr		#varsSetCalc
 		;
 
@@ -93,8 +93,8 @@ varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
 
 // in color, the properties are #xxxxx and rgb
 // falta implementar ação com pallete
-color 	: ID					#colorId 
-		| '#'(ID|NUMBER)		#colorHex
+color 	: ID						#colorId 
+		| '#'(ID|NUMBER)			#colorHex
 		| expr ',' expr ',' expr	#colorRGB
 		;
 
@@ -102,7 +102,7 @@ color 	: ID					#colorId
 
 // Begin list
 list	: ID 'add' ID (first='first')?		#listAdd
-		| ID 'remove' (expr | STRING)	#listRemove
+		| ID 'remove' (expr | STRING)		#listRemove
 		;
 // End list
 
@@ -115,8 +115,8 @@ blockStats	: stats | stop='stop' | NEWLINE ;
 // Begin loop
 loop	: 'each' (time | ID) loopSpecifics 'end' ;
 
-loopSpecifics	: ':' (stats+ | 'stop')						#eachTime
-		| 'until' booleanLogic ':' (stats+ | 'stop')			#eachWhile
+loopSpecifics	: ':' (stats+ | 'stop')								#eachTime
+		| 'until' booleanLogic ':' (stats+ | 'stop')				#eachWhile
 		| 'with' ID 'from' expr 'to' expr ':' (stats+ | 'stop') 	#eachFor
 		;
 

@@ -20,7 +20,7 @@ if a equals b and true:
 end
 
 start Rectangle rec:
-	display -> exposed
+	display -> true
 	width -> 400
 	thickness -> 2
 	height -> 400

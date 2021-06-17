@@ -275,11 +275,17 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
+
       return visitChildren(ctx);
    }
 
    @Override
    public String visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
+      String id = ctx.ID().getText();
+      idOfBlockSet = id;
+      String type = ctx.FIGURE().getText();
+
+      varsTypes.put(id, type);
       return visitChildren(ctx);
    }
 
@@ -290,18 +296,80 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitInlineSet(GeometricsParser.InlineSetContext ctx) {
-      return visitChildren(ctx);
+      String id = ctx.ID().getText();
+      switch(visit(ctx.attribs())){
+         case "expr":
+            if (contains(propsAsExpr, id))
+               return id;
+            break;
+         case "pointsExpr":
+            if (contains(propsAsPointsExpr, id))
+               return id;
+            break;
+         case "angle":
+            if (contains(propsAsAngle, id))
+               return id;
+            break;
+         // case "funcCall":
+         //    if (contains(propsAsFuncCall, id))
+         //       return id;
+         //    break;
+         case "TRUTHVAL":
+            if (contains(propsAsTruthVal, id))
+               return id;
+            break;
+      }
+
+      throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notValueOfPropErrorMessage, id));
+      return null;
    }
 
    // grupo 1
-   @Override
-   public String visitBlockSet(GeometricsParser.BlockSetContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitBlockSet(GeometricsParser.BlockSetContext ctx) {
+      String id = idOfBlockSet;
+      String type = varsTypes.get(id);
+      List<String> props = ctx.inlineSet().stream().map(value -> visit(value)).collects(Collectors.toList());
+      boolean valid;
+      switch(type) {
+         case "Figure":
+            valid = containsAll(figureProps, props);
+            break;
+         case "Triangle":
+            valid = containsAll(triangleProps, props);
+            break;          
+         case "Rectangle":
+            valid = containsAll(rectangleProps, props);
+            break;
+         case "Circle":
+            valid = containsAll(circleProps, props);
+            break;
+         case "Line":
+            valid = containsAll(lineProps, props);
+            break;
+      }
+      
+      if (!valid)
+         throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(invalidPropsOfFigureErrorMessage, id));
+
+      return valid ? id : null;
    }
 
    @Override
    public String visitAttribs(GeometricsParser.AttribsContext ctx) {
-      return visitChildren(ctx);
+      if(ctx.STRING() != null)
+         return "STRING";
+      else if(ctx.expr() != null)
+         return "expr";
+      else if(ctx.angle() != null)
+         return "angle";
+      else if (ctx.time() != null)    
+         return "time";
+      else if (ctx.pointsExpr() != null)
+         return "pointsExpr";
+      else if (ctx.funcCall() != null)
+         return "funcCall";
+      else
+         return "TRUTHVAL";
    }
 
    @Override
@@ -311,6 +379,8 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
+      String id = ctx.ID().getText();
+      idOfBlockSet = id;
       return visitChildren(ctx);
    }
 
@@ -319,19 +389,26 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return visitChildren(ctx);
    }
 
-   @Override
-   public String visitColorId(GeometricsParser.ColorIdContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitColorId(GeometricsParser.ColorIdContext ctx) {
+      return visit(ctx.ID());
    }
 
-   @Override
-   public String visitColorHex(GeometricsParser.ColorHexContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitColorHex(GeometricsParser.ColorHexContext ctx) {
+      String id = ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText();
+      // check if color code has more than 6 characters
+      boolean valid = id.length() <= 6;
+      if (!valid)
+         return null;
+      return id;
    }
 
-   @Override
-   public String visitColorRGB(GeometricsParser.ColorRGBContext ctx) {
-      return visitChildren(ctx);
+   @Override public String visitColorRGB(GeometricsParser.ColorRGBContext ctx) {
+      String expr0 = visit(ctx.expr(0));
+      String expr1 = visit(ctx.expr(1));
+      String expr2 = visit(ctx.expr(2));
+      if(expr0 == null || expr1 == null|| expr2 == null)
+         return null;
+      return expr0 + "," + expr1 + "," + expr2;   
    }
 
    @Override
@@ -563,10 +640,19 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return false;
    }
 
+   private static boolean containsAll(String[] arr, List<String> target) {
+      for (String t : target) {
+         if (!contains(arr, t))
+            return false;
+      }
+      return true;
+   }
+
    static private String notInitVarErrorMessage = "Variable %s might have not been initialized!";
    static private String notValidColorCodeErrorMessage = "%s is not a valid color code!";
    static private String notAFigureErrorMessage = "%s is not a Figure!";
    static private String notPropOfFigureErrorMessage = "%s is not a valid property of %s!";
+   static private String invalidPropsOfFigureErrorMessage = "Invalid set of properties of %s!";
    static private String notValueOfPropErrorMessage = "Invalid value for property %s!";
    static private String notVarOfPropErrorMessage = "Invalid variable for property!";
    static private String multVarInitWarningMessage = "Variable %s was initialized multiple times!";
@@ -589,20 +675,22 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    private String currentVar;
    private String currentPallete;
    private int openFigures = 0;
+   private String idOfBlockSet = "";
+   private HashMap<String, String> varsTypes = new HashMap<>();
 
    static private String[] figureTypes = { "Figure", "Rectangle", "Circle", "Triangle", "Line" };
    private HashMap<String, String[]> propsAssoc = new HashMap<>();
    static private String[] pointProps = { "x", "y" };
-   static private String[] rectangleProps = { "filled", "collide", "visibility", "color", "border", "width", "height",
+   static private String[] rectangleProps = { "filled", "collide", "display", "color", "border", "width", "height",
          "center", "angle", "size" };
-   static private String[] circleProps = { "filled", "collide", "visibility", "color", "border", "diameter", "radius",
+   static private String[] circleProps = { "filled", "collide", "display", "color", "border", "diameter", "radius",
          "center", "startingPoint", "endingPoint" };
-   static private String[] lineProps = { "filled", "collide", "visibility", "color", "border", "angle", "center",
+   static private String[] lineProps = { "filled", "collide", "display", "color", "border", "angle", "center",
          "startingPoint", "endingPoint", "length" };
-   static private String[] triangleProps = { "filled", "collide", "visibility", "color", "border", "p0", "p1", "p2" };
-   static private String[] figureProps = { "filled", "collide", "visibility", "color", "border", "center" };
+   static private String[] triangleProps = { "filled", "collide", "display", "color", "border", "p0", "p1", "p2" };
+   static private String[] figureProps = { "filled", "collide", "display", "color", "border", "center" };
 
-   static private String[] propsAsTruthVal = { "filled", "visibility", "collide" };
+   static private String[] propsAsTruthVal = { "filled", "display", "collide" };
    static private String[] propsAsExpr = { "center", "width", "height", "diameter", "radius", "color", "x", "y" };
    static private String[] propsAsPointsExpr = { "center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size" };
    static private String[] propsAsColor = { "color" };
