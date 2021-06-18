@@ -11,12 +11,17 @@ import org.antlr.v4.runtime.misc.Pair;
 import java.lang.Math;
 
 import structures.*;
-public class Test1 extends JPanel implements ActionListener{
+public class Test1 extends JPanel implements ActionListener,KeyListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
     List<Figure> figures = new ArrayList<>();
+
     public void paint(Graphics g){
         super.paintComponent(g);
+
+        g.drawString("P - play animation",10,10);
+        g.drawString("S - stop animation",8,25);
+
         String[] BeaverMainMainArgs = {"../../doc/Beaver/working/flags.bvr"};
         BeaverMain.main(BeaverMainMainArgs);
         structures.Figure flag1 = BeaverMain.getContainer("japanese");
@@ -77,13 +82,63 @@ public class Test1 extends JPanel implements ActionListener{
         double varExpr20 = 20;
         Color varExpr21 = new Color(varExpr18,varExpr19,varExpr20);
         recFigure.setColor(varExpr21);
+
         Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a,positions.get("rec").b,recFigure.width(),recFigure.height());
         java.awt.Rectangle recBounds = rec.getBounds(); 
-        rec.setColor(new Color(recFigure.color().rgb().toString()));
-        rec.setStroke(new BasicStroke(recFigure.thickness()));
-        recGraphics.translate((int)rec.getCenterX(),(int) rec.getCenterY());
+        recGraphics.setColor(new Color(recFigure.color().rgb().toString()));
+        recGraphics.setStroke(new BasicStroke(recFigure.thickness()));
+        recGraphics.translate(rec.getCenterX(),rec.getCenterY());
         recGraphics.rotate(angles.get("rec").degree());
-        recGraphics.translate((int) -rec.getCenterX(), (int) -rec.getCenterY());
+        recGraphics.translate(-rec.getCenterX(),-rec.getCenterY());
+        Graphics2D circGraphics = (Graphics2D) g.create();
+        structures.Circle circFigure = new structures.Circle("circ");
+        double varExpr22 = 500;
+        circFigure.setDiameter(varExpr22);
+        double varExpr23 = 2;
+        circFigure.setThickness(varExpr23);
+
+        circFigure.setDisplay(true);
+
+        circFigure.setFilled(false);
+        double varExpr24 = 2;
+        circFigure.setDepth(varExpr24);
+        Color varExpr25 = new Color("ffffff");
+        circFigure.setColor(varExpr25);
+        double varExpr26 = 12;
+
+        double varExpr27 = 30;
+
+        double varExpr28 = 20;
+        Color varExpr29 = new Color(varExpr26,varExpr27,varExpr28);
+        circFigure.setColor(varExpr29);
+
+        Shape circ = new Ellipse2D.Double(positions.get("circ").a,positions.get("circ").b,circFigure.diameter(),circFigure.diameter());
+        java.awt.Rectangle circBounds = circ.getBounds(); 
+        circGraphics.setColor(new Color(circFigure.color().rgb().toString()));
+        circGraphics.setStroke(new BasicStroke(circFigure.thickness()));
+        circGraphics.translate(circ.getCenterX(),circ.getCenterY());
+        circGraphics.rotate(angles.get("circ").degree());
+        circGraphics.translate(-circ.getCenterX(),-circ.getCenterY());
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if(key == KeyEvent.VK_S){
+        timer.stop();
+        }
+        if(key == KeyEvent.VK_P){
+        timer.start(); 
+        }  
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e){
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e){
     }
 
     @Override
@@ -96,9 +151,11 @@ public class Test1 extends JPanel implements ActionListener{
         JFrame frame1 = new JFrame();
         frame1.setTitle("Test");
         frame1.setSize(new Dimension(Width_Board,Height_Board));
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.addKeyListener(n);
         frame1.add(n);
         frame1.setLocationRelativeTo(null);
         frame1.setVisible(true);
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
+
 }

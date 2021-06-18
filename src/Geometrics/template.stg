@@ -12,14 +12,38 @@ import org.antlr.v4.runtime.misc.Pair;
 import java.lang.Math;
 
 import structures.*;
-public class <name> extends JPanel implements ActionListener{
+public class <name> extends JPanel implements ActionListener,KeyListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
     List\<Figure> figures = new ArrayList\<>();
 
     public void paint(Graphics g){
         super.paintComponent(g);
+
+        g.drawString("P - play animation",10,10);
+        g.drawString("S - stop animation",8,25);
+
         <stats(stat)>
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if(key == KeyEvent.VK_S){
+        timer.stop();
+        }
+        if(key == KeyEvent.VK_P){
+        timer.start(); 
+        }  
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e){
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e){
     }
 
     @Override
@@ -32,10 +56,11 @@ public class <name> extends JPanel implements ActionListener{
         JFrame frame1 = new JFrame();
         frame1.setTitle(<boardName>);
         frame1.setSize(new Dimension(Width_Board,Height_Board));
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.addKeyListener(n);
         frame1.add(n);
         frame1.setLocationRelativeTo(null);
         frame1.setVisible(true);
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
 
     <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(posMapEntries);<endif>
@@ -63,14 +88,39 @@ structures.<type> <var>Figure = new structures.<type>("<var>");
 >>
 
 rectangleMaking(var)::= <<
+
 Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.width(),<var>Figure.height());
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
-<var>.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>.setStroke(new BasicStroke(<var>Figure.thickness()));
-<var>Graphics.translate((int)<var>.getCenterX(),(int) <var>.getCenterY());
+<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
-<var>Graphics.translate((int) -<var>.getCenterX(), (int) -<var>.getCenterY());
+<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
 >>
+
+circleMaking(var)::= <<
+
+Shape <var> = new Ellipse2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.diameter(),<var>Figure.diameter());
+java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
+<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
+<var>Graphics.rotate(angles.get("<var>").degree());
+<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+>>
+
+lineMaking(var)::= <<
+
+Shape <var> = new Line2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.diameter(),<var>Figure.diameter());
+java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
+<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
+<var>Graphics.rotate(angles.get("<var>").degree());
+<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+>>
+
+
 
 figureColorSetter(var, funcName, hexcode, r, g, b, stat) ::= <<
 <if(stat)><stat><endif>

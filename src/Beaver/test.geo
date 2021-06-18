@@ -44,8 +44,19 @@ start Rectangle rec:
 	/- center -> 0,10
 end
 
+start Circle circ:
+	diameter -> 500
+	thickness -> 2
+	display -> true
+	filled -> false
+	depth -> 2
+	color -> #ffffff
+	color -> 12,30,20
+	/- center -> 0,10
+end
+
 draw rec
 
-
+draw circ
 
 close 3000 ms
