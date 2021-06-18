@@ -65,7 +65,7 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
 
     <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(posMapEntries);<endif>
     <if(anglesMapEntries)>HashMap\<String,structures.Angle> angles = Map.ofEntires(anglesMapEntries);<endif>
-    <if(linesMapEntries)>HashMap\<String,Pair\<Point, Point>\> lines = Map.ofEntires(linesMapEntries);<endif>
+    <if(linesMapEntries)>HashMap\<String,Pair\<structures.Point, structures.Point>\> lines = Map.ofEntires(linesMapEntries);<endif>
 }
 
 >>
@@ -89,35 +89,41 @@ structures.<type> <var>Figure = new structures.<type>("<var>");
 
 rectangleMaking(var)::= <<
 
-Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.width(),<var>Figure.height());
+Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,
+                                           <var>Figure.width(),<var>Figure.height());
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+
 >>
 
 circleMaking(var)::= <<
 
-Shape <var> = new Ellipse2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.diameter(),<var>Figure.diameter());
+Shape <var> = new Ellipse2D.Double(positions.get("<var>").a,positions.get("<var>").b,
+                                   <var>Figure.diameter(),<var>Figure.diameter());
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+
 >>
 
 lineMaking(var)::= <<
 
-Shape <var> = new Line2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.diameter(),<var>Figure.diameter());
+Shape <var> = new Line2D.Double(positions.get("<var>").a.x(),positions.get("<var>").b.y(),
+                              endPositionsLine.get("<var>").a.x(),endPositionsLine.get("<var>".b.y()));
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+
 >>
 
 

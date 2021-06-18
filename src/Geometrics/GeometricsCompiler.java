@@ -395,6 +395,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
             circleMaking.add("var", var);
             figureMaking.add("stat", circleMaking.render());
             break;
+            case "Line":
+            ST lineMaking = template.getInstanceOf("lineMaking");
+            lineMaking.add("var", var);
+            figureMaking.add("stat", lineMaking.render());
+            break;
 
       }
       return figureMaking;

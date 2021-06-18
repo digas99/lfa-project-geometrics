@@ -83,13 +83,15 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         Color varExpr21 = new Color(varExpr18,varExpr19,varExpr20);
         recFigure.setColor(varExpr21);
 
-        Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a,positions.get("rec").b,recFigure.width(),recFigure.height());
+        Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a,positions.get("rec").b,
+                                                   recFigure.width(),recFigure.height());
         java.awt.Rectangle recBounds = rec.getBounds(); 
         recGraphics.setColor(new Color(recFigure.color().rgb().toString()));
         recGraphics.setStroke(new BasicStroke(recFigure.thickness()));
         recGraphics.translate(rec.getCenterX(),rec.getCenterY());
         recGraphics.rotate(angles.get("rec").degree());
         recGraphics.translate(-rec.getCenterX(),-rec.getCenterY());
+
         Graphics2D circGraphics = (Graphics2D) g.create();
         structures.Circle circFigure = new structures.Circle("circ");
         double varExpr22 = 500;
@@ -112,13 +114,31 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         Color varExpr29 = new Color(varExpr26,varExpr27,varExpr28);
         circFigure.setColor(varExpr29);
 
-        Shape circ = new Ellipse2D.Double(positions.get("circ").a,positions.get("circ").b,circFigure.diameter(),circFigure.diameter());
+        Shape circ = new Ellipse2D.Double(positions.get("circ").a,positions.get("circ").b,
+                                           circFigure.diameter(),circFigure.diameter());
         java.awt.Rectangle circBounds = circ.getBounds(); 
         circGraphics.setColor(new Color(circFigure.color().rgb().toString()));
         circGraphics.setStroke(new BasicStroke(circFigure.thickness()));
         circGraphics.translate(circ.getCenterX(),circ.getCenterY());
         circGraphics.rotate(angles.get("circ").degree());
         circGraphics.translate(-circ.getCenterX(),-circ.getCenterY());
+
+        Graphics2D linGraphics = (Graphics2D) g.create();
+        structures.Line linFigure = new structures.Line("lin");
+        double varExpr30 = 2;
+        linFigure.setThickness(varExpr30);
+
+        linFigure.setDisplay(true);
+
+        Shape lin = new Line2D.Double(positions.get("lin").a.x(),positions.get("lin").b.y(),
+                                      endPositionsLine.get("lin").a.x(),endPositionsLine.get("lin".b.y()));
+        java.awt.Rectangle linBounds = lin.getBounds(); 
+        linGraphics.setColor(new Color(linFigure.color().rgb().toString()));
+        linGraphics.setStroke(new BasicStroke(linFigure.thickness()));
+        linGraphics.translate(lin.getCenterX(),lin.getCenterY());
+        linGraphics.rotate(angles.get("lin").degree());
+        linGraphics.translate(-lin.getCenterX(),-lin.getCenterY());
+
     }
 
     @Override

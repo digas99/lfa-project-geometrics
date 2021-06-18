@@ -55,6 +55,11 @@ start Circle circ:
 	/- center -> 0,10
 end
 
+start Line lin:
+	thickness -> 2
+	display -> true
+end
+
 draw rec
 
 draw circ
