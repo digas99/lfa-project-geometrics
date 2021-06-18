@@ -49,20 +49,36 @@ public class Test1 extends JPanel implements ActionListener{
         boolean varBoolExpr3 = true;
         boolean varBoolExpr1 = varBoolExpr2&&varBoolExpr3;
         if(varBoolExpr1){
-            structures.Point varExpr11 = n.center();
-            structures.Point n3 = varExpr11;double varExpr12 = n.center().x();
-            double n3x = varExpr12;String string = "this is a string";
+            String string = "this is a string";
         }
         Graphics2D recGraphics = (Graphics2D) g.create();
-        RectanglerecFigure=newRectangle();
-        double varExpr13 = 400;
-        rec.setWidth(varExpr13);
-        double varExpr14 = 500;
-        rec.setHeight(varExpr14);
-        double varExpr15 = 2;
-        rec.setThickness(varExpr15);
+        structures.Rectangle recFigure = new structures.Rectangle("rec");
+        double varExpr11 = 400;
+        recFigure.setWidth(varExpr11);
+        double varExpr12 = 500;
+        recFigure.setHeight(varExpr12);
+        double varExpr13 = 2;
+        recFigure.setThickness(varExpr13);
+        double varExpr14 = 3;
+        Angle varExpr15 = new Angle((int) varExpr14);
+        recFigure.setAngle(varExpr15);
+
+        recFigure.setDisplay(true);
+
+        recFigure.setFilled(false);
+        double varExpr16 = 2;
+        recFigure.setDepth(varExpr16);
+        Color varExpr17 = new Color("ffffff");
+        recFigure.setColor(varExpr17);
+        double varExpr18 = 12;
+
+        double varExpr19 = 30;
+
+        double varExpr20 = 20;
+        Color varExpr21 = new Color(varExpr18,varExpr19,varExpr20);
+        recFigure.setColor(varExpr21);
         Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a,positions.get("rec").b,recFigure.width(),recFigure.height());
-        Rectangle recBounds = rec.getBounds(); 
+        java.awt.Rectangle recBounds = rec.getBounds(); 
         rec.setColor(new Color(recFigure.color().rgb().toString()));
         rec.setStroke(new BasicStroke(recFigure.thickness()));
         recGraphics.translate((int)rec.getCenterX(),(int) rec.getCenterY());

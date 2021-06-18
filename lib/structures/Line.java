@@ -13,16 +13,16 @@ public class Line extends Figure {
 		super(id);
 	}
 
-    public Line(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Point startingPoint, Point endingPoint) {
-		super(id, color, center, filled, thickness, display, container);
+    public Line(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, Point startingPoint, Point endingPoint) {
+		super(id, color, center, filled, thickness, depth, display, container);
         this.startingPoint = startingPoint;
         this.endingPoint = endingPoint;
 		this.setCenter(new Point((startingPoint.x()+endingPoint.x())/2, (startingPoint.y()+endingPoint.y())/2));
 		this.length = Point.distance(startingPoint, endingPoint);
 	}
 
-    public Line(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Angle angle, double length) {
-		super(id, color, center, filled, thickness, display, container);
+    public Line(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, Angle angle, double length) {
+		super(id, color, center, filled, thickness, depth, display, container);
 		this.length = length;
         this.angle = angle;
 		this.startingPoint = this.center().oppositePoint(length/2, angle.rad());

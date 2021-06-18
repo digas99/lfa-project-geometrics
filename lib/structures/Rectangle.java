@@ -12,8 +12,8 @@ public class Rectangle extends Figure {
 		super(id);
 	}
 
-	public Rectangle(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, double width, double height, Angle angle) {
-		super(id, color, center, filled, thickness, display, container);
+	public Rectangle(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, double width, double height, Angle angle) {
+		super(id, color, center, filled, thickness, depth, display, container);
 		this.width = width;
 		this.height = height;
 		this.angle = angle;

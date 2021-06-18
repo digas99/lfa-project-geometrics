@@ -76,7 +76,7 @@ inlineSet	: ID '->' attribs NEWLINE* ;
 
 blockSet : ':' inlineSet+ 'end' ;
 
-attribs	returns [String var = null]: (STRING | expr | angle | time | pointsExpr | funcCall | TRUTHVAL) NEWLINE*;
+attribs	returns [String var = null]: (STRING | expr | angle | time | pointsExpr | color | funcCall | TRUTHVAL) NEWLINE*;
 // End vars initialization
 
 // Begin func call
@@ -93,7 +93,8 @@ varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
 
 // in color, the properties are #xxxxx and rgb
 // falta implementar ação com pallete
-color 	: ID						#colorId 
+color returns [String var = null]
+		: ID						#colorId 
 		| '#'(ID|NUMBER)			#colorHex
 		| expr ',' expr ',' expr	#colorRGB
 		;
@@ -124,7 +125,7 @@ loopSpecifics	: ':' (stats+ | 'stop')								#eachTime
 easteregg	: 'where is' ID '?' ; 
 // End easteregg
 
-angle : expr type=('º' | 'deg' | 'rad') ;
+angle returns [String var = null]: expr type=('º' | 'deg' | 'rad') ;
 time : expr type=('ms'|'s'); 
 point : expr ',' expr ;
 

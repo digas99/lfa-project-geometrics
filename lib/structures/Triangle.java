@@ -11,8 +11,8 @@ public class Triangle extends Figure{
 		super(id);
 	}
 
-    public Triangle(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Point p0, Point p1, Point p2) {
-		super(id, color, center, filled, thickness, display, container); 
+    public Triangle(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, Point p0, Point p1, Point p2) {
+		super(id, color, center, filled, thickness, depth, display, container); 
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;

@@ -59,14 +59,14 @@ figureProperty(var,action,value) ::= <<
 
 figureMaking(type,stat,var,properties)::= <<
 Graphics2D <var>Graphics = (Graphics2D) g.create();
-<type><var>Figure=new<type>();
+structures.<type> <var>Figure = new structures.<type>("<var>");
 <properties>
 <if(stat)><stats(stat)><endif>
 >>
 
 rectangleMaking(var)::= <<
 Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.width(),<var>Figure.height());
-Rectangle <var>Bounds = <var>.getBounds(); 
+java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>.setStroke(new BasicStroke(<var>Figure.thickness()));
 <var>Graphics.translate((int)<var>.getCenterX(),(int) <var>.getCenterY());
@@ -79,9 +79,9 @@ figureColorSetter(var, funcName, hexcode, r, g, b, stat) ::= <<
 <var>.set<funcName>(new Color(<if(r)>new RGB(<r>,<g>,<b>)<endif><if(hexcode)><hexcode><endif>));
 >>
 
-figureLiteralSetter(var, funcName, literal, stat) ::= <<
+figureSetter(var, funcName, value, stat) ::= <<
 <if(stat)><stat><endif>
-<var>.set<funcName>(<literal>);
+<var>.set<funcName>(<value>);
 >>
 
 figurePointSetter(var, funcName, x, y, stat) ::= <<
@@ -91,7 +91,7 @@ figurePointSetter(var, funcName, x, y, stat) ::= <<
 
 figureAngleSetter(var, funcName, angle, stat) ::= <<
 <if(stat)><stat><endif>
-<var>.set<funcName>(new Angle(<angle>));
+<var>.set<funcName>(<angle>);
 >>
 
 stats(stat) ::= <<

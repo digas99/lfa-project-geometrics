@@ -12,15 +12,15 @@ public class Circle extends Figure {
 		super(id);
 	}
 
-	public Circle(String id, Color color, Point center, boolean filled, double thickness,boolean display, boolean container, double diameter) {
-		super(id, color, center, filled, thickness, display, container);
+	public Circle(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, double diameter) {
+		super(id, color, center, filled, thickness, depth, display, container);
 		this.diameter = diameter;
 		this.startingPoint = new Point(center.x() - diameter/2, 0);
 		this.endingPoint = new Point(center.x() + diameter/2, 0);
 	}
 	
-	public Circle(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Point startingPoint, Point endingPoint) {
-		super(id, color, center, filled, thickness, display, container);
+	public Circle(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, Point startingPoint, Point endingPoint) {
+		super(id, color, center, filled, thickness, depth, display, container);
 		this.startingPoint = startingPoint;
 		this.endingPoint = endingPoint;
 		this.diameter = Point.distance(startingPoint, endingPoint);
