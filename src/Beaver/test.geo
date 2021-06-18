@@ -19,18 +19,23 @@ if a equals b and true:
 	/- try number with exponencial
 end
 
+/-start Rectangle rec:
+/-	display -> true
+/-	width -> 400
+/-	thickness -> 2
+/-	height -> 400
+/-	angle -> 0 deg
+/-	center -> 0,0
+/-	color -> red
+/-	depth -> 1
+/-	filled -> true
+/-end
+
 start Rectangle rec:
-	display -> true
 	width -> 400
+	height -> 500
 	thickness -> 2
-	height -> 400
-	angle -> 0 deg
-	center -> 0,0
-	color -> red
-	collision -> true
-	depth -> 1
-	filled -> true
-end 
+end
 
 draw rec
 

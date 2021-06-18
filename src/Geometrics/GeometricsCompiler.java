@@ -28,7 +28,10 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          module.add("stat", visit(ctx.use(0)));
       }
 
-      ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
+      //ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
+      for (int i =0; i < ctx.stats().size(); i++) {
+         module.add("stat", visit(ctx.stats(i)));
+      }
       if (hasVars)
          module.add("hasVars", hasVars);
 
@@ -374,6 +377,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    public ST visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
       String type = ctx.FIGURE().getText();
       String var = ctx.ID().getText();
+      idOfBlockSet = var;
       ST figureMaking = template.getInstanceOf("figureMaking");
       figureMaking.add("type",type);
       figureMaking.add("var",var);
@@ -386,7 +390,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
             figureMaking.add("stat", rectangleMaking.render());
             break;
       }
-      return visitChildren(ctx);
+      return figureMaking;
    }
 
    @Override
@@ -396,19 +400,48 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitInlineSet(GeometricsParser.InlineSetContext ctx) {
-      // ordernar InLineSet tendo em conta o construtor
-      // (add blank construtor)
-      return visitChildren(ctx);
+      String id = ctx.ID().getText();
+      ST setter = null;
+      String attrib = visit(ctx.attribs()).render();
+      
+      if (contains(propsAsTruthVal, id) || contains(propsAsExpr, id)) {
+         setter = template.getInstanceOf("figureLiteralSetter");
+         setter.add("literal", ctx.attribs().var);
+      }
+      else if (contains(propsAsAngle, id)) {
+         setter = template.getInstanceOf("figureAngleSetter");
+         setter.add("angle", attrib);
+      }
+      else if (contains(propsAsColor, id)) {
+         setter = template.getInstanceOf("figureColorSetter");
+         String[] split = attrib.split(",");
+         if (split.length == 3) {
+            setter.add("r", split[0]);
+            setter.add("g", split[1]);
+            setter.add("b", split[2]);
+         }
+         else
+            setter.add("hexcode", attrib);
+      }
+      else if (contains(propsAsPointsExpr, id)) {
+         setter = template.getInstanceOf("figurePointSetter");
+         String[] split = attrib.split(",");
+         setter.add("x", split[0]);
+         setter.add("y", split[1]);
+      }
+      if (setter != null) {
+         setter.add("stat", attrib);
+         setter.add("var", idOfBlockSet);
+         setter.add("funcName", (id.charAt(0)+"").toUpperCase() + id.substring(1));
+      }
+      return setter;
    }
 
    // grupo 1
    @Override
    public ST visitBlockSet(GeometricsParser.BlockSetContext ctx) {
       ST stats = template.getInstanceOf("stats"); 
-      for(int i=0; i<ctx.inlineSet().size(); i++){
-         stats.add("stat", ",");
-         stats.add("stat", ctx.inlineSet(i));
-      }
+      ctx.inlineSet().stream().forEach(inline -> stats.add("stat", visit(inline)));
       return stats;
    }
 
@@ -545,6 +578,14 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visitChildren(ctx);
    }
 
+   private static boolean contains(String[] arr, String target) {
+      for (String s : arr) {
+         if (s.equals(target))
+            return true;
+      }
+      return false;
+   }
+
    private STGroup template = new STGroupFile("template.stg");
 
    private String newExprVar() {
@@ -562,7 +603,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return "varBoolExpr" + boolExprVars;
    }
 
-   boolean hasVars = false;
+
+   private String idOfBlockSet = "";
+   private boolean hasVars = false;
    private int exprVars = 0;
    private int pointExprVars = 0;
    private int boolExprVars = 0;
@@ -590,4 +633,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       entry(Arrays.asList("color"), "Color"),
       entry(Arrays.asList("angle"), "Angle"));
    private HashMap<String, String> varsTypes = new HashMap<>();
+   static private String[] propsAsTruthVal = { "filled", "display"};
+   static private String[] propsAsExpr = { "center", "width", "height", "diameter", "radius", "color", "x", "y", "thickness"};
+   static private String[] propsAsPointsExpr = { "center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size" };
+   static private String[] propsAsColor = { "color" };
+   static private String[] propsAsAngle = { "angle" };
 }

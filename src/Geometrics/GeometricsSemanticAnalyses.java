@@ -328,8 +328,8 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    @Override public String visitBlockSet(GeometricsParser.BlockSetContext ctx) {
       String id = idOfBlockSet;
       String type = varsTypes.get(id);
-      List<String> props = ctx.inlineSet().stream().map(value -> visit(value)).collects(Collectors.toList());
-      boolean valid;
+      List<String> props = ctx.inlineSet().stream().map(value -> visit(value)).collect(Collectors.toList());
+      boolean valid = false;
       switch(type) {
          case "Figure":
             valid = containsAll(figureProps, props);
@@ -425,77 +425,82 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // If function
    @Override
    public String visitConditional(GeometricsParser.ConditionalContext ctx) {
-      String res = null;
-      String bologic = visit(ctx.booleanLogic());
-      String stat = visit(ctx.stats());
-      if (bologic == null || stat == null) {
-         res = null;
-      } else
-         res = bologic;
-      return res;
+      // String res = null;
+      // String bologic = visit(ctx.booleanLogic());
+      // String stat = visit(ctx.stats());
+      // if (bologic == null || stat == null) {
+      //    res = null;
+      // } else
+      //    res = bologic;
+      // return res;
+      return null;
    }
 
    // Loop functions start -----------------------------------------
    @Override
    public String visitLoop(GeometricsParser.LoopContext ctx) {
 
-      String res = null;
-      String resTime = visit(ctx.time());
-      String resID = visit(ctx.ID().getText());
-      String loopSpec = visit(ctx.loopSpecifics());
+      // String res = null;
+      // String resTime = visit(ctx.time());
+      // String resID = visit(ctx.ID().getText());
+      // String loopSpec = visit(ctx.loopSpecifics());
 
-      if (resID == null || resTime == null || loopSpec == null) {
-         res = null;
-      } else
-         res = loopSpec;
+      // if (resID == null || resTime == null || loopSpec == null) {
+      //    res = null;
+      // } else
+      //    res = loopSpec;
 
-      return res;
+      // return res;
       // Verify time and loopSpecifics(eachtime,while,for)
+      return null;
    }
 
    @Override
    public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
       // return visit(ctx.stats());
-      return visit(ctx.stats());
+      // return visit(ctx.stats());
       // Verify stats
       // Verify stop(interruption trigger)
+      return null;
    }
 
    @Override
    public String visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      String res = null;
-      String bologic = visit(ctx.booleanLogic());
-      String stat = visit(ctx.stats());
-      if (bologic == null || stat == null) {
-         res = null;
-      } else
-         res = bologic;
-      return res;
+      // String res = null;
+      // String bologic = visit(ctx.booleanLogic());
+      // String stat = visit(ctx.stats());
+      // if (bologic == null || stat == null) {
+      //    res = null;
+      // } else
+      //    res = bologic;
+      // return res;
       // Verify booleanLogic and stats
       // Verify stop(interruption trigger)
+      return null;
    }
 
    @Override
    public String visitEachFor(GeometricsParser.EachForContext ctx) {
-      String res = null;
+      // String res = null;
 
-      String resID = visit(ctx.ID().getText());
-      String expr0 = visit(ctx.expr(0));
-      String expr1 = visit(ctx.expr(1));
-      String stat = visit(ctx.stats());
+      // String resID = visit(ctx.ID().getText());
+      // String expr0 = visit(ctx.expr(0));
+      // String expr1 = visit(ctx.expr(1));
+      // String stat = visit(ctx.stats());
 
-      if (resID == null || expr0 == null || expr1 == null || stat == null) {
-         res = null;
-      }
-      /*
-       * else if(expr0 != null){ res = expr0; } else if(expr1 != null){ res = expr1; }
-       */
-      else
-         res = resID;
+      // if (resID == null || expr0 == null || expr1 == null || stat == null) {
+      //    res = null;
+      // }
+      // /*
+      //  * else if(expr0 != null){ res = expr0; } else if(expr1 != null){ res = expr1; }
+      //  */
+      // else
+      //    res = resID;
 
-      return res;
+      // return res;
       // Verify ID, 2 expr and stats
       // Verify stop(interruption trigger)
+      return null;
    }
 
    // Loop functions end -----------------------------------------

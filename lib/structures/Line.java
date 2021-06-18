@@ -7,18 +7,22 @@ public class Line extends Figure {
     private Point startingPoint;
     private Point endingPoint;
     private Angle angle;
-	private double length;
+    private double length;
     
-    public Line(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, Point startingPoint, Point endingPoint) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
+    public Line(String id) {
+		super(id);
+	}
+
+    public Line(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Point startingPoint, Point endingPoint) {
+		super(id, color, center, filled, thickness, display, container);
         this.startingPoint = startingPoint;
         this.endingPoint = endingPoint;
 		this.setCenter(new Point((startingPoint.x()+endingPoint.x())/2, (startingPoint.y()+endingPoint.y())/2));
 		this.length = Point.distance(startingPoint, endingPoint);
 	}
 
-    public Line(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, Angle angle, double length) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
+    public Line(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Angle angle, double length) {
+		super(id, color, center, filled, thickness, display, container);
 		this.length = length;
         this.angle = angle;
 		this.startingPoint = this.center().oppositePoint(length/2, angle.rad());
@@ -62,12 +66,12 @@ public class Line extends Figure {
 			  +"-------------\n"
 			  +"\n"
 			  +String.format("StartingPoint: %5s\nEndingPoint: %5s\nLength: %10.2f\nCenter: %14s\nAngle: %9s\n",this.startingPoint.print(), this.endingPoint.print(), this.length, this.center().print(), this.angle)
-			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
+			  +String.format("Color: %13s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.thickness(), this.container(), this.filled(), this.display(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
 			  ;
 	}
 
 	@Override public String toString() {
-        return String.format("%s [%s] Color: %s; Border: %.2f %s; Center: %s; Thickness: %.2f; StartingPoint: %s; EndingPoint: %s; Angle: %s; Length: %.2f; %s; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.startingPoint, this.endingPoint, this.angle, this.length, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.collide() ? "Collides" : "!Collides", this.visibility() ? "Visible" : "!Visible", this.figures().size());
+        return String.format("%s [%s] Color: %s; Border: %.2f %s; Center: %s; Thickness: %.2f; StartingPoint: %s; EndingPoint: %s; Angle: %s; Length: %.2f; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.center().print(), this.thickness(), this.startingPoint, this.endingPoint, this.angle, this.length, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.display() ? "Visible" : "!Visible", this.figures().size());
 	}
 }
 

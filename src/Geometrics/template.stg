@@ -1,4 +1,4 @@
-module(name, stat, boardName, hasVars, hasList, hasPoints, hasMath) ::= <<
+module(name, stat, boardName, addMapStats) ::= <<
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,9 +15,13 @@ import structures.*;
 public class <name> extends JPanel implements ActionListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
-    HashMap<String,Pair> positions = new HashMap<>();
-    HashMap<String,structures.Angle> angles = new HashMap<>();
     List\<Figure> figures = new ArrayList\<>();
+    <if(addMapStats)>
+    HashMap\<String,Pair\<Double, Double>\> positions = new HashMap\<>();
+    HashMap\<String,structures.Angle> angles = new HashMap\<>();
+    HashMap\<String,Pair\<Point, Point>\> lines = new HashMap\<>();
+    <addMapStats>
+    <endif>
 
     public void paint(Graphics g){
         super.paintComponent(g);
@@ -38,7 +42,7 @@ public class <name> extends JPanel implements ActionListener{
         frame1.add(n);
         frame1.setLocationRelativeTo(null);
         frame1.setVisible(true);
-    }
+    } 
 }
 
 >>
@@ -50,25 +54,44 @@ String[] <class>MainArgs = {<args>};
 >>
 
 figureProperty(var,action,value) ::= <<
-    <var>.<action>(<value>);
+<var>.<action>(<value>);
 >>
 
 figureMaking(type,stat,var,properties)::= <<
-    <type><var>Figure=new<type>(<properties>);
-    Graphics2D <var>Graphics = (Graphics2D) g.create();
-    <if(stat)><stats(stat)><endif>
+Graphics2D <var>Graphics = (Graphics2D) g.create();
+<type><var>Figure=new<type>();
+<properties>
+<if(stat)><stats(stat)><endif>
 >>
 
-<!O color só recebe valores RGB!>
 rectangleMaking(var)::= <<
-    Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.width(),<var>Figure.height());
-    Rectangle <var>Bounds = <var>.getBounds(); 
-    <if(<color>)><var>.setColor(new Color(<var>Figure.color().rgb().toString()));<endif>
-    <if(<thickness>)><var>.setStroke(new BasicStroke(<var>Figure.thickness()));<endif>
-    <if(<angle>)><var>Graphics.translate((int)<var>.getCenterX(),(int) <var>.getCenterY());
-    <var>Graphics.rotate(angles.get("<var>").degree());
-    <var>Graphics.translate((int) -<var>.getCenterX(), (int) -<var>.getCenterY());
-    <endif>
+Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,<var>Figure.width(),<var>Figure.height());
+Rectangle <var>Bounds = <var>.getBounds(); 
+<var>.setColor(new Color(<var>Figure.color().rgb().toString()));
+<var>.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.translate((int)<var>.getCenterX(),(int) <var>.getCenterY());
+<var>Graphics.rotate(angles.get("<var>").degree());
+<var>Graphics.translate((int) -<var>.getCenterX(), (int) -<var>.getCenterY());
+>>
+
+figureColorSetter(var, funcName, hexcode, r, g, b, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(new Color(<if(r)>new RGB(<r>,<g>,<b>)<endif><if(hexcode)><hexcode><endif>));
+>>
+
+figureLiteralSetter(var, funcName, literal, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(<literal>);
+>>
+
+figurePointSetter(var, funcName, x, y, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(new Point(<x>, <y>));
+>>
+
+figureAngleSetter(var, funcName, angle, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(new Angle(<angle>));
 >>
 
 stats(stat) ::= <<

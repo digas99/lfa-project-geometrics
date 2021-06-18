@@ -8,8 +8,12 @@ public class Rectangle extends Figure {
 	private double height;
 	private Angle angle;
 
-	public Rectangle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, double width, double height, Angle angle) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
+    public Rectangle(String id) {
+		super(id);
+	}
+
+	public Rectangle(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, double width, double height, Angle angle) {
+		super(id, color, center, filled, thickness, display, container);
 		this.width = width;
 		this.height = height;
 		this.angle = angle;
@@ -47,11 +51,11 @@ public class Rectangle extends Figure {
 			  +"|                 |\n"
 			  +"-------------------\n"
 			  +String.format("Width: %10.2f\nHeight: %10.2f\nCenter: %14s\nAngle: %9s\n",this.width, this.height, this.center().print(), this.angle)
-			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
+			  +String.format("Color: %13s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.thickness(), this.container(), this.filled(), this.display(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
 			  ;
 	}
 
 	@Override public String toString() {
-        return String.format("%s [%s] Color: %s; Border: %.2f %s; Center: %s; Thickness: %.2f; Width: %.2f; Height: %.2f; Angle: %s; %s; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.width, this.height, this.angle, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.collide() ? "Collides" : "!Collides", this.visibility() ? "Visible" : "!Visible", this.figures().size());
+        return String.format("%s [%s] Color: %s; Border: %.2f %s; Center: %s; Thickness: %.2f; Width: %.2f; Height: %.2f; Angle: %s; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.center().print(), this.thickness(), this.width, this.height, this.angle, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.display() ? "Visible" : "!Visible", this.figures().size());
 	}
 }

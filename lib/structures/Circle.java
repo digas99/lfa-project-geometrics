@@ -8,15 +8,19 @@ public class Circle extends Figure {
 	private Point endingPoint;
 	private double diameter;
 
-	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide,boolean visibility, boolean container, double diameter) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
+	public Circle(String id) {
+		super(id);
+	}
+
+	public Circle(String id, Color color, Point center, boolean filled, double thickness,boolean display, boolean container, double diameter) {
+		super(id, color, center, filled, thickness, display, container);
 		this.diameter = diameter;
 		this.startingPoint = new Point(center.x() - diameter/2, 0);
 		this.endingPoint = new Point(center.x() + diameter/2, 0);
 	}
 	
-	public Circle(String id, Color color, Color borderColor, double border, Point center, boolean filled, double thickness, boolean collide, boolean visibility, boolean container, Point startingPoint, Point endingPoint) {
-		super(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
+	public Circle(String id, Color color, Point center, boolean filled, double thickness, boolean display, boolean container, Point startingPoint, Point endingPoint) {
+		super(id, color, center, filled, thickness, display, container);
 		this.startingPoint = startingPoint;
 		this.endingPoint = endingPoint;
 		this.diameter = Point.distance(startingPoint, endingPoint);
@@ -55,11 +59,11 @@ public class Circle extends Figure {
 			  +" **    **\n"
 			  +"    **\n"
 			  +String.format("StartingPoint: %5s\nEndingPoint: %5s\nCenter: %14s\nDiameter: %9.2f\n",this.startingPoint.print(), this.endingPoint.print(), this.center().print(), this.diameter)
-			  +String.format("Color: %13s\nBorder: %9.2f %s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nCollides: %7s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.border(), this.borderColor(), this.thickness(), this.container(), this.filled(), this.collide(), this.visibility(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
+			  +String.format("Color: %13s\nThickness: %6.2f\nContainer: %7s\nFilled: %10s\nVisible: %8s\nContains:    [%d] %s\n", this.color().rgb() != null ? "      "+this.color() : this.color(), this.thickness(), this.container(), this.filled(), this.display(), this.figures().size(), "{"+String.join(", ", this.figures().stream().map(figure -> figure.id()).collect(Collectors.toList()))+"}")
 			  ;
 	}
 
 	@Override public String toString() {
-        return String.format("%s [%s] Color: %s; Border: %.2f %s; Center: %s; Thickness: %.2f; StartingPoint: %s; EndingPoint: %s; Diameter: %.2f; %s; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.border(), this.borderColor(), this.center().print(), this.thickness(), this.startingPoint, this.endingPoint, this.diameter, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.collide() ? "Collides" : "!Collides", this.visibility() ? "Visible" : "!Visible", this.figures().size());
+        return String.format("%s [%s] Color: %s; Center: %s; Thickness: %.2f; StartingPoint: %s; EndingPoint: %s; Diameter: %.2f; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.center().print(), this.thickness(), this.startingPoint, this.endingPoint, this.diameter, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.display() ? "Visible" : "!Visible", this.figures().size());
 	}
 }
