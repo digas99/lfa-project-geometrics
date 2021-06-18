@@ -1,4 +1,4 @@
-module(name, stat, boardName, addMapStats) ::= <<
+module(name, stat, boardName, posMapEntries, anglesMapEntries, linesMapEntries) ::= <<
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +16,6 @@ public class <name> extends JPanel implements ActionListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
     List\<Figure> figures = new ArrayList\<>();
-    <if(addMapStats)>
-    HashMap\<String,Pair\<Double, Double>\> positions = new HashMap\<>();
-    HashMap\<String,structures.Angle> angles = new HashMap\<>();
-    HashMap\<String,Pair\<Point, Point>\> lines = new HashMap\<>();
-    <addMapStats>
-    <endif>
 
     public void paint(Graphics g){
         super.paintComponent(g);
@@ -43,6 +37,10 @@ public class <name> extends JPanel implements ActionListener{
         frame1.setLocationRelativeTo(null);
         frame1.setVisible(true);
     } 
+
+    <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(posMapEntries);<endif>
+    <if(anglesMapEntries)>HashMap\<String,structures.Angle> angles = Map.ofEntires(anglesMapEntries);<endif>
+    <if(linesMapEntries)>HashMap\<String,Pair\<Point, Point>\> lines = Map.ofEntires(linesMapEntries);<endif>
 }
 
 >>
