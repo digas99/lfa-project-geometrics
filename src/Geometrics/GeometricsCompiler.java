@@ -400,6 +400,12 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
             lineMaking.add("var", var);
             figureMaking.add("stat", lineMaking.render());
             break;
+            case "Triangle":
+            ST triangleMaking = template.getInstanceOf("triangleMaking");
+            triangleMaking.add("var", var);
+            figureMaking.add("stat", triangleMaking.render());
+            break;
+
 
       }
       return figureMaking;

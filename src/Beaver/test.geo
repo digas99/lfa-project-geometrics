@@ -50,7 +50,6 @@ start Circle circ:
 	display -> true
 	filled -> false
 	depth -> 2
-	color -> #ffffff
 	color -> 12,30,20
 	/- center -> 0,10
 end
@@ -58,10 +57,19 @@ end
 start Line lin:
 	thickness -> 2
 	display -> true
+	color -> 250,124,98
+	color -> #ffffff
 end
 
+start Triangle trin:
+	thickness -> 2
+	display -> true
+	color -> 250,124,98
+	color -> #ffffff
+end
 draw rec
 
 draw circ
 
+/- have to remove delay 
 close 3000 ms

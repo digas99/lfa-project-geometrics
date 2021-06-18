@@ -1,4 +1,4 @@
-module(name, stat, boardName, posMapEntries, anglesMapEntries, linesMapEntries) ::= <<
+module(name, stat, boardName, posMapEntries, anglesMapEntries, linesMapEntries, triangleMapEntries) ::= <<
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +9,7 @@ import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
+import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
 
 import structures.*;
@@ -66,6 +67,7 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
     <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(posMapEntries);<endif>
     <if(anglesMapEntries)>HashMap\<String,structures.Angle> angles = Map.ofEntires(anglesMapEntries);<endif>
     <if(linesMapEntries)>HashMap\<String,Pair\<structures.Point, structures.Point>\> lines = Map.ofEntires(linesMapEntries);<endif>
+    <if(triangleMapEntries)>HashMap\<String,Triple\<structures.Point,structures.Point,structures.Point\> triangles = Map.ofEntires(trianglesMapEntries);<endif>
 }
 
 >>
@@ -115,8 +117,8 @@ java.awt.Rectangle <var>Bounds = <var>.getBounds();
 
 lineMaking(var)::= <<
 
-Shape <var> = new Line2D.Double(positions.get("<var>").a.x(),positions.get("<var>").b.y(),
-                              endPositionsLine.get("<var>").a.x(),endPositionsLine.get("<var>".b.y()));
+Shape <var> = new Line2D.Double(lines.get("<var>").a.x(),lines.get("<var>").a.y(),
+                              lines.get("<var>").b.x(),lines.get("<var>".b.y()));
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
@@ -126,6 +128,20 @@ java.awt.Rectangle <var>Bounds = <var>.getBounds();
 
 >>
 
+triangleMaking(var)::= <<
+
+Polygon <var> =  new Polygon();
+<var>.addPoint((int)triangles.get("<var>").a.x(),(int)triangles.get("<var>").a.y());
+<var>.addPoint((int)triangles.get("<var>").b.x(),(int)triangles.get("<var>").b.y());
+<var>.addPoint((int)triangles.get("<var>").c.x(),(int)triangles.get("<var>").c.y());
+java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
+<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
+<var>Graphics.rotate(angles.get("<var>").degree());
+<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+
+>>
 
 
 figureColorSetter(var, funcName, hexcode, r, g, b, stat) ::= <<
@@ -231,8 +247,8 @@ print(stat, value) ::= <<
 System.out.println(<value>);
 >>
 
-draw(var) ::= << 
-<var>.draw();
+draw(var, fig) ::= << 
+<var>Graphics.draw(<fig>);
 >>
 
 filled(var, fig) ::= <<

@@ -8,6 +8,7 @@ import java.awt.geom.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
+import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
 
 import structures.*;
@@ -104,15 +105,13 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         circFigure.setFilled(false);
         double varExpr24 = 2;
         circFigure.setDepth(varExpr24);
-        Color varExpr25 = new Color("ffffff");
-        circFigure.setColor(varExpr25);
-        double varExpr26 = 12;
+        double varExpr25 = 12;
 
-        double varExpr27 = 30;
+        double varExpr26 = 30;
 
-        double varExpr28 = 20;
-        Color varExpr29 = new Color(varExpr26,varExpr27,varExpr28);
-        circFigure.setColor(varExpr29);
+        double varExpr27 = 20;
+        Color varExpr28 = new Color(varExpr25,varExpr26,varExpr27);
+        circFigure.setColor(varExpr28);
 
         Shape circ = new Ellipse2D.Double(positions.get("circ").a,positions.get("circ").b,
                                            circFigure.diameter(),circFigure.diameter());
@@ -125,19 +124,55 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         Graphics2D linGraphics = (Graphics2D) g.create();
         structures.Line linFigure = new structures.Line("lin");
-        double varExpr30 = 2;
-        linFigure.setThickness(varExpr30);
+        double varExpr29 = 2;
+        linFigure.setThickness(varExpr29);
 
         linFigure.setDisplay(true);
+        double varExpr30 = 250;
 
-        Shape lin = new Line2D.Double(positions.get("lin").a.x(),positions.get("lin").b.y(),
-                                      endPositionsLine.get("lin").a.x(),endPositionsLine.get("lin".b.y()));
+        double varExpr31 = 124;
+
+        double varExpr32 = 98;
+        Color varExpr33 = new Color(varExpr30,varExpr31,varExpr32);
+        linFigure.setColor(varExpr33);
+        Color varExpr34 = new Color("ffffff");
+        linFigure.setColor(varExpr34);
+
+        Shape lin = new Line2D.Double(lines.get("lin").a.x(),lines.get("lin").a.y(),
+                                      lines.get("lin").b.x(),lines.get("lin".b.y()));
         java.awt.Rectangle linBounds = lin.getBounds(); 
         linGraphics.setColor(new Color(linFigure.color().rgb().toString()));
         linGraphics.setStroke(new BasicStroke(linFigure.thickness()));
         linGraphics.translate(lin.getCenterX(),lin.getCenterY());
         linGraphics.rotate(angles.get("lin").degree());
         linGraphics.translate(-lin.getCenterX(),-lin.getCenterY());
+
+        Graphics2D trinGraphics = (Graphics2D) g.create();
+        structures.Triangle trinFigure = new structures.Triangle("trin");
+        double varExpr35 = 2;
+        trinFigure.setThickness(varExpr35);
+
+        trinFigure.setDisplay(true);
+        double varExpr36 = 250;
+
+        double varExpr37 = 124;
+
+        double varExpr38 = 98;
+        Color varExpr39 = new Color(varExpr36,varExpr37,varExpr38);
+        trinFigure.setColor(varExpr39);
+        Color varExpr40 = new Color("ffffff");
+        trinFigure.setColor(varExpr40);
+
+        Polygon trin =  new Polygon();
+        trin.addPoint((int)triangles.get("trin").a.x(),(int)triangles.get("trin").a.y());
+        trin.addPoint((int)triangles.get("trin").b.x(),(int)triangles.get("trin").b.y());
+        trin.addPoint((int)triangles.get("trin").c.x(),(int)triangles.get("trin").c.y());
+        java.awt.Rectangle trinBounds = trin.getBounds(); 
+        trinGraphics.setColor(new Color(trinFigure.color().rgb().toString()));
+        trinGraphics.setStroke(new BasicStroke(trinFigure.thickness()));
+        trinGraphics.translate(trin.getCenterX(),trin.getCenterY());
+        trinGraphics.rotate(angles.get("trin").degree());
+        trinGraphics.translate(-trin.getCenterX(),-trin.getCenterY());
 
     }
 
