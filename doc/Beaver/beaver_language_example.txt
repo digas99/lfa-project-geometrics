@@ -22,7 +22,7 @@ Rectangle square =>
 	size 400, 400
 	angle 180º
 	color red
-	border 2 #f24235
+	thickness 2 
 	filled true
 >>
 
@@ -43,7 +43,7 @@ square contains =>
 			startingPoint -20, -20
 			endingPoint cir[startingPoint] ++ 2,2
 			color #fffff
-			border 3 #000000 
+			thickness 2 
 		>>
 
 		Line diagonal =>
