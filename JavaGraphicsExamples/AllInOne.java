@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 
 
 
@@ -25,7 +26,6 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
     private int depthRedCircle = 0;
     String play = new String("P - play animation");
     String stop = new String("S - stop animation");
-   
 
     /////////////// --------------------------------Two rectangles------------------
 
@@ -38,6 +38,7 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
         // Might be useful. Run without it if you don't understand.
         super.paintComponent(g);
 
+        ArrayList<java.awt.Rectangle> rectList = new ArrayList<>();
         
         g.drawString(play,10,10);
         g.drawString(stop,8,25);
@@ -143,6 +144,7 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
         Graphics2D containerRedCircle = (Graphics2D) g.create();
 
         Shape circle2 = new Ellipse2D.Double(xRedCircle, 100.0, 100.0, 100.0);
+        rectList.add(circle2.getBounds());
 
         containerRedCircle.setPaint(Color.RED);
         //This is to erase shape, the color that is above fill or draw
@@ -155,8 +157,11 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
 
         // Using shape directly
         Shape circle = new Ellipse2D.Float(xGreenCircle, 100.0f, 100.0f, 100.0f);
+        rectList.add(circle.getBounds());
 
-        
+        for(int i =0; i<rectList.size(); i++){
+            containerGreenCircle.draw(rectList.get(i));
+        }
         containerGreenCircle.setPaint(Color.GREEN);
         containerGreenCircle.fill(circle);
         depthGreenCircle = 2;
@@ -166,7 +171,7 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
         // rectangle that encloses the circle using getBounds().
         // If you don't draw/fill the rect, it's invisible
         // If you want to see it add containerRedCircle.draw(rect3);
-        Rectangle rect3 = new Rectangle(circle.getBounds());
+        //Rectangle rect3 = new Rectangle(circle.getBounds());
         
         Graphics2D testingChangingOrigin = (Graphics2D)g.create();
 
@@ -187,7 +192,18 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
 
         // Circles move away from each other after intersecting
         // velGreenCircle =0 && velRedCircle=0 to make it more smooth
-        if (circle2.intersects(circle.getBounds2D())) {
+        //if (circle2.intersects(circle.getBounds2D())) {
+        for(int i=0; i<rectList.size(); i++){
+            for(int j=i+1; j<rectList.size(); j++){
+                if(rectList.get(i).intersects(rectList.get(j))){
+                    velGreenCircle = 0;
+                    velRedCircle = 0;
+                    velGreenCircle -= 1;
+                    velRedCircle -= 1;
+                }    
+            }
+        }
+       
             //This is for hangling depth
             /*if(depthRedCircle > depthGreenCircle){
                 containerRedCircle.fill(circle2);
@@ -195,13 +211,6 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
             else{
                 containerGreenCircle.fill(circle); 
             }*/
-            velGreenCircle = 0;
-            velRedCircle = 0;
-            velGreenCircle -= 1;
-            velRedCircle -= 1;
-        }
-
-
 
         containerRedCircle.dispose();
         containerRedSquare.dispose();
@@ -209,8 +218,6 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
         containerGreenCircle.dispose();
         testingChangingOrigin.dispose();
         
-        
-
         timer.start();
     }
 
@@ -254,18 +261,6 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
         repaint();
     }
 
-  
-    /* //Trying to add delay exit of program
-        //Not being used as of this version
-    public static void wait(int ms){
-        try{
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException ex){
-            Thread.currentThread().interrupt();
-        }
-    }*/
-
     //For interaction
     @Override
     public void keyPressed(KeyEvent e) {
@@ -296,10 +291,10 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener{
         frame1.setVisible(true);
         // centers the board to the center of screen
         frame1.setLocationRelativeTo(null);
-        // program stops running after closing it on the X at the top right
-        // otherwise you have to close it on the terminal
         frame1.add(n);
         frame1.addKeyListener(n);
+         // program stops running after closing it on the X at the top right
+        // otherwise you have to close it on the terminal
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
     }
 }
