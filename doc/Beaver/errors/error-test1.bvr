@@ -16,7 +16,7 @@ Rectangle hitbox =>
     size 200    !! wrong
     angle 0º
     color #f4444444 !! wrong
-    border 3 red
+    thickness 2 
 >>
 
 Number n => 10 >>
@@ -26,7 +26,7 @@ hitbox contains =>
 		width 200 !! wrong
 		angle 10, 20 !! wrong
 		radius pi
-		border n !! wrong
+		thickness n  
 	>>
 
 	!! incomplete...

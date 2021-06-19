@@ -44,8 +44,32 @@ start Rectangle rec:
 	/- center -> 0,10
 end
 
+start Circle circ:
+	diameter -> 500
+	thickness -> 2
+	display -> true
+	filled -> false
+	depth -> 2
+	color -> 12,30,20
+	/- center -> 0,10
+end
+
+start Line lin:
+	thickness -> 2
+	display -> true
+	color -> 250,124,98
+	color -> #ffffff
+end
+
+start Triangle trin:
+	thickness -> 2
+	display -> true
+	color -> 250,124,98
+	color -> #ffffff
+end
 draw rec
 
+draw circ
 
-
+/- have to remove delay 
 close 3000 ms

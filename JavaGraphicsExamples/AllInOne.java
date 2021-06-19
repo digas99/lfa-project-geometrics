@@ -2,12 +2,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 
-public class AllInOne extends JPanel implements ActionListener,KeyListener {
+
+
+public class AllInOne extends JPanel implements ActionListener,KeyListener{
+
 
     private static final int Width_Board = 1000;
     private static final int Height_Board = 1000;
-    private Timer timer = new Timer(30, this); // (ms,ActionListener)
+    private Timer timer = new Timer((int)30.5, this); // (ms,ActionListener)
     private int xRedSquare = 0;
     private int xPurpleBlackSquare = 500;
     private int xGreenCircle = 300;
@@ -20,17 +24,25 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
     //These can be initiated inside paint
     private int depthGreenCircle = 0;
     private int depthRedCircle = 0;
-   
+    String play = new String("P - play animation");
+    String stop = new String("S - stop animation");
 
     /////////////// --------------------------------Two rectangles------------------
 
     // Need a PaintMethod
     public void paint(Graphics g) {
+        
 
         // If this is not here the image will not dissapear and appear after it, so it
         // will "leave a trace".
         // Might be useful. Run without it if you don't understand.
         super.paintComponent(g);
+
+        ArrayList<java.awt.Rectangle> rectList = new ArrayList<>();
+        
+        g.drawString(play,10,10);
+        g.drawString(stop,8,25);
+
 
         // cast to Graphics2D because Graphics is old, gives more options
         // this way you can use both Graphics and Graphics2D
@@ -53,22 +65,22 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         // Where you put the variable is important because how you move figures is
         // by updating the var. If you want to move it diagonally you have
         // to have two vars.
-        Rectangle rect = new Rectangle(100, xRedSquare, 100, 100);// x,y,width,height
+        Rectangle2D rect = new Rectangle2D.Double(100, xRedSquare, 100, 100);// x,y,width,height
 
         // This is the color of whataver is "attached" to containerRedSquare, in this
         // case rect.
         // if you attach something else to containerRedSquare it will be this color
         // but, of course, you can update the color inside the container.
-        containerRedSquare.setPaint(Color.RED);
+        containerRedSquare.setColor(Color.RED);
 
         // This is so that the rectangle rotates around it's center.
         // If you just put containerRedSquare.rotate(angle) it will rotate
         // around the center point of the board.
         // translate changes the origin point of container to origin point of rect.
-        containerRedSquare.translate((int) rect.getCenterX(), (int) rect.getCenterY());
-        containerRedSquare.rotate(angle);
+        containerRedSquare.translate(rect.getCenterX(), rect.getCenterY());
+        containerRedSquare.rotate(angle); 
         // ~3 hours to realize you need this
-        containerRedSquare.translate((int) -rect.getCenterX(), (int) -rect.getCenterY());
+        containerRedSquare.translate(-rect.getCenterX(),-rect.getCenterY());
         // You could call draw(containerRedSquare.draw(rect)) to only draw the perimeter
         // of the rectangle.
         containerRedSquare.fill(rect);
@@ -107,7 +119,7 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         if (rectS.intersects(rect2)) {
             velRedSquare = 0;
             velPurpleBlackSquare = 0;
-            angle += 0.1;
+            angle += Math.PI/4;
             containerPurpleBlackSquare.setColor(new Color(55, 55, 55));
             containerRedSquare.setColor(new Color(55, 55, 55));
             // After changing color (and most other things) you have to fill rect again,
@@ -131,7 +143,8 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
 
         Graphics2D containerRedCircle = (Graphics2D) g.create();
 
-        Shape circle2 = new Ellipse2D.Float(xRedCircle, 100.0f, 100.0f, 100.0f);
+        Shape circle2 = new Ellipse2D.Double(xRedCircle, 100.0, 100.0, 100.0);
+        rectList.add(circle2.getBounds());
 
         containerRedCircle.setPaint(Color.RED);
         //This is to erase shape, the color that is above fill or draw
@@ -144,7 +157,11 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
 
         // Using shape directly
         Shape circle = new Ellipse2D.Float(xGreenCircle, 100.0f, 100.0f, 100.0f);
+        rectList.add(circle.getBounds());
 
+        for(int i =0; i<rectList.size(); i++){
+            containerGreenCircle.draw(rectList.get(i));
+        }
         containerGreenCircle.setPaint(Color.GREEN);
         containerGreenCircle.fill(circle);
         depthGreenCircle = 2;
@@ -154,8 +171,8 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         // rectangle that encloses the circle using getBounds().
         // If you don't draw/fill the rect, it's invisible
         // If you want to see it add containerRedCircle.draw(rect3);
-        Rectangle rect3 = new Rectangle(circle.getBounds());
-
+        //Rectangle rect3 = new Rectangle(circle.getBounds());
+        
         Graphics2D testingChangingOrigin = (Graphics2D)g.create();
 
         Rectangle2D recOrigin = new Rectangle2D.Double(500,500,200,200);
@@ -164,15 +181,29 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         //This translate doesn't need cast to int because it's 2D
         testingChangingOrigin.translate(recOrigin.getCenterX(),recOrigin.getCenterY());
         Rectangle2D recInsideRec = new Rectangle2D.Double(0,0,50,50);
-        containerRedSquare.translate((int) -rect.getCenterX(), (int) -rect.getCenterY());
+        testingChangingOrigin.drawString("String center",0,0);
         testingChangingOrigin.draw(recInsideRec);
+        testingChangingOrigin.translate((int) -rect.getCenterX(), (int) -rect.getCenterY());
+        
+        
 
 
         /////////////// -------------- ------------------Two circles interaction -------------------------        
 
         // Circles move away from each other after intersecting
         // velGreenCircle =0 && velRedCircle=0 to make it more smooth
-        if (circle2.intersects(rect3)) {
+        //if (circle2.intersects(circle.getBounds2D())) {
+        for(int i=0; i<rectList.size(); i++){
+            for(int j=i+1; j<rectList.size(); j++){
+                if(rectList.get(i).intersects(rectList.get(j))){
+                    velGreenCircle = 0;
+                    velRedCircle = 0;
+                    velGreenCircle -= 1;
+                    velRedCircle -= 1;
+                }    
+            }
+        }
+       
             //This is for hangling depth
             /*if(depthRedCircle > depthGreenCircle){
                 containerRedCircle.fill(circle2);
@@ -180,11 +211,27 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
             else{
                 containerGreenCircle.fill(circle); 
             }*/
-            velGreenCircle = 0;
-            velRedCircle = 0;
-            velGreenCircle -= 1;
-            velRedCircle -= 1;
-        }
+
+        containerRedCircle.dispose();
+        containerRedSquare.dispose();
+        containerPurpleBlackSquare.dispose();
+        containerGreenCircle.dispose();
+        testingChangingOrigin.dispose();
+        
+        timer.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        // This makes the redSquare(rect) go down,
+        // because xRedSquare is in y coordinate
+        xRedSquare += velRedSquare;
+
+        xPurpleBlackSquare -= velPurpleBlackSquare;
+
+        xGreenCircle += velGreenCircle;
+        xRedCircle -= velRedCircle;
 
         if (xRedSquare >= getWidth() - getWidth() * 0.10 ) {
             velRedSquare = velRedSquare * -1;
@@ -211,51 +258,18 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
             velRedCircle = velRedCircle * -1;
         }
 
-        containerRedCircle.dispose();
-        containerRedSquare.dispose();
-        containerPurpleBlackSquare.dispose();
-        containerGreenCircle.dispose();
-        testingChangingOrigin.dispose();
-
-        timer.start();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        // This makes the redSquare(rect) go down,
-        // because xRedSquare is in y coordinate
-        xRedSquare += velRedSquare;
-
-        xPurpleBlackSquare -= velPurpleBlackSquare;
-
-        xGreenCircle += velGreenCircle;
-        xRedCircle -= velRedCircle;
-
         repaint();
     }
-
-  
-    /* //Trying to add delay exit of program
-        //Not being used as of this version
-    public static void wait(int ms){
-        try{
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException ex){
-            Thread.currentThread().interrupt();
-        }
-    }*/
 
     //For interaction
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if(key == KeyEvent.VK_UP){
+        if(key == KeyEvent.VK_S){
         timer.stop();
         }
-        if(key == KeyEvent.VK_DOWN){
+        if(key == KeyEvent.VK_P){
         timer.start(); 
         }  
     }
@@ -277,10 +291,10 @@ public class AllInOne extends JPanel implements ActionListener,KeyListener {
         frame1.setVisible(true);
         // centers the board to the center of screen
         frame1.setLocationRelativeTo(null);
-        // program stops running after closing it on the X at the top right
-        // otherwise you have to close it on the terminal
         frame1.add(n);
         frame1.addKeyListener(n);
+         // program stops running after closing it on the X at the top right
+        // otherwise you have to close it on the terminal
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
     }
 }
