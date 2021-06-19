@@ -127,7 +127,7 @@ easteregg	: 'where is' ID '?' ;
 
 angle returns [String var = null]: expr type=('º' | 'deg' | 'rad') ;
 time : expr type=('ms'|'s'); 
-point : expr ',' expr ;
+point returns [String var = null]: expr ',' expr ;
 
 FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle' | 'Line' ;
 OBJECT : 'Label' | 'Point' | 'Number' | 'Angle' | 'Time';

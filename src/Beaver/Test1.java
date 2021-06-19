@@ -10,6 +10,7 @@ import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
+import java.util.Map;
 
 import structures.*;
 public class Test1 extends JPanel implements ActionListener,KeyListener{
@@ -83,6 +84,11 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         double varExpr20 = 20;
         Color varExpr21 = new Color(varExpr18,varExpr19,varExpr20);
         recFigure.setColor(varExpr21);
+        double varExpr22 = 0;
+
+        double varExpr23 = 10;
+        Point varPointExpr1 = new structures.Point(varExpr22,varExpr23);
+        recFigure.setCenter(varPointExpr1);
 
         Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a,positions.get("rec").b,
                                                    recFigure.width(),recFigure.height());
@@ -95,23 +101,28 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         Graphics2D circGraphics = (Graphics2D) g.create();
         structures.Circle circFigure = new structures.Circle("circ");
-        double varExpr22 = 500;
-        circFigure.setDiameter(varExpr22);
-        double varExpr23 = 2;
-        circFigure.setThickness(varExpr23);
+        double varExpr24 = 500;
+        circFigure.setDiameter(varExpr24);
+        double varExpr25 = 2;
+        circFigure.setThickness(varExpr25);
 
         circFigure.setDisplay(true);
 
         circFigure.setFilled(false);
-        double varExpr24 = 2;
-        circFigure.setDepth(varExpr24);
-        double varExpr25 = 12;
+        double varExpr26 = 2;
+        circFigure.setDepth(varExpr26);
+        double varExpr27 = 12;
 
-        double varExpr26 = 30;
+        double varExpr28 = 30;
 
-        double varExpr27 = 20;
-        Color varExpr28 = new Color(varExpr25,varExpr26,varExpr27);
-        circFigure.setColor(varExpr28);
+        double varExpr29 = 20;
+        Color varExpr30 = new Color(varExpr27,varExpr28,varExpr29);
+        circFigure.setColor(varExpr30);
+        double varExpr31 = 0;
+
+        double varExpr32 = 10;
+        Point varPointExpr2 = new structures.Point(varExpr31,varExpr32);
+        circFigure.setCenter(varPointExpr2);
 
         Shape circ = new Ellipse2D.Double(positions.get("circ").a,positions.get("circ").b,
                                            circFigure.diameter(),circFigure.diameter());
@@ -124,19 +135,19 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         Graphics2D linGraphics = (Graphics2D) g.create();
         structures.Line linFigure = new structures.Line("lin");
-        double varExpr29 = 2;
-        linFigure.setThickness(varExpr29);
+        double varExpr33 = 2;
+        linFigure.setThickness(varExpr33);
 
         linFigure.setDisplay(true);
-        double varExpr30 = 250;
+        double varExpr34 = 250;
 
-        double varExpr31 = 124;
+        double varExpr35 = 124;
 
-        double varExpr32 = 98;
-        Color varExpr33 = new Color(varExpr30,varExpr31,varExpr32);
-        linFigure.setColor(varExpr33);
-        Color varExpr34 = new Color("ffffff");
-        linFigure.setColor(varExpr34);
+        double varExpr36 = 98;
+        Color varExpr37 = new Color(varExpr34,varExpr35,varExpr36);
+        linFigure.setColor(varExpr37);
+        Color varExpr38 = new Color("ffffff");
+        linFigure.setColor(varExpr38);
 
         Shape lin = new Line2D.Double(lines.get("lin").a.x(),lines.get("lin").a.y(),
                                       lines.get("lin").b.x(),lines.get("lin".b.y()));
@@ -149,19 +160,19 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         Graphics2D trinGraphics = (Graphics2D) g.create();
         structures.Triangle trinFigure = new structures.Triangle("trin");
-        double varExpr35 = 2;
-        trinFigure.setThickness(varExpr35);
+        double varExpr39 = 2;
+        trinFigure.setThickness(varExpr39);
 
         trinFigure.setDisplay(true);
-        double varExpr36 = 250;
+        double varExpr40 = 250;
 
-        double varExpr37 = 124;
+        double varExpr41 = 124;
 
-        double varExpr38 = 98;
-        Color varExpr39 = new Color(varExpr36,varExpr37,varExpr38);
-        trinFigure.setColor(varExpr39);
-        Color varExpr40 = new Color("ffffff");
-        trinFigure.setColor(varExpr40);
+        double varExpr42 = 98;
+        Color varExpr43 = new Color(varExpr40,varExpr41,varExpr42);
+        trinFigure.setColor(varExpr43);
+        Color varExpr44 = new Color("ffffff");
+        trinFigure.setColor(varExpr44);
 
         Polygon trin =  new Polygon();
         trin.addPoint((int)triangles.get("trin").a.x(),(int)triangles.get("trin").a.y());
@@ -213,4 +224,5 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
 
+    Map<String,Pair<Double, Double>> positions = Map.ofEntires(entry("rec", new Pair(varExpr22, varExpr23)),entry("circ", new Pair(varExpr31, varExpr32)));
 }

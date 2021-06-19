@@ -41,7 +41,7 @@ start Rectangle rec:
 	depth -> 2
 	color -> #ffffff
 	color -> 12,30,20
-	/- center -> 0,10
+	center -> 0,10
 end
 
 start Circle circ:
@@ -51,7 +51,7 @@ start Circle circ:
 	filled -> false
 	depth -> 2
 	color -> 12,30,20
-	/- center -> 0,10
+	center -> 0,10
 end
 
 start Line lin:

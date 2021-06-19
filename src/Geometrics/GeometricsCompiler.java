@@ -36,12 +36,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          module.add("stat", visit(ctx.stats(i)));
       }
 
-      ST stats = template.getInstanceOf("stats_line");
       boolean first = true;
-      for (Entry<String, Pair<Double,Double>> e : positionsMap.entrySet()) {
+      for (Entry<String, Pair<String,String>> e : positionsMap.entrySet()) {
          if (!first)
-            stats.add("stat", ",");
-         stats.add("stat", String.format("entry(\"%s\", new Pair(%d, %d))", e.getKey(), e.getValue().a, e.getValue().b));
+            module.add("posMapEntries", ",");
+         module.add("posMapEntries", String.format("entry(\"%s\", new Pair(%s, %s))", e.getKey(), e.getValue().a, e.getValue().b));
          first = false;
       }
       return module;
@@ -264,22 +263,26 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
-      ST calcP = template.getInstanceOf("calcPoints");
-      String type;
-      if (ctx.op.getText() == "+")
-         type = "sum";
-      else
-         type = "sub";
-      calcP.add("type", type);
-      calcP.add("var", newExprVar());
-      calcP.add("p0", ctx.pointsExpr(0));
-      calcP.add("p1", ctx.pointsExpr(1));
-      return calcP;
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newPointExprVar();
+      declVar.add("stat", visit(ctx.pointsExpr(0)));
+      declVar.add("stat", visit(ctx.pointsExpr(1)));
+      declVar.add("type", "Point");
+      declVar.add("var", ctx.var);
+      String function = ctx.op.getText().equals("+") ? "sum" : "sub";
+      declVar.add("value", "new structures.Point."+function+"(");
+      declVar.add("value", ctx.pointsExpr(0).var);
+      declVar.add("value", ",");
+      declVar.add("value", ctx.pointsExpr(1).var);
+      declVar.add("value", ")");
+      return declVar;
    }
 
    @Override
    public ST visitPointsExprPoint(GeometricsParser.PointsExprPointContext ctx) {
-      return visit(ctx.point());
+      ST visit = visit(ctx.point());
+      ctx.var = ctx.point().var;
+      return visit;
    }
 
    @Override
@@ -398,23 +401,21 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
             rectangleMaking.add("var", var);
             figureMaking.add("stat", rectangleMaking.render());
             break;
-            case "Circle":
+         case "Circle":
             ST circleMaking = template.getInstanceOf("circleMaking");
             circleMaking.add("var", var);
             figureMaking.add("stat", circleMaking.render());
             break;
-            case "Line":
+         case "Line":
             ST lineMaking = template.getInstanceOf("lineMaking");
             lineMaking.add("var", var);
             figureMaking.add("stat", lineMaking.render());
             break;
-            case "Triangle":
+         case "Triangle":
             ST triangleMaking = template.getInstanceOf("triangleMaking");
             triangleMaking.add("var", var);
             figureMaking.add("stat", triangleMaking.render());
             break;
-
-
       }
       return figureMaking;
    }
@@ -429,7 +430,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       String id = ctx.ID().getText();
       ST setter = null;
       String attrib = visit(ctx.attribs()).render();
-      
       if (contains(propsAsExpr, id)) {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", ctx.attribs().var);
@@ -443,10 +443,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          setter.add("value", ctx.attribs().var);
       }
       else if (contains(propsAsPointsExpr, id)) {
-         setter = template.getInstanceOf("figurePointSetter");
-         String[] split = attrib.split(",");
-         setter.add("x", split[0]);
-         setter.add("y", split[1]);
+         setter = template.getInstanceOf("figureSetter");
+         setter.add("value", ctx.attribs().var);
       }
       else if (contains(propsAsTruthVal, id)) {
          setter = template.getInstanceOf("figureSetter");
@@ -498,7 +496,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          return visitColor;
       }
       else if (ctx.pointsExpr() != null) {
-
+         ST visitExpr = visit(ctx.pointsExpr());
+         ctx.var = ctx.pointsExpr().var;
+         return visitExpr;
       }
 
       return null;
@@ -639,7 +639,21 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitPoint(GeometricsParser.PointContext ctx) {
-      return visitChildren(ctx);
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newPointExprVar();
+      declVar.add("stat", visit(ctx.expr(0)));
+      declVar.add("stat", visit(ctx.expr(1)));
+      declVar.add("type", "Point");
+      declVar.add("var", ctx.var);
+      declVar.add("value", "new structures.Point(");
+      String expr0Var = ctx.expr(0).var;
+      String expr1Var = ctx.expr(1).var;
+      positionsMap.put(idOfBlockSet, new Pair<String, String>(expr0Var, expr1Var));
+      declVar.add("value", expr0Var);
+      declVar.add("value", ",");
+      declVar.add("value", expr1Var);
+      declVar.add("value", ")");
+      return declVar;
    }
 
    private static boolean contains(String[] arr, String target) {
@@ -698,9 +712,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       entry(Arrays.asList("angle"), "Angle"));
    private HashMap<String, String> varsTypes = new HashMap<>();
    static private String[] propsAsTruthVal = { "filled", "display"};
-   static private String[] propsAsExpr = { "center", "width", "height", "diameter", "radius", "color", "x", "y", "thickness", "depth"};
+   static private String[] propsAsExpr = { "width", "height", "diameter", "radius", "color", "x", "y", "thickness", "depth"};
    static private String[] propsAsPointsExpr = { "center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size" };
    static private String[] propsAsColor = { "color" };
    static private String[] propsAsAngle = { "angle" };
-   private HashMap<String, Pair<Double, Double>> positionsMap = new HashMap<>();
+   private HashMap<String, Pair<String, String>> positionsMap = new HashMap<>();
 }
