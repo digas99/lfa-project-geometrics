@@ -500,12 +500,15 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitEachFor(GeometricsParser.EachForContext ctx) {
       // String res = null;
 
-       String resID = visit(ctx.ID().getText());
+       String resID = ctx.ID().getText();
        String expr0 = visit(ctx.expr(0));
        String expr1 = visit(ctx.expr(1));
-       String stat = visit(ctx.stats());
+       
 
-      if (resID == null || expr0 == null || expr1 == null || stat == null) {}
+      
+       //String stat = visit(ctx.stats());
+
+      if (resID == null || expr0 == null || expr1 == null || stat == null) {
          return null;
       }
       return "with" + resID + "from" + expr0 + "to" + expr1 + ":" + stat + "stop";   
@@ -522,18 +525,18 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // Loop functions end -----------------------------------------
    @Override
    public String visitEasteregg(GeometricsParser.EastereggContext ctx) {
-      return "where is " + visit(ctx.ID()) + "?";
+      return "where is " + ctx.ID().getText() + "?";
    }
 
    @Override
    public String visitAngle(GeometricsParser.AngleContext ctx) {
 
-      /*angled = visit (ctx.expr());
-      double angle = Double.parseDouble(angled);
+      String angled = visit (ctx.expr());
+      /*double angle = Double.parseDouble(angled);
       if (angle > 2pi && angle < -2pi){
          return angled + "deg";
       }*/
-      return visit(ctx.expr());
+      return angled;
       // verificar se o angulo é menor ou maior que 360 no caso de ser º ou deg e se é
       // maior ou menor que 2pi caso rad?
    }
@@ -542,7 +545,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitTime(GeometricsParser.TimeContext ctx) {
 
       String timed = visit(ctx.expr());
-      if (!(timed.isNumber())){
+      if (!(isNumber(timed))){
          return null;
       } 
       int time = Integer.parseInt(timed);
