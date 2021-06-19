@@ -1,6 +1,8 @@
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import static java.util.Map.entry;
 import org.antlr.v4.runtime.misc.Pair;
 
@@ -33,9 +35,15 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       for (int i =0; i < ctx.stats().size(); i++) {
          module.add("stat", visit(ctx.stats(i)));
       }
-      if (hasVars)
-         module.add("hasVars", hasVars);
 
+      ST stats = template.getInstanceOf("stats_line");
+      boolean first = true;
+      for (Entry<String, Pair<Double,Double>> e : positionsMap.entrySet()) {
+         if (!first)
+            stats.add("stat", ",");
+         stats.add("stat", String.format("entry(\"%s\", new Pair(%d, %d))", e.getKey(), e.getValue().a, e.getValue().b));
+         first = false;
+      }
       return module;
    }
 
