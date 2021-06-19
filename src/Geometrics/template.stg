@@ -166,9 +166,15 @@ declList(type, var) ::= <<
 List \<<type>\> <var> = new List\<>();
 >>
 
-loop(stat, conditional) ::= <<
+while_loop(stat, conditional) ::= <<
 while(<conditional>){
-    <stats(stat)>
+    <if(stat)><stat><endif>
+}
+>>
+
+for_loop(id, start, till, stat) ::= <<
+for(int <id> = <start>; <id> <= <till>, <id>++){
+    <if(stat)><stat><endif>
 }
 >>
 
@@ -188,8 +194,8 @@ call_func(name, values) ::= <<
 <name>(<values>);
 >>
 
-change_var(var, value) ::= <<
-<var> = <value>;
+set_var(id, value) ::= <<
+<id> = <value>;
 >>
 
 add_to_list(var, varList, value, type) ::= <<
@@ -238,4 +244,8 @@ draw(var, fig) ::= <<
 
 filled(var, fig) ::= <<
 <var>.fill(<fig>);
+>>
+
+set_calc(id, value) ::= <<
+<id> = <id><value>
 >>

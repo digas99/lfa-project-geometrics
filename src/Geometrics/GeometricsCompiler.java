@@ -31,16 +31,18 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          module.add("stat", visit(ctx.use(0)));
       }
 
-      //ctx.stats().stream().forEach(stat -> module.add("stat", visit(stat).render()));
-      for (int i =0; i < ctx.stats().size(); i++) {
+      // ctx.stats().stream().forEach(stat -> module.add("stat",
+      // visit(stat).render()));
+      for (int i = 0; i < ctx.stats().size(); i++) {
          module.add("stat", visit(ctx.stats(i)));
       }
 
       boolean first = true;
-      for (Entry<String, Pair<String,String>> e : positionsMap.entrySet()) {
+      for (Entry<String, Pair<String, String>> e : positionsMap.entrySet()) {
          if (!first)
             module.add("posMapEntries", ",");
-         module.add("posMapEntries", String.format("entry(\"%s\", new Pair(%s, %s))", e.getKey(), e.getValue().a, e.getValue().b));
+         module.add("posMapEntries",
+               String.format("entry(\"%s\", new Pair(%s, %s))", e.getKey(), e.getValue().a, e.getValue().b));
          first = false;
       }
       return module;
@@ -58,11 +60,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    @Override
    public ST visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
       ST addList = template.getInstanceOf("add_to_list");
-      String type = "structures."+ctx.FIGURE().getText();
+      String type = "structures." + ctx.FIGURE().getText();
       addList.add("type", type);
       addList.add("var", ctx.ID(0).getText());
       addList.add("varList", "figures");
-      addList.add("value", "BeaverMain.getContainer(\""+ctx.ID(1).getText()+"\")");
+      addList.add("value", "BeaverMain.getContainer(\"" + ctx.ID(1).getText() + "\")");
       return addList;
    }
 
@@ -174,17 +176,16 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST visit = visit(ctx.identifiers());
       declVar.add("value", visit);
       String[] functions = visit.render().split("\\.");
-      String lastFunc = functions[functions.length-1].split("\\(\\)")[0];
+      String lastFunc = functions[functions.length - 1].split("\\(\\)")[0];
       String type = "";
       if (functions.length > 1) {
          for (List<String> funcList : funcTypesAssoc.keySet()) {
             if (funcList.contains(lastFunc))
                type = funcTypesAssoc.get(funcList);
          }
-      }
-      else
+      } else
          type = varsTypes.get(visit.render());
-      declVar.add("type", type); 
+      declVar.add("type", type);
       declVar.add("var", ctx.var);
       return declVar;
    }
@@ -243,7 +244,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       stats.add("stat", ctx.ID(0).getText());
       for (int i = 1; i < ctx.ID().size(); i++) {
          stats.add("stat", ".");
-         stats.add("stat", ctx.ID(i).getText()+"()");
+         stats.add("stat", ctx.ID(i).getText() + "()");
       }
       return stats;
    }
@@ -270,7 +271,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       declVar.add("type", "Point");
       declVar.add("var", ctx.var);
       String function = ctx.op.getText().equals("+") ? "sum" : "sub";
-      declVar.add("value", "new structures.Point."+function+"(");
+      declVar.add("value", "new structures.Point." + function + "(");
       declVar.add("value", ctx.pointsExpr(0).var);
       declVar.add("value", ",");
       declVar.add("value", ctx.pointsExpr(1).var);
@@ -360,14 +361,14 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST decl = template.getInstanceOf("declVar");
 
       String type = ctx.OBJECT().getText();
-      String convertedType = typesAssoc.containsKey(type) ? typesAssoc.get(type) : type; 
+      String convertedType = typesAssoc.containsKey(type) ? typesAssoc.get(type) : type;
       String var = ctx.ID().getText();
       decl.add("type", convertedType);
       decl.add("var", var);
       varsTypes.put(var, convertedType);
 
       String value = "";
-      switch(type) {
+      switch (type) {
          case "Number":
             decl.add("stat", visit(ctx.attribs()));
             value = ctx.attribs().var;
@@ -391,11 +392,11 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       String var = ctx.ID().getText();
       idOfBlockSet = var;
       ST figureMaking = template.getInstanceOf("figureMaking");
-      figureMaking.add("type",type);
-      figureMaking.add("var",var);
+      figureMaking.add("type", type);
+      figureMaking.add("var", var);
       figureMaking.add("properties", visit(ctx.blockSet()));
 
-      switch(type){
+      switch (type) {
          case "Rectangle":
             ST rectangleMaking = template.getInstanceOf("rectangleMaking");
             rectangleMaking.add("var", var);
@@ -433,20 +434,18 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       if (contains(propsAsExpr, id)) {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", ctx.attribs().var);
-      }
-      else if (contains(propsAsAngle, id)) {
+      } else if (contains(propsAsAngle, id)) {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", ctx.attribs().var);
-      }
-      else if (contains(propsAsColor, id)) {
+      } else if (contains(propsAsColor, id)) {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", ctx.attribs().var);
-      }
-      else if (contains(propsAsPointsExpr, id)) {
-         setter = template.getInstanceOf("figureSetter");
-         setter.add("value", ctx.attribs().var);
-      }
-      else if (contains(propsAsTruthVal, id)) {
+      } else if (contains(propsAsPointsExpr, id)) {
+         setter = template.getInstanceOf("figurePointSetter");
+         String[] split = attrib.split(",");
+         setter.add("x", split[0]);
+         setter.add("y", split[1]);
+      } else if (contains(propsAsTruthVal, id)) {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", attrib);
       }
@@ -454,8 +453,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       if (setter != null) {
          if (!contains(propsAsTruthVal, id))
             setter.add("stat", attrib);
-         setter.add("var",idOfBlockSet+"Figure");
-         setter.add("funcName", (id.charAt(0)+"").toUpperCase() + id.substring(1));
+         setter.add("var", idOfBlockSet + "Figure");
+         setter.add("funcName", (id.charAt(0) + "").toUpperCase() + id.substring(1));
       }
       return setter;
    }
@@ -463,7 +462,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    // grupo 1
    @Override
    public ST visitBlockSet(GeometricsParser.BlockSetContext ctx) {
-      ST stats = template.getInstanceOf("stats"); 
+      ST stats = template.getInstanceOf("stats");
       ctx.inlineSet().stream().forEach(inline -> stats.add("stat", visit(inline)));
       return stats;
    }
@@ -474,31 +473,24 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          ST visitExpr = visit(ctx.expr());
          ctx.var = ctx.expr().var;
          return visitExpr;
-      }
-      else if (ctx.STRING() != null) {
+      } else if (ctx.STRING() != null) {
          ST stats = template.getInstanceOf("stats");
          stats.add("stat", ctx.STRING().getText());
          return stats;
-      }
-      else if (ctx.angle() != null) {
+      } else if (ctx.angle() != null) {
          ST visitAngle = visit(ctx.angle());
          ctx.var = ctx.angle().var;
          return visitAngle;
-      }
-      else if (ctx.TRUTHVAL() != null) {
+      } else if (ctx.TRUTHVAL() != null) {
          ST stats = template.getInstanceOf("stats");
          stats.add("stat", ctx.TRUTHVAL().getText());
          return stats;
-      }
-      else if (ctx.color() != null) {
+      } else if (ctx.color() != null) {
          ST visitColor = visit(ctx.color());
          ctx.var = ctx.color().var;
          return visitColor;
-      }
-      else if (ctx.pointsExpr() != null) {
-         ST visitExpr = visit(ctx.pointsExpr());
-         ctx.var = ctx.pointsExpr().var;
-         return visitExpr;
+      } else if (ctx.pointsExpr() != null) {
+
       }
 
       return null;
@@ -522,19 +514,27 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
-      return visitChildren(ctx);
+      ST set = template.getInstanceOf("set_var");
+      set.add("id", ctx.ID().getText());
+      set.add("value", visit(ctx.expr()));
+      return set;
    }
 
    @Override
    public ST visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
-      return visitChildren(ctx);
+      ST set = template.getInstanceOf("set_calc");
+      set.add("id", ctx.ID().getText());
+      String op = ctx.op.getText();
+      set.add("value", symbAssoc.containsKey(op) ? symbAssoc.get(op) : op);
+      set.add("value", visit(ctx.expr()));
+      return set;
    }
 
    @Override
    public ST visitColorId(GeometricsParser.ColorIdContext ctx) {
       ST stats = template.getInstanceOf("stats");
       ctx.var = newExprVar();
-      stats.add("stat", "Color "+ctx.var+" = new Color("+ctx.ID().getText()+");");
+      stats.add("stat", "Color " + ctx.var + " = new Color(" + ctx.ID().getText() + ");");
       return stats;
    }
 
@@ -542,7 +542,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    public ST visitColorHex(GeometricsParser.ColorHexContext ctx) {
       ST stats = template.getInstanceOf("stats");
       ctx.var = newExprVar();
-      stats.add("stat", String.format("Color %s = new Color(\"%s\");", ctx.var, ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText()));
+      stats.add("stat", String.format("Color %s = new Color(\"%s\");", ctx.var,
+            ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText()));
       return stats;
    }
 
@@ -553,7 +554,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       stats.add("stat", visit(ctx.expr(1)));
       stats.add("stat", visit(ctx.expr(2)));
       ctx.var = newExprVar();
-      stats.add("stat", "Color "+ctx.var+" = new Color("+ctx.expr(0).var+","+ctx.expr(1).var+","+ctx.expr(2).var+");");
+      stats.add("stat", "Color " + ctx.var + " = new Color(" + ctx.expr(0).var + "," + ctx.expr(1).var + ","
+            + ctx.expr(2).var + ");");
       return stats;
    }
 
@@ -605,12 +607,28 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      return visitChildren(ctx);
+      ST wLoop = template.getInstanceOf("while_loop");
+      wLoop.add("conditional", visit(ctx.booleanLogic()));
+      if (ctx.stats() != null) {
+         ctx.stats().stream().forEach(stats -> wLoop.add("stat", visit(stats)));
+      } else if (ctx.stop != null) {
+         wLoop.add("stat", "break;");
+      }
+      return wLoop;
    }
 
    @Override
    public ST visitEachFor(GeometricsParser.EachForContext ctx) {
-      return visitChildren(ctx);
+      ST fLoop = template.getInstanceOf("for_loop");
+      fLoop.add("id", ctx.ID().getText());
+      fLoop.add("start", visit(ctx.expr(0)));
+      fLoop.add("till", visit(ctx.expr(1)));
+      if (ctx.stats() != null) {
+         ctx.stats().stream().forEach(stats -> fLoop.add("stat", visit(stats)));
+      } else if (ctx.stop != null) {
+         fLoop.add("stat", "break;");
+      }
+      return fLoop;
    }
 
    @Override
@@ -626,9 +644,9 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       String varExpr = ctx.expr().var;
       ctx.var = newExprVar();
       if (type.equals("rad"))
-         stats.add("stat", "Angle "+ctx.var+" = new Angle("+varExpr+");");
+         stats.add("stat", "Angle " + ctx.var + " = new Angle(" + varExpr + ");");
       else
-         stats.add("stat", "Angle "+ctx.var+" = new Angle((int) "+varExpr+");");
+         stats.add("stat", "Angle " + ctx.var + " = new Angle((int) " + varExpr + ");");
       return stats;
    }
 
@@ -681,38 +699,26 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return "varBoolExpr" + boolExprVars;
    }
 
-
    private String idOfBlockSet = "";
    private boolean hasVars = false;
    private int exprVars = 0;
    private int pointExprVars = 0;
    private int boolExprVars = 0;
-   private Map<String, String> symbAssoc = Map.ofEntries(
-      entry("or", "||"),
-      entry("and", "&&"),
-      entry("diffente", "^"),
-      entry("equals", "=="),
-      entry("greater", ">"),
-      entry("lower", "<"),
-      entry("greater equal", ">="),
-      entry("lower equal", "<="),
-      entry("|", "||"),
-      entry("&", "&&"),
-      entry("!", "!="),
-      entry("=", "=="));
-   private Map<String, String> typesAssoc = Map.ofEntries(
-      entry("Label", "String"),
-      entry("Number", "double"),
-      entry("Point", "structures.Point"));
-   private Map<List<String>, String> funcTypesAssoc = Map.ofEntries(
-      entry(Arrays.asList("width", "height", "diameter", "radius", "x", "y"), "double"),
-      entry(Arrays.asList("center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"), "structures.Point"),
-      entry(Arrays.asList("filled", "visibility", "collide"), "boolean"),
-      entry(Arrays.asList("color"), "Color"),
-      entry(Arrays.asList("angle"), "Angle"));
+   private Map<String, String> symbAssoc = Map.ofEntries(entry("or", "||"), entry("and", "&&"), entry("diffente", "^"),
+         entry("equals", "=="), entry("greater", ">"), entry("lower", "<"), entry("greater equal", ">="),
+         entry("lower equal", "<="), entry("|", "||"), entry("&", "&&"), entry("!", "!="), entry("=", "=="));
+   private Map<String, String> typesAssoc = Map.ofEntries(entry("Label", "String"), entry("Number", "double"),
+         entry("Point", "structures.Point"));
+   private Map<List<String>, String> funcTypesAssoc = Map
+         .ofEntries(entry(Arrays.asList("width", "height", "diameter", "radius", "x", "y"), "double"),
+               entry(Arrays.asList("center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"),
+                     "structures.Point"),
+               entry(Arrays.asList("filled", "visibility", "collide"), "boolean"),
+               entry(Arrays.asList("color"), "Color"), entry(Arrays.asList("angle"), "Angle"));
    private HashMap<String, String> varsTypes = new HashMap<>();
-   static private String[] propsAsTruthVal = { "filled", "display"};
-   static private String[] propsAsExpr = { "width", "height", "diameter", "radius", "color", "x", "y", "thickness", "depth"};
+   static private String[] propsAsTruthVal = { "filled", "display" };
+   static private String[] propsAsExpr = { "center", "width", "height", "diameter", "radius", "color", "x", "y",
+         "thickness", "depth" };
    static private String[] propsAsPointsExpr = { "center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size" };
    static private String[] propsAsColor = { "color" };
    static private String[] propsAsAngle = { "angle" };

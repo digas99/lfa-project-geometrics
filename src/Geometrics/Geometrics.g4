@@ -86,7 +86,7 @@ funcCall	: 'call' ID ('with' (expr | STRING) (',' (expr | STRING))* )? ;
 // Begin vars set
 varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
 		| 'set' ID '->' expr						#varsSetExpr
-		| 'set' ID ('*' | '/' | '+' | '-') expr		#varsSetCalc
+		| 'set' ID op=('*' | '/' | '+' | '-') expr		#varsSetCalc
 		;
 
 // End objects properties
