@@ -419,6 +419,8 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // grupo 2
    @Override
    public String visitListRemove(GeometricsParser.ListRemoveContext ctx) {
+
+      
       return visitChildren(ctx);
    }
 
@@ -426,14 +428,14 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    @Override
    public String visitConditional(GeometricsParser.ConditionalContext ctx) {
       // String res = null;
-      // String bologic = visit(ctx.booleanLogic());
-      // String stat = visit(ctx.stats());
-      // if (bologic == null || stat == null) {
+       String bologic = visit(ctx.booleanLogic());
+       String blockstat = visit(ctx.blockStats());
+       if (bologic == null || blockstat == null) {}
       //    res = null;
       // } else
       //    res = bologic;
       // return res;
-      return null;
+      return "if" + bologic + ":" + blockstat + "end";
    }
 
    // Loop functions start -----------------------------------------
@@ -441,76 +443,96 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitLoop(GeometricsParser.LoopContext ctx) {
 
       // String res = null;
-      // String resTime = visit(ctx.time());
-      // String resID = visit(ctx.ID().getText());
-      // String loopSpec = visit(ctx.loopSpecifics());
+      String timed = visit(ctx.time());
+      String resID = visit(ctx.ID().getText());
+      String loopSpec = visit(ctx.loopSpecifics());
 
-      // if (resID == null || resTime == null || loopSpec == null) {
+      if (loopSpec == null){
+         return null;
+      }
+      else if (resID == null && timed == null){
+         return null;
+
+      }
+
+      else if (resID == null) {
+          return "each" + timed + loopSpecifics + "end";
+
+      }
+      else{
+          return "each" + resID + loopSpecifics + "end";
+      }
       //    res = null;
       // } else
       //    res = loopSpec;
 
       // return res;
       // Verify time and loopSpecifics(eachtime,while,for)
-      return null;
    }
 
    @Override
    public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      // return visit(ctx.stats());
+      return ":" + visit(ctx.stats()) + "stop";
       // return visit(ctx.stats());
       // Verify stats
       // Verify stop(interruption trigger)
-      return null;
+      //return null;
    }
 
    @Override
    public String visitEachWhile(GeometricsParser.EachWhileContext ctx) {
       // String res = null;
-      // String bologic = visit(ctx.booleanLogic());
-      // String stat = visit(ctx.stats());
-      // if (bologic == null || stat == null) {
+       String bologic = visit(ctx.booleanLogic());
+       String stat = visit(ctx.stats());
+       if (bologic == null || stat == null) {
+          return null;
+       }
       //    res = null;
       // } else
       //    res = bologic;
       // return res;
       // Verify booleanLogic and stats
       // Verify stop(interruption trigger)
-      return null;
+      return "until" + bologic + ":" + stat + "stop" ;
    }
 
    @Override
    public String visitEachFor(GeometricsParser.EachForContext ctx) {
       // String res = null;
 
-      // String resID = visit(ctx.ID().getText());
-      // String expr0 = visit(ctx.expr(0));
-      // String expr1 = visit(ctx.expr(1));
-      // String stat = visit(ctx.stats());
+       String resID = visit(ctx.ID().getText());
+       String expr0 = visit(ctx.expr(0));
+       String expr1 = visit(ctx.expr(1));
+       String stat = visit(ctx.stats());
 
-      // if (resID == null || expr0 == null || expr1 == null || stat == null) {
-      //    res = null;
-      // }
+      if (resID == null || expr0 == null || expr1 == null || stat == null) {}
+         return null;
+      }
+      return "with" + resID + "from" + expr0 + "to" + expr1 + ":" + stat + "stop";   
+
       // /*
       //  * else if(expr0 != null){ res = expr0; } else if(expr1 != null){ res = expr1; }
       //  */
-      // else
-      //    res = resID;
-
-      // return res;
+      
       // Verify ID, 2 expr and stats
-      // Verify stop(interruption trigger)
-      return null;
+      //Verify stop(interruption trigger)
+      //return null;
    }
 
    // Loop functions end -----------------------------------------
    @Override
    public String visitEasteregg(GeometricsParser.EastereggContext ctx) {
-      return visit(ctx.ID());
+      return "where is " + visit(ctx.ID()) + "?";
    }
 
    @Override
    public String visitAngle(GeometricsParser.AngleContext ctx) {
+
+      /*angled = visit (ctx.expr());
+      double angle = Double.parseDouble(angled);
+      if (angle > 2pi && angle < -2pi){
+         return angled + "deg";
+      }*/
       return visit(ctx.expr());
       // verificar se o angulo é menor ou maior que 360 no caso de ser º ou deg e se é
       // maior ou menor que 2pi caso rad?
@@ -518,20 +540,27 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitTime(GeometricsParser.TimeContext ctx) {
-      return visit(ctx.expr());
+
+      String timed = visit(ctx.expr());
+      int time = Integer.parseInt(timed);
+      if (time < 0)  
+      {
+         return null;
+      }
+      return timed;
+      //return visit(ctx.expr());
       // verificar se tempo é positivo ?
    }
 
    @Override
    public String visitPoint(GeometricsParser.PointContext ctx) {
-      String res = null;
+      //String res = null;
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
       if (expr0 == null || expr1 == null) {
-         res = null;
-      } else
-         res = expr0;
-      return res;
+         return null;
+      }
+      return expr0 + "," + expr1;
    }
 
    private static boolean isNumber(String val) {
