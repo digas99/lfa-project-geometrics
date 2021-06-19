@@ -542,6 +542,9 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitTime(GeometricsParser.TimeContext ctx) {
 
       String timed = visit(ctx.expr());
+      if (!(timed.isNumber())){
+         return null;
+      } 
       int time = Integer.parseInt(timed);
       if (time < 0)  
       {
