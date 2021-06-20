@@ -200,7 +200,7 @@ while(<conditional>){
 >>
 
 for_loop(id, start, till, stat) ::= <<
-for(int <id> = <start>; <id> <= <till>; <id>++){
+for(int <id> = <start>; <id> \<= <till>; <id>++){
     <if(stat)><stat><endif>
 }
 >>
