@@ -12,15 +12,15 @@ public class Circle extends Figure {
 		super(id);
 	}
 
-	public Circle(String id, Color color, Color borderColor, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, double diameter) {
-		super(id, color, borderColor, center, filled, thickness, depth, display, container);
+	public Circle(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, double diameter) {
+		super(id, color, center, filled, thickness, depth, display, container);
 		this.diameter = diameter;
 		this.startingPoint = new Point(center.x() - diameter/2, 0);
 		this.endingPoint = new Point(center.x() + diameter/2, 0);
 	}
 	
-	public Circle(String id, Color color, Color borderColor, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, Point startingPoint, Point endingPoint) {
-		super(id, color, borderColor, center, filled, thickness, depth, display, container);
+	public Circle(String id, Color color, Point center, boolean filled, double thickness, double depth, boolean display, boolean container, Point startingPoint, Point endingPoint) {
+		super(id, color, center, filled, thickness, depth, display, container);
 		this.startingPoint = startingPoint;
 		this.endingPoint = endingPoint;
 		this.diameter = Point.distance(startingPoint, endingPoint);
@@ -64,6 +64,6 @@ public class Circle extends Figure {
 	}
 
 	@Override public String toString() {
-        return String.format("%s [%s] Color: %s; BorderColor: %s Center: %s; Thickness: %.2f; StartingPoint: %s; EndingPoint: %s; Diameter: %.2f; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.borderColor(), this.center().print(), this.thickness(), this.startingPoint, this.endingPoint, this.diameter, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.display() ? "Visible" : "!Visible", this.figures().size());
+        return String.format("%s [%s] Color: %s; Center: %s; Thickness: %.2f; StartingPoint: %s; EndingPoint: %s; Diameter: %.2f; %s; %s; %s; Contains [%d] Figures", this.getClass().getSimpleName(), this.id(), this.color(), this.center().print(), this.thickness(), this.startingPoint, this.endingPoint, this.diameter, this.container() ? "Container" : "!Container", this.filled() ? "Filled" : "!Filled", this.display() ? "Visible" : "!Visible", this.figures().size());
 	}
 }

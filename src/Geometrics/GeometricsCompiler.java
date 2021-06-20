@@ -488,9 +488,10 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          ctx.var = ctx.color().var;
          return visitColor;
       } else if (ctx.pointsExpr() != null) {
-
+         ST visitExpr = visit(ctx.pointsExpr());
+         ctx.var = ctx.pointsExpr().var;
+         return visitExpr;
       }
-
       return null;
    }
 
