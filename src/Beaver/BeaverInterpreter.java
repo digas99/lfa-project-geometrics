@@ -71,14 +71,12 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
 
       // figure properties
       Color color = new Color(new RGB(255, 255, 255));
-      Color borderColor = new Color(new RGB(0, 0, 0));
-      double border = 0;
       Point center = new Point(0, 0);
       boolean filled = false;
       double thickness = 0;
-      boolean collide = true;
       boolean visibility = true;
       boolean container = false;
+      double depth = 0;
 
       // see if there is already an uppermost container, if not, then set this as an
       // uppermost container
@@ -108,11 +106,6 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          switch (split[0]) {
             case "color":
                color = Color.parseColor(value);
-               break;
-            case "border":
-               String[] values = value.split(" ");
-               border = Double.parseDouble(values[0]);
-               borderColor = Color.parseColor(values[1]);
                break;
             case "width":
                width = Double.parseDouble(value);
@@ -156,9 +149,6 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
             case "p2":
                endingPoint = Point.parsePoint(value);
                break;
-            case "collide":
-               collide = value.equals("true") ? true : false;
-               break;
             case "filled":
                filled = value.equals("true") ? true : false;
                break;
@@ -171,28 +161,28 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          } 
       }
 
-      Figure f = new Figure(id, color, borderColor, border, center, filled, thickness, collide, visibility, container);
+      Figure f = new Figure(id, color, center, filled, thickness, depth, visibility, container);
       switch (figure) {
          case "Rectangle":
-            f = new Rectangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, container,
+            f = new Rectangle(id, color, center, filled, thickness, depth, visibility, container,
                   width, height, angle);
             break;
          case "Circle":
             if (diameter > 0)
-               f = new Circle(id, color, borderColor, border, center, filled, thickness, collide, visibility, container,
+               f = new Circle(id, color, center, filled, thickness, depth, visibility, container,
                      diameter);
             else
-               f = new Circle(id, color, borderColor, border, center, filled, thickness, collide, visibility, container,
+               f = new Circle(id, color, center, filled, thickness, depth, visibility, container,
                      startingPoint, endingPoint);
             break;
          case "Line":
             if (length > 0)
-               f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, container, angle, length);
+               f = new Line(id, color, center, filled, thickness, depth, visibility, container, angle, length);
             else
-               f = new Line(id, color, borderColor, border, center, filled, thickness, collide, visibility, container, startingPoint, endingPoint);
+               f = new Line(id, color, center, filled, thickness, depth, visibility, container, startingPoint, endingPoint);
             break;
          case "Triangle":
-            f = new Triangle(id, color, borderColor, border, center, filled, thickness, collide, visibility, container,
+            f = new Triangle(id, color, center, filled, thickness, depth, visibility, container,
                   startingPoint, middlePoint, endingPoint);
             break;
       }
@@ -250,20 +240,11 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
          value = visit(ctx.pointsExpr());
       else if (ctx.color() != null)
          value = visit(ctx.color());
-      else if (ctx.borderValue() != null)
-         value = visit(ctx.borderValue());
       else if (ctx.angle() != null)
          value = visit(ctx.angle());
       else
          value = ctx.TRUTHVAL().getText();
       return prop + ";" + value;
-   }
-
-   @Override
-   public String visitBorderValue(BeaverParser.BorderValueContext ctx) {
-      String border = visit(ctx.expr());
-      String color = ctx.ID() != null ? colorVars.get(ctx.ID().getText()).toString() : visit(ctx.color());
-      return border + " " + color;
    }
 
    @Override

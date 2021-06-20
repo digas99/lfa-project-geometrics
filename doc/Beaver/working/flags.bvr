@@ -25,7 +25,6 @@ Rectangle japanese =>
 	color white
 	visibility true
 	filled true
-	collide true
 >>
 
 japanese contains =>
@@ -50,7 +49,6 @@ Rectangle french =>
 	size flag[width], flag[height]
 	visibility false
 	filled false
-	collide true
 >>
 
 french contains =>

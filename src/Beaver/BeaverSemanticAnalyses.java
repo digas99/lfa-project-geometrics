@@ -158,7 +158,6 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
       // if it is a correct property
       else {
          if (ctx.color() != null && visit(ctx.color()) && !contains(propsAsColor, prop)
-          || ctx.borderValue() != null && visit(ctx.borderValue()) && !contains(propsAsExprColor, prop)
           || ctx.angle() != null && visit(ctx.angle()) && !contains(propsAsAngle, prop)
           || ctx.TRUTHVAL() != null && !contains(propsAsTruthVal, prop))
             throwError(line, col, String.format(notValueOfPropErrorMessage, prop));
@@ -170,19 +169,6 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
          }
       }
       return valid;
-   }
-
-   @Override public Boolean visitBorderValue(BeaverParser.BorderValueContext ctx) {
-      boolean valid = true;
-      if (ctx.color() != null) {
-         valid = visit(ctx.color());
-      }
-      else {
-         String var = ctx.ID().getText();
-         valid = hasBeenInit(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), var);
-      }
-      boolean validExpr = visit(ctx.expr());
-      return valid && validExpr;
    }
 
    @Override public Boolean visitExprMultDiv(BeaverParser.ExprMultDivContext ctx) {
@@ -475,6 +461,5 @@ public class BeaverSemanticAnalyses extends BeaverBaseVisitor<Boolean> {
    static private String[] propsAsExpr = {"center", "width", "height", "diameter", "radius", "color", "x", "y"};
    static private String[] propsAsPointsExpr = {"center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size"};
    static private String[] propsAsColor = {"color"};
-   static private String[] propsAsExprColor = {"border"};
    static private String[] propsAsAngle = {"angle"};
 }
