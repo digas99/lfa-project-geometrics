@@ -119,14 +119,14 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
-      return null;
+      return expr0 + expr1;
    }
 
    @Override
    public String visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
-      return null;
+      return expr0 + expr1;
    }
 
    @Override
@@ -148,7 +148,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitExprPower(GeometricsParser.ExprPowerContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
-      return null;
+      return expr0 + expr1;
    }
 
    // grupo 1
@@ -419,9 +419,14 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // grupo 2
    @Override
    public String visitListRemove(GeometricsParser.ListRemoveContext ctx) {
-
-      
-      return visitChildren(ctx);
+     
+      String resID = ctx.ID().getText();
+      String expr0 = visit(ctx.expr());
+      String resString = ctx.STRING().getText();
+      if (resID == null || expr0 == null || resString == null){
+         return null;
+      }
+      return resID + expr0 + resString;
    }
 
    // If function
@@ -429,20 +434,25 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitConditional(GeometricsParser.ConditionalContext ctx) {
       // String res = null;
        String bologic = visit(ctx.booleanLogic());
-       String blockstat = visit(ctx.blockStats());
-       if (bologic == null || blockstat == null) {}
+      // List<String> blocks = ctx.blockStats().stream().map(attr -> visit(attr)).collect(Collectors.toList());
+      // String blockstat = visit(ctx.blockStats());
+       if (bologic == null/* || blockstat == null*/) {}
       //    res = null;
       // } else
       //    res = bologic;
       // return res;
-      return "if" + bologic + ":" + blockstat + "end";
+      return "if" + bologic/* + ":" + blockstat +*/ + "end";
    }
 
+ /*
+   //created visit blockStats
    @Override
-   public String visitBlockStats(GeometricsParser.BlockStatsContext ctx) {
-      return visitChildren(ctx);
-   }
+   public String visitBlockStats(GeometricsParser.BlockStatsContext ctx){//quick fix: create class BlockStatsContext in GeometricsParser(not sure if it works)
+                                                                         //maybe create a new visitor and copy the data from this to the other ?
+      return visit(ctx.stats());
 
+   }
+*/
 
    // Loop functions start -----------------------------------------
    @Override
@@ -462,44 +472,33 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       }
 
       else if (resID == null) {
-          return "each" + timed + loopSpecifics + "end";
+          return "each" + timed + loopSpec + "end";
 
       }
       else{
-          return "each" + resID + loopSpecifics + "end";
+          return "each" + resID + loopSpec + "end";
       }
-      //    res = null;
-      // } else
-      //    res = loopSpec;
-
-      // return res;
-      // Verify time and loopSpecifics(eachtime,while,for)
+      
    }
 
    @Override
    public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      return ":" + visit(ctx.stats()) + "stop";
-      // return visit(ctx.stats());
-      // Verify stats
-      // Verify stop(interruption trigger)
-      //return null;
+      List<String> resStats = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
+      if(resStats == null){
+         return null;
+      }
+      return ":" + resStats;
    }
 
    @Override
    public String visitEachWhile(GeometricsParser.EachWhileContext ctx) {
       // String res = null;
        String bologic = visit(ctx.booleanLogic());
-       String stat = visit(ctx.stats());
-       if (bologic == null || stat == null) {
+       List<String> resStats = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
+       if (bologic == null || resStats == null) {
           return null;
        }
-      //    res = null;
-      // } else
-      //    res = bologic;
-      // return res;
-      // Verify booleanLogic and stats
-      // Verify stop(interruption trigger)
-      return "until" + bologic + ":" + stat + "stop" ;
+      return "until" + bologic + ":" + resStats + "stop" ;
    }
 
    @Override
@@ -509,23 +508,16 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
        String resID = ctx.ID().getText();
        String expr0 = visit(ctx.expr(0));
        String expr1 = visit(ctx.expr(1));
-       
+       List<String> resStats = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
 
       
        //String stat = visit(ctx.stats());
 
-      if (resID == null || expr0 == null || expr1 == null || stat == null) {
+      if (resID == null || expr0 == null || expr1 == null || resStats == null) {
          return null;
       }
-      return "with" + resID + "from" + expr0 + "to" + expr1 + ":" + stat + "stop";   
+      return "with" + resID + "from" + expr0 + "to" + expr1 + ":" + resStats + "stop";   
 
-      // /*
-      //  * else if(expr0 != null){ res = expr0; } else if(expr1 != null){ res = expr1; }
-      //  */
-      
-      // Verify ID, 2 expr and stats
-      //Verify stop(interruption trigger)
-      //return null;
    }
 
    // Loop functions end -----------------------------------------
@@ -538,10 +530,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitAngle(GeometricsParser.AngleContext ctx) {
 
       String angled = visit (ctx.expr());
-      /*double angle = Double.parseDouble(angled);
-      if (angle > 2pi && angle < -2pi){
-         return angled + "deg";
-      }*/
       return angled;
       // verificar se o angulo é menor ou maior que 360 no caso de ser º ou deg e se é
       // maior ou menor que 2pi caso rad?
@@ -560,15 +548,14 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
          return null;
       }
       return timed;
-      //return visit(ctx.expr());
-      // verificar se tempo é positivo ?
+      
    }
 
    @Override
    public String visitPoint(GeometricsParser.PointContext ctx) {
       //String res = null;
       String expr0 = visit(ctx.expr(0));
-      String expr1 = visit(ctx.expr(1));
+      String expr1 = visit(ctx.expr(1));//quick fix: created method expr(int) in type 'PointContext';
       if (expr0 == null || expr1 == null) {
          return null;
       }
