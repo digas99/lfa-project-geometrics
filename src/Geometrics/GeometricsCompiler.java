@@ -441,10 +441,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsPointsExpr, id)) {
-         setter = template.getInstanceOf("figurePointSetter");
-         String[] split = attrib.split(",");
-         setter.add("x", split[0]);
-         setter.add("y", split[1]);
+         setter = template.getInstanceOf("figureSetter");
+         setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsTruthVal, id)) {
          setter = template.getInstanceOf("figureSetter");
          setter.add("value", attrib);
@@ -573,7 +571,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       ST remList = template.getInstanceOf("remove_from_list");
       remList.add("var", ctx.ID());
       remList.add("value", ctx.expr());
-      return visitChildren(ctx);
+      return remList;
    }
 
    @Override
@@ -597,12 +595,25 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitLoop(GeometricsParser.LoopContext ctx) {
-      return visitChildren(ctx);
+      ST loop = template.getInstanceOf("while_loop");
+      if (ctx.time() != null) {
+         loop.add("conditional", ctx.time());
+      } else {
+         loop.add("conditional", ctx.ID().getText());
+      }
+      loop.add("stat", visit(ctx.loopSpecifics()));
+      return loop;
    }
 
    @Override
    public ST visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      return visitChildren(ctx);
+      ST time = template.getInstanceOf("stats");
+      if (ctx.stats() != null) {
+         ctx.stats().stream().forEach(stats -> time.add("stat", visit(stats)));
+      } else if (ctx.stop != null) {
+         time.add("stat", "break;");
+      }
+      return time;
    }
 
    @Override
@@ -717,8 +728,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
                entry(Arrays.asList("color"), "Color"), entry(Arrays.asList("angle"), "Angle"));
    private HashMap<String, String> varsTypes = new HashMap<>();
    static private String[] propsAsTruthVal = { "filled", "display" };
-   static private String[] propsAsExpr = { "center", "width", "height", "diameter", "radius", "color", "x", "y",
-         "thickness", "depth" };
+   static private String[] propsAsExpr = { "width", "height", "diameter", "radius", "color", "x", "y", "thickness",
+         "depth" };
    static private String[] propsAsPointsExpr = { "center", "startingPoint", "endingPoint", "p0", "p1", "p2", "size" };
    static private String[] propsAsColor = { "color" };
    static private String[] propsAsAngle = { "angle" };
