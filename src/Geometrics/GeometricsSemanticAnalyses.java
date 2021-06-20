@@ -481,7 +481,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    @Override
    public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
       List<String> resStats = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
-      if(resStats == null){
+      if( anyNull(resStats) == true){
          return null;
       }
       return ":" + resStats;
@@ -492,7 +492,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       // String res = null;
        String bologic = visit(ctx.booleanLogic());
        List<String> resStats = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
-       if (bologic == null || resStats == null) {
+       if (bologic == null ||  anyNull(resStats) == true) {
           return null;
        }
       return "until" + bologic + ":" + resStats + "stop" ;
@@ -510,7 +510,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       
        //String stat = visit(ctx.stats());
 
-      if (resID == null || expr0 == null || expr1 == null || resStats == null) {
+      if (resID == null || expr0 == null || expr1 == null || anyNull(resStats) == true) {
          return null;
       }
       return "with" + resID + "from" + expr0 + "to" + expr1 + ":" + resStats + "stop";   
