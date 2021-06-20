@@ -44,7 +44,7 @@ public class Figure {
 
     public Color color() {
         return this.color;
-    }
+    } 
 
     public void setCenter(Point center) {
         this.center = center;
