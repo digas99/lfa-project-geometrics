@@ -11,7 +11,6 @@ import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
-import java.util.Map;
 
 import structures.*;
 public class <name> extends JPanel implements ActionListener,KeyListener{
@@ -21,6 +20,8 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
 
     public void paint(Graphics g){
         super.paintComponent(g);
+
+        ArrayList\<java.awt.Rectangle> rectBoundsList = new ArrayList\<>();
 
         g.drawString("P - play animation",10,10);
         g.drawString("S - stop animation",8,25);
@@ -65,10 +66,10 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
 
-    <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(<posMapEntries>);<endif>
-    <if(anglesMapEntries)>HashMap\<String,structures.Angle> angles = Map.ofEntires(<anglesMapEntries>);<endif>
-    <if(linesMapEntries)>HashMap\<String,Pair\<structures.Point, structures.Point>\> lines = Map.ofEntires(<linesMapEntries>);<endif>
-    <if(triangleMapEntries)>HashMap\<String,Triple\<structures.Point,structures.Point,structures.Point\> triangles = Map.ofEntires(<trianglesMapEntries>);<endif>
+    <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(posMapEntries);<endif>
+    <if(anglesMapEntries)>HashMap\<String,structures.Angle> angles = Map.ofEntires(anglesMapEntries);<endif>
+    <if(linesMapEntries)>HashMap\<String,Pair\<structures.Point, structures.Point>\> lines = Map.ofEntires(linesMapEntries);<endif>
+    <if(triangleMapEntries)>HashMap\<String,Triple\<structures.Point,structures.Point,structures.Point\> triangles = Map.ofEntires(trianglesMapEntries);<endif>
 }
 
 >>
@@ -92,61 +93,93 @@ structures.<type> <var>Figure = new structures.<type>("<var>");
 
 rectangleMaking(var)::= <<
 
-Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.get("<var>").b,
+<var>Graphics.translate(getWidth()/2,getHeight()/2);
+Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a - <var>Figure.width()/2,positions.get("<var>").b + <var>Figure.height()/2,
                                            <var>Figure.width(),<var>Figure.height());
-java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
+
+<var>Graphics.setColor(new structures.Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 
 circleMaking(var)::= <<
 
-Shape <var> = new Ellipse2D.Double(positions.get("<var>").a,positions.get("<var>").b,
+<var>Graphics.translate(getWidth()/2,getHeight()/2);
+Shape <var> = new Ellipse2D.Double(positions.get("<var>").a - <var>Figure.diameter()/2,positions.get("<var>").b + <var>Figure.diameter()/2,
                                    <var>Figure.diameter(),<var>Figure.diameter());
-java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
+
+<var>Graphics.setColor(new structures.Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
-<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
+<var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
-<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+<var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
+<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 
 lineMaking(var)::= <<
 
+<var>Graphics.translate(getWidth()/2,getHeight()/2);
 Shape <var> = new Line2D.Double(lines.get("<var>").a.x(),lines.get("<var>").a.y(),
                               lines.get("<var>").b.x(),lines.get("<var>".b.y()));
-java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
+java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
+ 
+<var>Graphics.setColor(new structures.Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
-<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
+<var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
-<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+<var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
+<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 
 triangleMaking(var)::= <<
 
+<var>Graphics.translate(getWidth()/2,getHeight()/2);
 Polygon <var> =  new Polygon();
 <var>.addPoint((int)triangles.get("<var>").a.x(),(int)triangles.get("<var>").a.y());
 <var>.addPoint((int)triangles.get("<var>").b.x(),(int)triangles.get("<var>").b.y());
 <var>.addPoint((int)triangles.get("<var>").c.x(),(int)triangles.get("<var>").c.y());
-java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
-<var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
-<var>Graphics.rotate(angles.get("<var>").degree());
-<var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
+java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
 
+<var>Graphics.setColor(new structures.Color(<var>Figure.color().rgb().toString()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
+<var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
+<var>Graphics.rotate(angles.get("<var>").degree());
+<var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
+<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
+
+>>
+
+
+figureColorSetter(var, funcName, hexcode, r, g, b, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(new Color(<if(r)>new RGB(<r>,<g>,<b>)<endif><if(hexcode)><hexcode><endif>));
 >>
 
 figureSetter(var, funcName, value, stat) ::= <<
 <if(stat)><stat><endif>
 <var>.set<funcName>(<value>);
+>>
+
+figurePointSetter(var, funcName, x, y, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(new Point(<x>, <y>));
+>>
+
+figureAngleSetter(var, funcName, angle, stat) ::= <<
+<if(stat)><stat><endif>
+<var>.set<funcName>(<angle>);
 >>
 
 stats(stat) ::= <<
