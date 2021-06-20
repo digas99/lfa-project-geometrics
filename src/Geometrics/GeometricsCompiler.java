@@ -37,6 +37,8 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          module.add("stat", visit(ctx.stats(i)));
       }
 
+      module.add("stat", "if (firstPaint) firstPaint = false;");
+
       boolean first = true;
       for (Entry<String, Pair<String, String>> e : positionsMap.entrySet()) {
          if (!first)
@@ -449,13 +451,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       if (contains(propsAsExpr, id)) {
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsAngle, id)) {
-         setter.add("stat", String.format("\nangles.put(\"%s\", %s);", idOfBlockSet, ctx.attribs().var));
+         setter.add("stat", String.format("\nif(firstPaint) angles.put(\"%s\", %s);", idOfBlockSet, ctx.attribs().var));
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsColor, id)) {
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsPointsExpr, id)) {
          String[] split = attrib.split("[()]");
-         setter.add("stat", String.format("\npositions.put(\"%s\", new Pair<Double, Double>(varExpr22, varExpr23));", idOfBlockSet, split[1], split[2]));
+         setter.add("stat", String.format("\nif(firstPaint) positions.put(\"%s\", new Pair<Double, Double>(varExpr22, varExpr23));", idOfBlockSet, split[1], split[2]));
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsTruthVal, id)) {
          setter.add("value", attrib);

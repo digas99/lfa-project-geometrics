@@ -22,6 +22,7 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
     List\<Figure> figures = new ArrayList\<>();
     <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = new HashMap\<>();<endif>
     <if(anglesMapEntries)>Map\<String,structures.Angle> angles = new HashMap\<>();<endif>
+    boolean firstPaint = true;
 
     public void paint(Graphics g){
         super.paintComponent(g);
@@ -96,7 +97,7 @@ structures.<type> <var>Figure = new structures.<type>("<var>");
 rectangleMaking(var)::= <<
 
 <var>Graphics.translate(getWidth()/2,getHeight()/2);
-Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a - <var>Figure.width()/2,positions.get("<var>").b + <var>Figure.height()/2,
+Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a - <var>Figure.width()/2,positions.get("<var>").b - <var>Figure.height()/2,
                                            <var>Figure.width(),<var>Figure.height());
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
 rectBoundsList.add(<var>Bounds);
@@ -106,14 +107,13 @@ rectBoundsList.add(<var>Bounds);
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
-<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 
 circleMaking(var)::= <<
 
 <var>Graphics.translate(getWidth()/2,getHeight()/2);
-Shape <var> = new Ellipse2D.Double(positions.get("<var>").a - <var>Figure.diameter()/2,positions.get("<var>").b + <var>Figure.diameter()/2,
+Shape <var> = new Ellipse2D.Double(positions.get("<var>").a - <var>Figure.diameter()/2,positions.get("<var>").b - <var>Figure.diameter()/2,
                                    <var>Figure.diameter(),<var>Figure.diameter());
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
 rectBoundsList.add(<var>Bounds);
@@ -122,7 +122,6 @@ rectBoundsList.add(<var>Bounds);
 <var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
-<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 
@@ -139,7 +138,6 @@ rectBoundsList.add(<var>Bounds);
 <var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
-<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 
@@ -158,7 +156,6 @@ rectBoundsList.add(<var>Bounds);
 <var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
-<var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
 >>
 

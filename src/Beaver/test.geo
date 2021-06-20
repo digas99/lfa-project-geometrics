@@ -1,8 +1,3 @@
-use "../../doc/Beaver/working/flags.bvr" :
-	Figure flag1 -> japanese
-	Figure sphere -> armilarSphere
-end
-
 Board "Test"
 
 write "this is a test"
@@ -32,25 +27,25 @@ end
 /-end
 
 start Rectangle rec:
-	width -> 400
-	height -> 500
+	width -> 40
+	height -> 50
 	thickness -> 2
 	angle -> 3 º
 	display -> true
 	filled -> false
 	depth -> 2
 	color -> #ffffff
-	color -> 12,30,20
+	color -> 21,179,91
 	center -> 0,10
 end
 
 start Circle circ:
-	diameter -> 500
-	thickness -> 2
+	diameter -> 50
+	thickness -> 10
 	display -> true
 	filled -> false
 	depth -> 2
-	color -> 12,30,20
+	color -> 209, 19, 85
 	center -> 0,10
 end
 
@@ -70,6 +65,10 @@ end
 draw rec
 
 draw circ
+
+each 30 ms :
+	set rec center -> 0, rec center y - 1
+end
 
 /- have to remove delay 
 close 3000 ms
