@@ -14,7 +14,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitProgram(GeometricsParser.ProgramContext ctx) {
       List<String> values = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
       values.addAll(ctx.use().stream().map(use -> visit(use)).collect(Collectors.toList()));
-      values.add(visit(ctx.time()));
       return anyNull(values) ? null : ctx.STRING().getText();
    }
 
