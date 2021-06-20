@@ -468,12 +468,9 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       }
       else if (resID == null && timed == null){
          return null;
-
       }
-
       else if (resID == null) {
           return "each" + timed + loopSpec + "end";
-
       }
       else{
           return "each" + resID + loopSpec + "end";
@@ -537,14 +534,17 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitTime(GeometricsParser.TimeContext ctx) {
-
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
       String timed = visit(ctx.expr());
       if (!(isNumber(timed))){
+         throwError(line, col, String.format(notVarTypeNumberErrorMessage, timed));
          return null;
       } 
       int time = Integer.parseInt(timed);
       if (time < 0)  
       {
+         throwError(line, col, String.format(notValueOfPropErrorMessage, timed));
          return null;
       }
       return timed;
