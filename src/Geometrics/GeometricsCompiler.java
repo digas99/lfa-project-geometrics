@@ -39,23 +39,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
       module.add("stat", "if (firstPaint) firstPaint = false;");
 
-      boolean first = true;
-      for (Entry<String, Pair<String, String>> e : positionsMap.entrySet()) {
-         if (!first)
-            module.add("posMapEntries", ",");
-         module.add("posMapEntries",
-               String.format("entry(\"%s\", new Pair<Double, Double>(%s, %s))", e.getKey(), e.getValue().a, e.getValue().b));
-         first = false;
+      if (timerValue != null)
+         module.add("timer", timerValue.render());
+
+      for (Entry<String, String> entry : figuresVarAssoc.entrySet()) {
+         module.add("varsInit", entry.getValue()+" "+entry.getKey()+";\n");
       }
 
-      boolean first1 = true;
-      for (Entry<String, String> e : anglesMap.entrySet()) {
-         if (!first1)
-            module.add("anglesMapEntries", ",");
-         module.add("anglesMapEntries",
-               String.format("entry(\"%s\", %s)", e.getKey(), e.getValue()));
-         first1 = false;
-      }
       return module;
    }
 
@@ -117,11 +107,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    }
 
    // grupo 2
-   @Override
-   public ST visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
-      return visit(ctx.easteregg());
-   }
-
    @Override
    public ST visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
       ST print = template.getInstanceOf("print");
@@ -254,7 +239,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    @Override
    public ST visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
       ST stats = template.getInstanceOf("stats_line");
-      stats.add("stat", ctx.ID(0).getText());
+      stats.add("stat", ctx.ID(0).getText()+(ctx.ID().size() > 1 ? "Figure" : ""));
       for (int i = 1; i < ctx.ID().size(); i++) {
          stats.add("stat", ".");
          stats.add("stat", ctx.ID(i).getText() + "()");
@@ -317,9 +302,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitBoolLogicNot(GeometricsParser.BoolLogicNotContext ctx) {
-      ST not = template.getInstanceOf("not_bool");
-      not.add("value", ctx.booleanLogic());
-      return not;
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newBoolExprVar();
+      declVar.add("stat", visit(ctx.booleanLogic()).render());
+      declVar.add("type", "boolean");
+      declVar.add("var", ctx.var);
+      declVar.add("value", "!"+ctx.booleanLogic().var);
+      return declVar;
    }
 
    // grupo 2
@@ -339,7 +328,12 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
-      return visitChildren(ctx);
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newBoolExprVar();
+      declVar.add("value", ctx.ID(0).getText()+"Bounds.intersects("+ctx.ID(1).getText()+"Bounds)");
+      declVar.add("type", "boolean");
+      declVar.add("var", ctx.var);
+      return declVar;
    }
 
    @Override
@@ -403,6 +397,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    public ST visitVarsInitFigure(GeometricsParser.VarsInitFigureContext ctx) {
       String type = ctx.FIGURE().getText();
       String var = ctx.ID().getText();
+      figuresVarAssoc.put(var+"Figure", "structures."+type);
       idOfBlockSet = var;
       ST figureMaking = template.getInstanceOf("figureMaking");
       figureMaking.add("type", type);
@@ -457,7 +452,10 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsPointsExpr, id)) {
          String[] split = attrib.split("[()]");
-         setter.add("stat", String.format("\nif(firstPaint) positions.put(\"%s\", new Pair<Double, Double>(varExpr22, varExpr23));", idOfBlockSet, split[1], split[2]));
+         if (split.length > 3)
+            setter.add("stat", String.format("\npositions.put(\"%s\", new Pair<Double, Double>(%s));", idOfBlockSet, split[5]));
+         else
+            setter.add("stat", String.format("\nif(firstPaint) positions.put(\"%s\", new Pair<Double, Double>(%s));", idOfBlockSet, split[1]));
          setter.add("value", ctx.attribs().var);
       } else if (contains(propsAsTruthVal, id)) {
          setter.add("value", attrib);
@@ -519,7 +517,10 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
-      return visitChildren(ctx);
+      ST stats = template.getInstanceOf("stats");
+      idOfBlockSet = ctx.ID().getText();
+      stats.add("stat", ctx.inlineSet() != null ? visit(ctx.inlineSet()) : visit(ctx.blockSet()));
+      return stats;
    }
 
    @Override
@@ -607,56 +608,18 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitLoop(GeometricsParser.LoopContext ctx) {
-      ST loop = template.getInstanceOf("while_loop");
-      if (ctx.time() != null) {
-         loop.add("conditional", ctx.time());
-      } else {
-         loop.add("conditional", ctx.ID().getText());
-      }
-      loop.add("stat", visit(ctx.loopSpecifics()));
-      return loop;
-   }
+      ST timeST = visit(ctx.time());
+      timerValue = template.getInstanceOf("stats");
+      timerValue.add("stat", timeST.render());
+      timerValue.add("stat", "private Timer timer = new Timer((int) "+ctx.time().var+", this);");
 
-   @Override
-   public ST visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      ST time = template.getInstanceOf("stats");
-      if (ctx.stats() != null) {
-         ctx.stats().stream().forEach(stats -> time.add("stat", visit(stats)));
-      } else if (ctx.stop != null) {
-         time.add("stat", "break;");
-      }
-      return time;
-   }
+      ST stats = template.getInstanceOf("stats");
 
-   @Override
-   public ST visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      ST wLoop = template.getInstanceOf("while_loop");
-      wLoop.add("conditional", visit(ctx.booleanLogic()));
-      if (ctx.stats() != null) {
-         ctx.stats().stream().forEach(stats -> wLoop.add("stat", visit(stats)));
-      } else if (ctx.stop != null) {
-         wLoop.add("stat", "break;");
-      }
-      return wLoop;
-   }
+      ctx.stats().stream().forEach(stat -> stats.add("stat", visit(stat)));
 
-   @Override
-   public ST visitEachFor(GeometricsParser.EachForContext ctx) {
-      ST fLoop = template.getInstanceOf("for_loop");
-      fLoop.add("id", ctx.ID().getText());
-      fLoop.add("start", visit(ctx.expr(0)));
-      fLoop.add("till", visit(ctx.expr(1)));
-      if (ctx.stats() != null) {
-         ctx.stats().stream().forEach(stats -> fLoop.add("stat", visit(stats)));
-      } else if (ctx.stop != null) {
-         fLoop.add("stat", "break;");
-      }
-      return fLoop;
-   }
-
-   @Override
-   public ST visitEasteregg(GeometricsParser.EastereggContext ctx) {
-      return visitChildren(ctx);
+      stats.add("stat", "timer.start();");
+      
+      return stats;
    }
 
    @Override
@@ -676,7 +639,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitTime(GeometricsParser.TimeContext ctx) {
-      return visitChildren(ctx);
+      ST declVar = template.getInstanceOf("declVar");
+      ctx.var = newExprVar();
+      declVar.add("stat", visit(ctx.expr()));
+      declVar.add("type", "double");
+      declVar.add("var", ctx.var);
+      declVar.add("value", ctx.expr().var);
+      return declVar;
    }
 
    @Override
@@ -723,6 +692,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return "varBoolExpr" + boolExprVars;
    }
 
+   private ST timerValue;
    private String idOfBlockSet = "";
    private boolean hasVars = false;
    private int exprVars = 0;
@@ -748,4 +718,5 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    static private String[] propsAsAngle = { "angle" };
    private HashMap<String, Pair<String, String>> positionsMap = new HashMap<>();
    private HashMap<String, String> anglesMap = new HashMap<>();
+   private HashMap<String, String> figuresVarAssoc = new HashMap<>();
 }

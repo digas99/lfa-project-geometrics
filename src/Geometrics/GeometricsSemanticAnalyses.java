@@ -94,10 +94,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    // grupo 2
-   @Override
-   public String visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
-      return visit(ctx.EasterEgg());
-   }
 
    @Override
    public String visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
@@ -233,12 +229,12 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // todo
    @Override
    public String visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
-      return visit(ctx.identifiers());
+      return visitChildren(ctx);
    }
 
    @Override
    public String visitPointsId(GeometricsParser.PointsIdContext ctx) {
-     return ctx.ID().getText();
+      return visitChildren(ctx);
    }
    
 
@@ -474,59 +470,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return null;
    }
 
-   @Override
-   public String visitEachTime(GeometricsParser.EachTimeContext ctx) {
-      // return visit(ctx.stats());
-      // return visit(ctx.stats());
-      // Verify stats
-      // Verify stop(interruption trigger)
-      return null;
-   }
-
-   @Override
-   public String visitEachWhile(GeometricsParser.EachWhileContext ctx) {
-      // String res = null;
-      // String bologic = visit(ctx.booleanLogic());
-      // String stat = visit(ctx.stats());
-      // if (bologic == null || stat == null) {
-      //    res = null;
-      // } else
-      //    res = bologic;
-      // return res;
-      // Verify booleanLogic and stats
-      // Verify stop(interruption trigger)
-      return null;
-   }
-
-   @Override
-   public String visitEachFor(GeometricsParser.EachForContext ctx) {
-      // String res = null;
-
-      // String resID = visit(ctx.ID().getText());
-      // String expr0 = visit(ctx.expr(0));
-      // String expr1 = visit(ctx.expr(1));
-      // String stat = visit(ctx.stats());
-
-      // if (resID == null || expr0 == null || expr1 == null || stat == null) {
-      //    res = null;
-      // }
-      // /*
-      //  * else if(expr0 != null){ res = expr0; } else if(expr1 != null){ res = expr1; }
-      //  */
-      // else
-      //    res = resID;
-
-      // return res;
-      // Verify ID, 2 expr and stats
-      // Verify stop(interruption trigger)
-      return null;
-   }
-
    // Loop functions end -----------------------------------------
-   @Override
-   public String visitEasteregg(GeometricsParser.EastereggContext ctx) {
-      return ctx.ID().getText();
-   }
 
    @Override
    public String visitAngle(GeometricsParser.AngleContext ctx) {
