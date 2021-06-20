@@ -438,13 +438,19 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return "if" + bologic + ":" + blockstat + "end";
    }
 
+   @Override
+   public String visitBlockStats(GeometricsParser.BlockStatsContext ctx) {
+      return visitChildren(ctx);
+   }
+
+
    // Loop functions start -----------------------------------------
    @Override
    public String visitLoop(GeometricsParser.LoopContext ctx) {
 
       // String res = null;
       String timed = visit(ctx.time());
-      String resID = visit(ctx.ID().getText());
+      String resID = ctx.ID().getText();
       String loopSpec = visit(ctx.loopSpecifics());
 
       if (loopSpec == null){
