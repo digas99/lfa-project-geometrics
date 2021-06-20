@@ -96,7 +96,7 @@ Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a,positions.ge
                                            <var>Figure.width(),<var>Figure.height());
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
@@ -109,7 +109,7 @@ Shape <var> = new Ellipse2D.Double(positions.get("<var>").a,positions.get("<var>
                                    <var>Figure.diameter(),<var>Figure.diameter());
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
@@ -122,7 +122,7 @@ Shape <var> = new Line2D.Double(lines.get("<var>").a.x(),lines.get("<var>").a.y(
                               lines.get("<var>").b.x(),lines.get("<var>".b.y()));
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
@@ -137,7 +137,7 @@ Polygon <var> =  new Polygon();
 <var>.addPoint((int)triangles.get("<var>").c.x(),(int)triangles.get("<var>").c.y());
 java.awt.Rectangle <var>Bounds = <var>.getBounds(); 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
