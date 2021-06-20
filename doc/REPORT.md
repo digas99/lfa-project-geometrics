@@ -1,26 +1,26 @@
-## Group members
+## Membros do Grupo
 &nbsp;
 
 | NMec | Name | email | Contribution (%) | Detailed contribution [1]
 |:-:|:--|:--|:-:|:--|
-| 90327 | Diogo Correia | diogo.correia99@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
 | 73150 | Gonçalo Maranhão | goncalo.rodrigues@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
-| 93460 | João Fernandes | joaogilfernandes@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
-| 93427 | Lara Rodrigues| laravieirarodrigues@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
-| 92975 | Leandro Rito | leandro.rito@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
 | 73211 | Mariana Gomes | marianapinheiro@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
+| 90327 | Diogo Correia | diogo.correia99@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
+| 92975 | Leandro Rito | leandro.rito@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
+| 93427 | Lara Rodrigues| laravieirarodrigues@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
+| 93460 | João Fernandes | joaogilfernandes@ua.pt | 15% | primary-grammar (20%)<br>examples (40%)<br>testing (30%)|
 
 
 [1] Topics:<br>
-   primary-grammar (%)<br>primary-semantic-analysis (%)<br>code-generation (%)<br>secondary-grammar (%)<br>secondary-semantic-analysis (%)<br>secondary-interpretation/secondary-code-generation (%)<br>examples (%)<br>testing (%)<br>report (%) 
+   gramática principal (%)<br> análise semântica gramática principal (%)<br> geração de código  (%)<br> gramática secundária (%)<br> análise semântica gramática secundária (%)<br>interpretação/geração de código linguagem secundária (%)<br>exemplos (%)<br>testes(%)<br>relatório (%) 
 
 - Beware that within the group the sum for each topic must be 100% (obviously).
 
 ## Material para avaliação
 
-- Beware that **only** the code in the **master** branch will be considered for evaluation.
+Todo o código presente na master conta para avalição excepto a pasta JavaGraphicsExample e a pasta figure_making que é apenas material de apoio à realização do projeto.
 
-## Compilation & Run
+## Compilar e Correr
 
 - Explain how to compile and run language code.
 
@@ -34,6 +34,8 @@ No ponto 1. encontram-se dois exemplos funcionais da linguagem secundária.
 
     No ficheiro `working-test1.bvr` é criada a figura de um stickman que é constituido por diversas figuras que estão dentro de um container retangular.<br>
     No ficheiro `flags.bvr` são criadas figuras de duas bandeiras que, assim como no exemplo acima, são constituidas por diversas figuras.<br>
+    Para compilar e correr este exemplo executar o comando :<br> `java BeaverMain ../../doc/Beaver/working/nome_do_ficheiro` <br> 
+    no diretório : `geometrics-lfa-14/src/Beaver/`
 
 No ponto 2. encontam-se x exemplos funcionais da linguagem principal.   
 
@@ -58,7 +60,7 @@ Nas imagens que incluimos no relatório são visiveis a maioria das mesagens de 
 
     ![title](images/test2.png)
      
-    Este exemplo(error-test2.bvr)  testa especificamente erros relacionados com as propriedades de cor. <br>
+    Este exemplo(error-test2.bvr) testa especificamente erros relacionados com as propriedades de cor. <br>
 
 
 2. `path-to-example`
