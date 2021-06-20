@@ -1,6 +1,6 @@
 grammar Geometrics;
 
-program	: NEWLINE* use* NEWLINE* 'Board' STRING NEWLINE* (stats NEWLINE*)* 'close' time NEWLINE* EOF ;
+program	: NEWLINE* use* NEWLINE* 'Board' STRING NEWLINE* (stats NEWLINE*)* NEWLINE* EOF ;
 
 // Begin use
 use		: 'use' STRING ':' (useAttribs)+ 'end' ;
@@ -58,7 +58,7 @@ booleanLogic returns [String var = null]
 		| expr																#boolLogicExpr
 		| '(' booleanLogic ')'												#boolLogicParentesis			
 		| 'not' booleanLogic												#boolLogicNot
-		| ID 'collides' ID													#boolLogicCollides
+		| (id0=ID|board0=BOARD) 'collides' (id1=ID|board1=BOARD)			#boolLogicCollides
 		| TRUTHVAL															#boolLogicTruthval
 		;
 // End boolean logic
@@ -119,6 +119,7 @@ angle returns [String var = null]: expr type=('º' | 'deg' | 'rad') ;
 time returns [String var = null]: expr type=('ms'|'s'); 
 point returns [String var = null]: expr ',' expr ;
 
+BOARD : 'boardTop' | 'boardRight' | 'boardBottom' | 'boardLeft' ;
 FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle' | 'Line' ;
 OBJECT : 'Label' | 'Point' | 'Number' | 'Angle' | 'Time';
 TRUTHVAL : 'true' | 'false';

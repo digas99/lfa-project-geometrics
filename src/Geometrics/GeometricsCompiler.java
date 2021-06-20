@@ -60,13 +60,25 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
 
    @Override
    public ST visitUseAttribs(GeometricsParser.UseAttribsContext ctx) {
-      ST addList = template.getInstanceOf("add_to_list");
+      ST declVar = template.getInstanceOf("declVar");
       String type = "structures." + ctx.FIGURE().getText();
-      addList.add("type", type);
-      addList.add("var", ctx.ID(0).getText());
-      addList.add("varList", "figures");
-      addList.add("value", "BeaverMain.getContainer(\"" + ctx.ID(1).getText() + "\")");
-      return addList;
+      String var = ctx.ID(0).getText();
+      figuresVarAssoc.put(var+"Figure", type);
+      declVar.add("type", type);
+      declVar.add("var", var);
+      declVar.add("value", "BeaverMain.getContainer(\"" + ctx.ID(1).getText() + "\")");
+
+      ST figureMaking = template.getInstanceOf("figureMaking");
+      figureMaking.add("type", type);
+      figureMaking.add("var", var);
+   
+      ST rectangleMaking = template.getInstanceOf("rectangleMaking");
+      rectangleMaking.add("var", var);
+      figureMaking.add("stat", rectangleMaking.render());
+
+      declVar.add("stat", figureMaking.render());
+
+      return declVar;
    }
 
    @Override
@@ -330,7 +342,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    public ST visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
       ST declVar = template.getInstanceOf("declVar");
       ctx.var = newBoolExprVar();
-      declVar.add("value", ctx.ID(0).getText()+"Bounds.intersects("+ctx.ID(1).getText()+"Bounds)");
+      declVar.add("value", (ctx.id0 != null ? ctx.id0.getText() : ctx.board0.getText())+"Bounds.intersects("+(ctx.id1 != null ? ctx.id1.getText() : ctx.board1.getText())+"Bounds)");
       declVar.add("type", "boolean");
       declVar.add("var", ctx.var);
       return declVar;

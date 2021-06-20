@@ -37,11 +37,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         g.drawString("P - play animation",10,10);
         g.drawString("S - stop animation",8,25);
 
-        String[] BeaverMainMainArgs = {"../../doc/Beaver/working/flags.bvr"};
-        BeaverMain.main(BeaverMainMainArgs);
-        structures.Figure jap = BeaverMain.getContainer("japanese");
-        figures.add(jap);
-
         System.out.println("this is a test");
 
         double varExpr1 = 10;
@@ -178,6 +173,11 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
             double varExpr41 = 0;
             structures.Color varExpr42 = new structures.Color(new RGB((int)varExpr39,(int)varExpr40,(int)varExpr41));
             circFigure.setColor(varExpr42);
+        }
+
+        boolean varBoolExpr6 = circBounds.intersects(boardTopBounds);
+        if(varBoolExpr6){
+            System.out.println("collided with top of board");
         }
         timer.start();
         if (firstPaint) firstPaint = false;

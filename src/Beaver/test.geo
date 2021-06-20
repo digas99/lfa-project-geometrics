@@ -1,7 +1,3 @@
-use "../../doc/Beaver/working/flags.bvr":
-	Figure jap -> japanese
-end
-
 Board "Test"
 
 write "this is a test"
@@ -72,11 +68,15 @@ draw circ
 
 each 30 ms:
 	/-set circ center -> 100, 100
-	set circ center -> 0, circ center y - 2
 	if not rec collides circ:
 		set circ color -> 0,0,0
 	end
-end
 
-/- have to remove delay 
-close 3000 ms
+	if not circ center y equals - 500:
+		set circ center -> 0, circ center y - 2
+	end
+
+	if circ center y equals -500:
+		set circ center -> 0, circ center y + 2
+	end
+end
