@@ -96,7 +96,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // grupo 2
    @Override
    public String visitStatEasterEgg(GeometricsParser.StatEasterEggContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.EasterEgg());
    }
 
    @Override
@@ -106,7 +106,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitStatContainer(GeometricsParser.StatContainerContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.container());
    }
 
    @Override
@@ -119,14 +119,20 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitExprMultDiv(GeometricsParser.ExprMultDivContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
+      if(anyNull(expr0,expr1))
       return null;
+
+   return "mult/div";
    }
 
    @Override
    public String visitExprAddSub(GeometricsParser.ExprAddSubContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
+      if(anyNull(expr0,expr1))
       return null;
+
+   return "add/sub";
    }
 
    @Override
@@ -148,7 +154,10 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitExprPower(GeometricsParser.ExprPowerContext ctx) {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
+      if(anyNull(expr0,expr1))
       return null;
+
+   return "Power";
    }
 
    // grupo 1
@@ -164,7 +173,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitPointsExprCalc(GeometricsParser.PointsExprCalcContext ctx) {
       String expr0 = visit(ctx.pointsExpr(0));
       String expr1 = visit(ctx.pointsExpr(1));
-      if (expr0 == null || expr1 == null)
+      if (anyNull(expr0,expr1))
          return null;
       return expr0 + ";" + expr1;
    }
@@ -224,13 +233,14 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // todo
    @Override
    public String visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.identifiers());
    }
 
    @Override
    public String visitPointsId(GeometricsParser.PointsIdContext ctx) {
-      return visit(ctx.identifiers());
+     return ctx.ID().getText();
    }
+   
 
    @Override
    public String visitPointsCenter(GeometricsParser.PointsCenterContext ctx) {
@@ -255,17 +265,23 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitBoolLogicCollides(GeometricsParser.BoolLogicCollidesContext ctx) {
-      return visitChildren(ctx);
+      String id1 = ctx.ID(0).getText();
+      String id2 = ctx.ID(1).getText();
+      if(anyNull(id1,id2)){
+         return null;
+      }
+      return id1 + "colides" + id2 ;
    }
 
    @Override
    public String visitBoolLogicTruthval(GeometricsParser.BoolLogicTruthvalContext ctx) {
-      return visitChildren(ctx);
+      return ctx.TRUTHVAL().getText();
    }
 
    @Override
    public String visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
       return visitChildren(ctx);
+
    }
 
    @Override
@@ -390,15 +406,18 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override public String visitColorId(GeometricsParser.ColorIdContext ctx) {
-      return visit(ctx.ID());
+      return ctx.ID().getText();
+      
    }
 
    @Override public String visitColorHex(GeometricsParser.ColorHexContext ctx) {
       String id = ctx.ID() != null ? ctx.ID().getText() : ctx.NUMBER().getText();
       // check if color code has more than 6 characters
       boolean valid = id.length() <= 6;
-      if (!valid)
+      if (!valid){
+         throwError(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(), String.format(notValidColorCodeErrorMessage, id));
          return null;
+      }   
       return id;
    }
 
@@ -406,7 +425,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       String expr0 = visit(ctx.expr(0));
       String expr1 = visit(ctx.expr(1));
       String expr2 = visit(ctx.expr(2));
-      if(expr0 == null || expr1 == null|| expr2 == null)
+      if(anyNull(expr0,expr1,expr2))
          return null;
       return expr0 + "," + expr1 + "," + expr2;   
    }
@@ -506,7 +525,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // Loop functions end -----------------------------------------
    @Override
    public String visitEasteregg(GeometricsParser.EastereggContext ctx) {
-      return visit(ctx.ID());
+      return ctx.ID().getText();
    }
 
    @Override
@@ -547,11 +566,11 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return values.stream().allMatch(val -> val == null);
    }
 
-   private static boolean allNull(String[] values) {
+   private static boolean allNull(String... values) {
       return allNull(Arrays.asList(values));
    }
 
-   private static boolean allTrue(boolean[] values) {
+   private static boolean allTrue(boolean... values) {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).allMatch(val -> val);
    }
 
@@ -563,11 +582,11 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return values.stream().anyMatch(val -> val == null);
    }
 
-   private static boolean anyNull(String[] values) {
+   private static boolean anyNull(String... values) {
       return anyNull(Arrays.asList(values));
    }
 
-   private static boolean anyTrue(boolean[] values) {
+   private static boolean anyTrue(boolean... values) {
       return IntStream.range(0, values.length).mapToObj(i -> values[i]).anyMatch(val -> val);
    }
 
@@ -575,7 +594,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return values.stream().anyMatch(val -> val);
    }
 
-   private static boolean someTrue(boolean[] values) {
+   private static boolean someTrue(boolean... values) {
       return !allTrue(values) && !noneTrue(values);
    }
 
@@ -583,7 +602,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allTrue(values) && !noneTrue(values);
    }
 
-   private static boolean someNull(String[] values) {
+   private static boolean someNull(String... values) {
       return !allNull(values) && !noneNull(values);
    }
 
@@ -591,7 +610,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !allNull(values) && !noneNull(values);
    }
 
-   private static boolean noneTrue(boolean[] values) {
+   private static boolean noneTrue(boolean... values) {
       return !anyTrue(values);
    }
 
@@ -599,7 +618,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return !anyTrue(values);
    }
 
-   private static boolean noneNull(String[] values) {
+   private static boolean noneNull(String... values) {
       return !anyNull(values);
    }
 
@@ -652,8 +671,12 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       }
       return true;
    }
+  
+
 
    static private String notInitVarErrorMessage = "Variable %s might have not been initialized!";
+   static private String notInitVarsErrorMessage = "Variable %s or variable %s might have not been initialized!";
+   static private String notInit3VarsErrorMessage = "Variable %s,variable %s or variable %s might have not been initialized!";
    static private String notValidColorCodeErrorMessage = "%s is not a valid color code!";
    static private String notAFigureErrorMessage = "%s is not a Figure!";
    static private String notPropOfFigureErrorMessage = "%s is not a valid property of %s!";
