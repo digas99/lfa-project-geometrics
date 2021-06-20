@@ -12,11 +12,11 @@
 
 
 [1] Topics:<br>
-   primary-grammar (%)<br>primary-semantic-analysis (%)<br>code-generation (%)<br>secondary-grammar (%)<br>secondary-semantic-analysis (%)<br>secondary-interpretation/secondary-code-generation (%)<br>examples (%)<br>testing (%)<br>other (%) (explain)
+   primary-grammar (%)<br>primary-semantic-analysis (%)<br>code-generation (%)<br>secondary-grammar (%)<br>secondary-semantic-analysis (%)<br>secondary-interpretation/secondary-code-generation (%)<br>examples (%)<br>testing (%)<br>report (%) 
 
 - Beware that within the group the sum for each topic must be 100% (obviously).
 
-## Material to be evaluated
+## Material para avaliação
 
 - Beware that **only** the code in the **master** branch will be considered for evaluation.
 
@@ -26,13 +26,16 @@
 
 - Preferable option is to provide scripts *compile* and *run*, accepting program filename as argument.
 
-## Working examples (at least two)
+## Exemplos funcionais 
 
-Use examples to show the language functionalities.
+No ponto 1. encontram-se dois exemplos funcionais da linguagem secundária.
 
-1. `.../geometrics-lfa-14/src/Beaver$ java BeaverMain ../../doc/Beaver/working/working-test1.bvr`
+1. `geometrics-lfa-14/src/Beaver/working`
 
-    Explain what the example does, how it is compiled and run.
+    No ficheiro `working-test1.bvr` é criada a figura de um stickman que é constituido por diversas figuras que estão dentro de um container retangular.<br>
+    No ficheiro `flags.bvr` são criadas figuras de duas bandeiras que, assim como no exemplo acima, são constituidas por diversas figuras.<br>
+
+No ponto 2. encontam-se x exemplos funcionais da linguagem principal.   
 
 2. `path-to-example`
 
@@ -40,24 +43,25 @@ Use examples to show the language functionalities.
 
 ...
 
-## Semantic error examples
+## Exemplos de erros semânticos
 
-Fizemos análise semântica para as duas linguagens com mensagens personalizadas de erro.
-Dentro da pasta doc está a pasta Beaver onde estão dois ficheiros de teste da linguagem com alguns erros criados propositadamente para vermos as mensagens de erro.
-As mensagens de erro vem com a espicificação da linha e da coluna em que ocorrem no código.<br>
+Fizemos análise semântica para as duas linguagens com mensagens personalizadas de erro. No ponto 1. encontram-se os testes para a linguagem secundária e no ponto 2. os testes para a linguagem principal.<br>
+As mensagens de erro vem com a especificação da linha e da coluna onde ocorrem no código.<br>
+Nas imagens que incluimos no relatório são visiveis a maioria das mesagens de erro criadas.<br>
 
-1. `.../geometrics-lfa-14/src/Beaver`
+1. `geometrics-lfa-14/src/Beaver/errors`
 
-    Neste exemplo são detetados dois erros de semântica:
-    O primeiro, é um erro na propreidade size que deveria receber dois parâmetros e recebeu apenas um. A mensagem de erro mostrada ao utilizador será:<br>
-    `Error@6:4 -> Invalid value for property size! `<br>
-    O segundo, é um erro no atributo color que recebeu um código de cor inválido.
-    A mensagem de erro apresentada será:<br>
-    `Error@8:10 -> #f4444444 is not a valid color code! `<br>
+    ![title](images/test1.png)
+
+    Neste exemplo(error-test1.bvr)  são detetados vários erros de semântica relacionados com as figuras.<br>
+    Tal como podemos observar as mensagens de erro indicam especificamente quais foram os erros cometidos.<br>
+
+    ![title](images/test2.png)
+     
+    Este exemplo(error-test2.bvr)  testa especificamente erros relacionados com as propriedades de cor. <br>
 
 
-
-    `path-to-example`
+2. `path-to-example`
     Neste segundo exemplo são detetados três erros de semântica:
     O primeiro, é um erro 
 
@@ -65,4 +69,31 @@ As mensagens de erro vem com a espicificação da linha e da coluna em que ocorr
 
     Explain the detected semantic error and how it is compiled.
 
-...
+## Especificações da linguagem 
+
+1. Palavras reservadas das linguagens:<br>
+`Secundária:`<br>
+containers, Color, Pallete, Rectangle, Number, Figure, Circle, Line, Triangle, Point, <br>
+size,angle,color, border, filled,<br>
+contains,<br>
+startingPoint, endingPoint, center,<br>
+pi,rad, º <br>
+`Principal:` <br> 
+use, Color, Board,<br> 
+start, end , List, at, Text, set,<br> 
+pos,posX,posY,<br> 
+Figure, Line, Triangle, Rectangle, Circle, <br> 
+display, width, thickness, color, collision, exposed, depth, hidden<br> 
+true, false,<br> 
+center,<br> 
+add, remove, <br> 
+draw, write,<br> 
+Time, ms, <br> 
+Angle, º, deg, pi, rad, <br> 
+each, while,<br> 
+Task, from, where is, close <br> 
+
+2. Comentários:<br>
+Linguagem secundária: `!!`<br>
+Linguagem principal : `/-` <br>
+

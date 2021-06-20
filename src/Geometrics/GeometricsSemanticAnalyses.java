@@ -117,7 +117,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       String expr1 = visit(ctx.expr(1));
       if(anyNull(expr0,expr1))
       return null;
-
    return "mult/div";
    }
 
@@ -127,7 +126,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       String expr1 = visit(ctx.expr(1));
       if(anyNull(expr0,expr1))
       return null;
-
    return "add/sub";
    }
 
@@ -152,7 +150,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       String expr1 = visit(ctx.expr(1));
       if(anyNull(expr0,expr1))
       return null;
-
    return "Power";
    }
 
@@ -186,7 +183,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
-      return visitChildren(ctx);
+      return visitChildren(ctx);   
    }
    // Expr functions end------------------------------------------------------
 
@@ -229,12 +226,12 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // todo
    @Override
    public String visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
-      return visitChildren(ctx);
+      return visitChildren(ctx);   
    }
 
    @Override
    public String visitPointsId(GeometricsParser.PointsIdContext ctx) {
-      return visitChildren(ctx);
+      return visit(ctx.identifiers());
    }
    
 
