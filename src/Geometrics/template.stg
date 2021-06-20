@@ -24,7 +24,16 @@ public class <name> extends JPanel implements ActionListener<if(timer)>,KeyListe
     Map\<String,Pair\<Double, Double>\> positions = new HashMap\<>();
     Map\<String,structures.Angle> angles = new HashMap\<>();
     boolean firstPaint = true;
+    Shape lineTopLeft = new Line2D.Double(0,0,1000,0);
+    Shape lineTopRight = new Line2D.Double(1000,0,1000,1000);
+    Shape lineBottomRight = new Line2D.Double(1000,1000,0,1000);
+    Shape lineBottomLeft = new Line2D.Double(0,1000,0,0);
+    Rectangle boardTopBounds = lineTopLeft.getBounds();
+    Rectangle boardRightBounds = lineTopRight.getBounds();
+    Rectangle boardBottomBounds = lineBottomLeft.getBounds();
+    Rectangle boardLeftBounds = lineBottomRight.getBounds();
     <if(varsInit)><varsInit><endif>
+
 
     public void paint(Graphics g){
         super.paintComponent(g);
