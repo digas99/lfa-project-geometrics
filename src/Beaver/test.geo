@@ -54,19 +54,19 @@ start Circle circ:
 	center -> 0,10
 end
 
-start Line lin:
-	thickness -> 2
-	display -> true
-	color -> 250,124,98
-	color -> #ffffff
-end
+/-start Line lin:
+/-	thickness -> 2
+/-	display -> true
+/-	color -> 250,124,98
+/-	color -> #ffffff
+/-end
 
-start Triangle trin:
-	thickness -> 2
-	display -> true
-	color -> 250,124,98
-	color -> #ffffff
-end
+/-start Triangle trin:
+/-	thickness -> 2
+/-	display -> true
+/-	color -> 250,124,98
+/-	color -> #ffffff
+/-end
 draw rec
 
 draw circ
