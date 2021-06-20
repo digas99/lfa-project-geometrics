@@ -18,9 +18,7 @@ stats	: 'Pallete' ID '=>' idsList '>>'				#statsPallete
 idsList	: ID (',' NEWLINE* ID)* NEWLINE* ;
 
 // NEWLINE? 
-inlineSet	: ID (expr | pointsExpr | color | borderValue | angle | TRUTHVAL) NEWLINE* ;
-
-borderValue : expr (ID | color) ;
+inlineSet	: ID (expr | pointsExpr | color | angle | TRUTHVAL) NEWLINE* ;
 
 expr	: expr op=('*' | '/') expr			#exprMultDiv
 		| expr op=('+' | '-') expr			#exprAddSub
