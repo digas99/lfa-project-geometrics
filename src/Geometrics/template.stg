@@ -21,6 +21,8 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
     public void paint(Graphics g){
         super.paintComponent(g);
 
+        ArrayList\<java.awt.Rectangle> rectBoundsList = new ArrayList\<>();
+
         g.drawString("P - play animation",10,10);
         g.drawString("S - stop animation",8,25);
 
@@ -95,6 +97,7 @@ rectangleMaking(var)::= <<
 Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a - <var>Figure.width()/2,positions.get("<var>").b + <var>Figure.height()/2,
                                            <var>Figure.width(),<var>Figure.height());
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
@@ -111,6 +114,7 @@ circleMaking(var)::= <<
 Shape <var> = new Ellipse2D.Double(positions.get("<var>").a - <var>Figure.diameter()/2,positions.get("<var>").b + <var>Figure.diameter()/2,
                                    <var>Figure.diameter(),<var>Figure.diameter());
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
@@ -127,6 +131,7 @@ lineMaking(var)::= <<
 Shape <var> = new Line2D.Double(lines.get("<var>").a.x(),lines.get("<var>").a.y(),
                               lines.get("<var>").b.x(),lines.get("<var>".b.y()));
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
  
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
@@ -145,6 +150,7 @@ Polygon <var> =  new Polygon();
 <var>.addPoint((int)triangles.get("<var>").b.x(),(int)triangles.get("<var>").b.y());
 <var>.addPoint((int)triangles.get("<var>").c.x(),(int)triangles.get("<var>").c.y());
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
+rectBoundsList.add(<var>Bounds);
 
 <var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
 <var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
