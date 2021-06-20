@@ -11,12 +11,17 @@ import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
+import java.util.Map;
+import java.util.HashMap;
+import static java.util.Map.entry;
 
 import structures.*;
 public class <name> extends JPanel implements ActionListener,KeyListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
     List\<Figure> figures = new ArrayList\<>();
+    <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = new HashMap\<>();<endif>
+    <if(anglesMapEntries)>Map\<String,structures.Angle> angles = new HashMap\<>();<endif>
 
     public void paint(Graphics g){
         super.paintComponent(g);
@@ -27,6 +32,7 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
         g.drawString("S - stop animation",8,25);
 
         <stats(stat)>
+
     }
 
     @Override
@@ -34,10 +40,10 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
         int key = e.getKeyCode();
 
         if(key == KeyEvent.VK_S){
-        timer.stop();
+        //timer.stop();
         }
         if(key == KeyEvent.VK_P){
-        timer.start(); 
+        //timer.start(); 
         }  
     }
 
@@ -66,10 +72,6 @@ public class <name> extends JPanel implements ActionListener,KeyListener{
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
 
-    <if(posMapEntries)>Map\<String,Pair\<Double, Double>\> positions = Map.ofEntires(posMapEntries);<endif>
-    <if(anglesMapEntries)>HashMap\<String,structures.Angle> angles = Map.ofEntires(anglesMapEntries);<endif>
-    <if(linesMapEntries)>HashMap\<String,Pair\<structures.Point, structures.Point>\> lines = Map.ofEntires(linesMapEntries);<endif>
-    <if(triangleMapEntries)>HashMap\<String,Triple\<structures.Point,structures.Point,structures.Point\> triangles = Map.ofEntires(trianglesMapEntries);<endif>
 }
 
 >>
@@ -99,8 +101,8 @@ Rectangle2D <var> = new Rectangle2D.Double(positions.get("<var>").a - <var>Figur
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
 rectBoundsList.add(<var>Bounds);
 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
@@ -116,10 +118,9 @@ Shape <var> = new Ellipse2D.Double(positions.get("<var>").a - <var>Figure.diamet
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
 rectBoundsList.add(<var>Bounds);
 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
-<var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
 <var>Graphics.translate(-getWidth()/2,-getHeight()/2);
 
@@ -133,8 +134,8 @@ Shape <var> = new Line2D.Double(lines.get("<var>").a.x(),lines.get("<var>").a.y(
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
 rectBoundsList.add(<var>Bounds);
  
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
@@ -152,8 +153,8 @@ Polygon <var> =  new Polygon();
 java.awt.Rectangle <var>Bounds = <var>.getBounds();
 rectBoundsList.add(<var>Bounds);
 
-<var>Graphics.setColor(new Color(<var>Figure.color().rgb().toString()));
-<var>Graphics.setStroke(new BasicStroke(<var>Figure.thickness()));
+<var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
+<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
 <var>Graphics.rotate(angles.get("<var>").degree());
 <var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
@@ -161,25 +162,9 @@ rectBoundsList.add(<var>Bounds);
 
 >>
 
-
-figureColorSetter(var, funcName, hexcode, r, g, b, stat) ::= <<
-<if(stat)><stat><endif>
-<var>.set<funcName>(new Color(<if(r)>new RGB(<r>,<g>,<b>)<endif><if(hexcode)><hexcode><endif>));
->>
-
 figureSetter(var, funcName, value, stat) ::= <<
 <if(stat)><stat><endif>
 <var>.set<funcName>(<value>);
->>
-
-figurePointSetter(var, funcName, x, y, stat) ::= <<
-<if(stat)><stat><endif>
-<var>.set<funcName>(new Point(<x>, <y>));
->>
-
-figureAngleSetter(var, funcName, angle, stat) ::= <<
-<if(stat)><stat><endif>
-<var>.set<funcName>(<angle>);
 >>
 
 stats(stat) ::= <<
@@ -271,8 +256,8 @@ print(stat, value) ::= <<
 System.out.println(<value>);
 >>
 
-draw(var, fig) ::= << 
-<var>Graphics.draw(<fig>);
+draw(var) ::= << 
+<var>Graphics.draw(<var>);
 >>
 
 filled(var, fig) ::= <<
