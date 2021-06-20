@@ -10,26 +10,37 @@ import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
+import java.util.Map;
+import java.util.HashMap;
+import static java.util.Map.entry;
 
 import structures.*;
 public class Test1 extends JPanel implements ActionListener,KeyListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
     List<Figure> figures = new ArrayList<>();
+    double varExpr34 = 30;
+    double varExpr33 = varExpr34;
+    private Timer timer = new Timer((int) varExpr33, this);
+    Map<String,Pair<Double, Double>> positions = new HashMap<>();
+    Map<String,structures.Angle> angles = new HashMap<>();
+    boolean firstPaint = true;
+    structures.Rectangle recFigure;
+    structures.Circle circFigure;
+
 
     public void paint(Graphics g){
         super.paintComponent(g);
+
+        ArrayList<java.awt.Rectangle> rectBoundsList = new ArrayList<>();
 
         g.drawString("P - play animation",10,10);
         g.drawString("S - stop animation",8,25);
 
         String[] BeaverMainMainArgs = {"../../doc/Beaver/working/flags.bvr"};
         BeaverMain.main(BeaverMainMainArgs);
-        structures.Figure flag1 = BeaverMain.getContainer("japanese");
-        figures.add(flag1);
-
-        structures.Figure sphere = BeaverMain.getContainer("armilarSphere");
-        figures.add(sphere);
+        structures.Figure jap = BeaverMain.getContainer("japanese");
+        figures.add(jap);
 
         System.out.println("this is a test");
 
@@ -58,121 +69,118 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
             String string = "this is a string";
         }
         Graphics2D recGraphics = (Graphics2D) g.create();
-        structures.Rectangle recFigure = new structures.Rectangle("rec");
-        double varExpr11 = 400;
-        recFigure.setWidth(varExpr11);
-        double varExpr12 = 500;
-        recFigure.setHeight(varExpr12);
-        double varExpr13 = 2;
-        recFigure.setThickness(varExpr13);
-        double varExpr14 = 3;
-        Angle varExpr15 = new Angle((int) varExpr14);
-        recFigure.setAngle(varExpr15);
+        if (firstPaint) {
+            recFigure = new structures.Rectangle("rec");
+            double varExpr11 = 40;
+            recFigure.setWidth(varExpr11);
+            double varExpr12 = 50;
+            recFigure.setHeight(varExpr12);
+            double varExpr13 = 2;
+            recFigure.setThickness(varExpr13);
+            double varExpr14 = 3;
+            Angle varExpr15 = new Angle((int) varExpr14);
+            if(firstPaint) angles.put("rec", varExpr15);
+            recFigure.setAngle(varExpr15);
 
-        recFigure.setDisplay(true);
+            recFigure.setDisplay(true);
 
-        recFigure.setFilled(false);
-        double varExpr16 = 2;
-        recFigure.setDepth(varExpr16);
-        Color varExpr17 = new Color("ffffff");
-        recFigure.setColor(varExpr17);
-        double varExpr18 = 12;
+            recFigure.setFilled(false);
+            double varExpr16 = 2;
+            recFigure.setDepth(varExpr16);
+            structures.Color varExpr17 = new structures.Color("ffffff");
+            recFigure.setColor(varExpr17);
+            double varExpr18 = 21;
 
-        double varExpr19 = 30;
+            double varExpr19 = 179;
 
-        double varExpr20 = 20;
-        Color varExpr21 = new Color(varExpr18,varExpr19,varExpr20);
-        recFigure.setColor(varExpr21);
+            double varExpr20 = 91;
+            structures.Color varExpr21 = new structures.Color(new RGB((int)varExpr18,(int)varExpr19,(int)varExpr20));
+            recFigure.setColor(varExpr21);
+            double varExpr22 = 0;
 
-        Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a,positions.get("rec").b,
+            double varExpr23 = 10;
+            structures.Point varPointExpr1 = new structures.Point(varExpr22,varExpr23);
+            if(firstPaint) positions.put("rec", new Pair<Double, Double>(varExpr22,varExpr23));
+            recFigure.setCenter(varPointExpr1);
+        }
+
+        recGraphics.translate(getWidth()/2,getHeight()/2);
+        Rectangle2D rec = new Rectangle2D.Double(positions.get("rec").a - recFigure.width()/2,positions.get("rec").b - recFigure.height()/2,
                                                    recFigure.width(),recFigure.height());
-        java.awt.Rectangle recBounds = rec.getBounds(); 
-        recGraphics.setColor(new Color(recFigure.color().rgb().toString()));
-        recGraphics.setStroke(new BasicStroke(recFigure.thickness()));
+        java.awt.Rectangle recBounds = rec.getBounds();
+        rectBoundsList.add(recBounds);
+
+        recGraphics.setColor(new java.awt.Color(recFigure.color().rgb().p0(), recFigure.color().rgb().p1(), recFigure.color().rgb().p2()));
+        recGraphics.setStroke(new BasicStroke((int)recFigure.thickness()));
         recGraphics.translate(rec.getCenterX(),rec.getCenterY());
         recGraphics.rotate(angles.get("rec").degree());
         recGraphics.translate(-rec.getCenterX(),-rec.getCenterY());
 
         Graphics2D circGraphics = (Graphics2D) g.create();
-        structures.Circle circFigure = new structures.Circle("circ");
-        double varExpr22 = 500;
-        circFigure.setDiameter(varExpr22);
-        double varExpr23 = 2;
-        circFigure.setThickness(varExpr23);
+        if (firstPaint) {
+            circFigure = new structures.Circle("circ");
+            double varExpr24 = 50;
+            circFigure.setDiameter(varExpr24);
+            double varExpr25 = 10;
+            circFigure.setThickness(varExpr25);
 
-        circFigure.setDisplay(true);
+            circFigure.setDisplay(true);
 
-        circFigure.setFilled(false);
-        double varExpr24 = 2;
-        circFigure.setDepth(varExpr24);
-        double varExpr25 = 12;
+            circFigure.setFilled(false);
+            double varExpr26 = 2;
+            circFigure.setDepth(varExpr26);
+            double varExpr27 = 209;
 
-        double varExpr26 = 30;
+            double varExpr28 = 19;
 
-        double varExpr27 = 20;
-        Color varExpr28 = new Color(varExpr25,varExpr26,varExpr27);
-        circFigure.setColor(varExpr28);
+            double varExpr29 = 85;
+            structures.Color varExpr30 = new structures.Color(new RGB((int)varExpr27,(int)varExpr28,(int)varExpr29));
+            circFigure.setColor(varExpr30);
+            double varExpr31 = 0;
 
-        Shape circ = new Ellipse2D.Double(positions.get("circ").a,positions.get("circ").b,
+            double varExpr32 = 10;
+            structures.Point varPointExpr2 = new structures.Point(varExpr31,varExpr32);
+            if(firstPaint) positions.put("circ", new Pair<Double, Double>(varExpr31,varExpr32));
+            circFigure.setCenter(varPointExpr2);
+        }
+
+        circGraphics.translate(getWidth()/2,getHeight()/2);
+        Shape circ = new Ellipse2D.Double(positions.get("circ").a - circFigure.diameter()/2,positions.get("circ").b - circFigure.diameter()/2,
                                            circFigure.diameter(),circFigure.diameter());
-        java.awt.Rectangle circBounds = circ.getBounds(); 
-        circGraphics.setColor(new Color(circFigure.color().rgb().toString()));
-        circGraphics.setStroke(new BasicStroke(circFigure.thickness()));
-        circGraphics.translate(circ.getCenterX(),circ.getCenterY());
-        circGraphics.rotate(angles.get("circ").degree());
-        circGraphics.translate(-circ.getCenterX(),-circ.getCenterY());
+        java.awt.Rectangle circBounds = circ.getBounds();
+        rectBoundsList.add(circBounds);
 
-        Graphics2D linGraphics = (Graphics2D) g.create();
-        structures.Line linFigure = new structures.Line("lin");
-        double varExpr29 = 2;
-        linFigure.setThickness(varExpr29);
+        circGraphics.setColor(new java.awt.Color(circFigure.color().rgb().p0(), circFigure.color().rgb().p1(), circFigure.color().rgb().p2()));
+        circGraphics.setStroke(new BasicStroke((int)circFigure.thickness()));
+        circGraphics.translate(circBounds.getCenterX(),circBounds.getCenterY());
+        circGraphics.translate(-circBounds.getCenterX(),-circBounds.getCenterY());
 
-        linFigure.setDisplay(true);
-        double varExpr30 = 250;
 
-        double varExpr31 = 124;
+        recGraphics.draw(rec);
 
-        double varExpr32 = 98;
-        Color varExpr33 = new Color(varExpr30,varExpr31,varExpr32);
-        linFigure.setColor(varExpr33);
-        Color varExpr34 = new Color("ffffff");
-        linFigure.setColor(varExpr34);
+        circGraphics.draw(circ);
+        double varExpr35 = 0;
 
-        Shape lin = new Line2D.Double(lines.get("lin").a.x(),lines.get("lin").a.y(),
-                                      lines.get("lin").b.x(),lines.get("lin".b.y()));
-        java.awt.Rectangle linBounds = lin.getBounds(); 
-        linGraphics.setColor(new Color(linFigure.color().rgb().toString()));
-        linGraphics.setStroke(new BasicStroke(linFigure.thickness()));
-        linGraphics.translate(lin.getCenterX(),lin.getCenterY());
-        linGraphics.rotate(angles.get("lin").degree());
-        linGraphics.translate(-lin.getCenterX(),-lin.getCenterY());
+        double varExpr37 = circFigure.center().y();
 
-        Graphics2D trinGraphics = (Graphics2D) g.create();
-        structures.Triangle trinFigure = new structures.Triangle("trin");
-        double varExpr35 = 2;
-        trinFigure.setThickness(varExpr35);
+        double varExpr38 = 2;
+        double varExpr36 = varExpr37-varExpr38;
+        structures.Point varPointExpr3 = new structures.Point(varExpr35,varExpr36);
+        positions.put("circ", new Pair<Double, Double>(varExpr35,varExpr36));
+        circFigure.setCenter(varPointExpr3);
+        boolean varBoolExpr5 = recBounds.intersects(circBounds);
+        boolean varBoolExpr4 = !varBoolExpr5;
+        if(varBoolExpr4){
+            double varExpr39 = 0;
 
-        trinFigure.setDisplay(true);
-        double varExpr36 = 250;
+            double varExpr40 = 0;
 
-        double varExpr37 = 124;
-
-        double varExpr38 = 98;
-        Color varExpr39 = new Color(varExpr36,varExpr37,varExpr38);
-        trinFigure.setColor(varExpr39);
-        Color varExpr40 = new Color("ffffff");
-        trinFigure.setColor(varExpr40);
-
-        Polygon trin =  new Polygon();
-        trin.addPoint((int)triangles.get("trin").a.x(),(int)triangles.get("trin").a.y());
-        trin.addPoint((int)triangles.get("trin").b.x(),(int)triangles.get("trin").b.y());
-        trin.addPoint((int)triangles.get("trin").c.x(),(int)triangles.get("trin").c.y());
-        java.awt.Rectangle trinBounds = trin.getBounds(); 
-        trinGraphics.setColor(new Color(trinFigure.color().rgb().toString()));
-        trinGraphics.setStroke(new BasicStroke(trinFigure.thickness()));
-        trinGraphics.translate(trin.getCenterX(),trin.getCenterY());
-        trinGraphics.rotate(angles.get("trin").degree());
-        trinGraphics.translate(-trin.getCenterX(),-trin.getCenterY());
+            double varExpr41 = 0;
+            structures.Color varExpr42 = new structures.Color(new RGB((int)varExpr39,(int)varExpr40,(int)varExpr41));
+            circFigure.setColor(varExpr42);
+        }
+        timer.start();
+        if (firstPaint) firstPaint = false;
 
     }
 
@@ -181,10 +189,10 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
         int key = e.getKeyCode();
 
         if(key == KeyEvent.VK_S){
-        timer.stop();
+            timer.stop();
         }
         if(key == KeyEvent.VK_P){
-        timer.start(); 
+            timer.start(); 
         }  
     }
 

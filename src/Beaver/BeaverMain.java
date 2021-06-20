@@ -55,7 +55,7 @@ public class BeaverMain {
                //sortedByNmrFigures.forEach(figure -> System.out.println(figure.printFigure()));
 
                // print default sorting
-               beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
+               // beaverInterpreter.palletes().entrySet().stream().forEach(pallete -> System.out.println(pallete.getValue()));
             }
          }
       }

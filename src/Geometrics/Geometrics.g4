@@ -16,7 +16,6 @@ stats	: 'start' varsInit NEWLINE*		#statVarsInit
 	| loop								#statLoop
 	| conditional						#statConditional
 	| funcCall							#statFuncCall
-	| easteregg							#statEasterEgg
 	| 'write' (ID | STRING)				#statConsoleLog
 	| container							#statContainer
 	;
@@ -86,7 +85,7 @@ funcCall	: 'call' ID ('with' (expr | STRING) (',' (expr | STRING))* )? ;
 // Begin vars set
 varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties
 		| 'set' ID '->' expr						#varsSetExpr
-		| 'set' ID ('*' | '/' | '+' | '-') expr		#varsSetCalc
+		| 'set' ID op=('*' | '/' | '+' | '-') expr		#varsSetCalc
 		;
 
 // End objects properties
@@ -114,20 +113,11 @@ conditional	: 'if' booleanLogic ':' blockStats* 'end' ;
 blockStats	: stats | stop='stop' | NEWLINE ;
 
 // Begin loop
-loop	: 'each' (time | ID) loopSpecifics 'end' ;
-
-loopSpecifics	: ':' (stats+ | 'stop')								#eachTime
-		| 'until' booleanLogic ':' (stats+ | 'stop')				#eachWhile
-		| 'with' ID 'from' expr 'to' expr ':' (stats+ | 'stop') 	#eachFor
-		;
-
-// Begin easteregg
-easteregg	: 'where is' ID '?' ; 
-// End easteregg
+loop	: 'each' (time | ID) ':' (stats NEWLINE*)+ 'end' ;
 
 angle returns [String var = null]: expr type=('º' | 'deg' | 'rad') ;
-time : expr type=('ms'|'s'); 
-point : expr ',' expr ;
+time returns [String var = null]: expr type=('ms'|'s'); 
+point returns [String var = null]: expr ',' expr ;
 
 FIGURE : 'Figure' | 'Triangle' | 'Rectangle' | 'Circle' | 'Line' ;
 OBJECT : 'Label' | 'Point' | 'Number' | 'Angle' | 'Time';

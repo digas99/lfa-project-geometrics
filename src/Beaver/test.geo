@@ -1,6 +1,5 @@
-use "../../doc/Beaver/working/flags.bvr" :
-	Figure flag1 -> japanese
-	Figure sphere -> armilarSphere
+use "../../doc/Beaver/working/flags.bvr":
+	Figure jap -> japanese
 end
 
 Board "Test"
@@ -32,44 +31,52 @@ end
 /-end
 
 start Rectangle rec:
-	width -> 400
-	height -> 500
+	width -> 40
+	height -> 50
 	thickness -> 2
 	angle -> 3 º
 	display -> true
 	filled -> false
 	depth -> 2
 	color -> #ffffff
-	color -> 12,30,20
-	/- center -> 0,10
+	color -> 21,179,91
+	center -> 0,10
 end
 
 start Circle circ:
-	diameter -> 500
-	thickness -> 2
+	diameter -> 50
+	thickness -> 10
 	display -> true
 	filled -> false
 	depth -> 2
-	color -> 12,30,20
-	/- center -> 0,10
+	color -> 209, 19, 85
+	center -> 0,10
 end
 
-start Line lin:
-	thickness -> 2
-	display -> true
-	color -> 250,124,98
-	color -> #ffffff
-end
+/-start Line lin:
+/-	thickness -> 2
+/-	display -> true
+/-	color -> 250,124,98
+/-	color -> #ffffff
+/-end
 
-start Triangle trin:
-	thickness -> 2
-	display -> true
-	color -> 250,124,98
-	color -> #ffffff
-end
+/-start Triangle trin:
+/-	thickness -> 2
+/-	display -> true
+/-	color -> 250,124,98
+/-	color -> #ffffff
+/-end
 draw rec
 
 draw circ
+
+each 30 ms:
+	/-set circ center -> 100, 100
+	set circ center -> 0, circ center y - 2
+	if not rec collides circ:
+		set circ color -> 0,0,0
+	end
+end
 
 /- have to remove delay 
 close 3000 ms
