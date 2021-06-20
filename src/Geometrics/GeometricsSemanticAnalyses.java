@@ -398,7 +398,15 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
-      return visitChildren(ctx);
+      
+      String resID = ctx.ID().getText();
+      String expr0 = visit(ctx.expr());
+
+      if(anyNull(resID,expr0)){
+         return null;
+      }
+      
+      return resID + expr0;
    }
 
    @Override public String visitColorId(GeometricsParser.ColorIdContext ctx) {
@@ -428,7 +436,11 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitListAdd(GeometricsParser.ListAddContext ctx) {
-      return visitChildren(ctx);
+      List<String> resID = ctx.ID().stream().map(id -> id.getText()).collect(Collectors.toList());
+      if(anyNull(resID)){
+         return null;
+      }
+      return "add";
    }
 
    // grupo 2
@@ -447,19 +459,12 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    // If function
    @Override
    public String visitConditional(GeometricsParser.ConditionalContext ctx) {
-      // String res = null;
        String bologic = visit(ctx.booleanLogic());
-      // List<String> blocks = ctx.blockStats().stream().map(attr -> visit(attr)).collect(Collectors.toList());
-      // String blockstat = visit(ctx.blockStats());
-       if (bologic == null/* || blockstat == null*/) {}
-      //    res = null;
-      // } else
-      //    res = bologic;
-      // return res;
-      return "if" + bologic/* + ":" + blockstat +*/ + "end";
+       List<String> blocks = ctx.blockStats().stream().map(attr -> visit(attr)).collect(Collectors.toList());
+       if (bologic == null || blocks == null) {}
+      return "if" + bologic + ":" + blocks + "end";
    }
 
- 
    //created visit blockStats
    @Override
    public String visitBlockStats(GeometricsParser.BlockStatsContext ctx){
