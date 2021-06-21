@@ -273,19 +273,44 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
-      return visitChildren(ctx);
-
+      
+      String resObj = ctx.OBJECT().getText();
+      String resFig = ctx.FIGURE().getText();
+      String resID = ctx.ID().getText();
+     
+      if(resID == null){
+         return null;
+      }
+      else if(resObj == null && resFig == null){
+         return null;
+      }
+      else if(resFig == null){
+         return resObj + resID;
+      }
+      else{
+      return resFig + resID ;
+      }
    }
 
    @Override
    public String visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
-      return visitChildren(ctx);
+      String resFig = ctx.FIGURE().getText();
+      String resID = ctx.ID().getText();
+      if(anyNull(resFig,resID)){
+         return null;
+      }
+      return resFig + "list" + resID;
    }
 
    @Override
    public String visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
-
-      return visitChildren(ctx);
+      String resObj = ctx.OBJECT().getText();
+      String resID = ctx.ID().getText();
+      String attr = visit(ctx.attribs());
+      if(anyNull(resObj,resID,attr)){
+         return null;
+      }
+      return resObj + resID + "->" + attr;
    }
 
    @Override
@@ -383,14 +408,37 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitFuncCall(GeometricsParser.FuncCallContext ctx) {
+
+      //String resID = ctx.ID().getText();
+      //return resID;
       return visitChildren(ctx);
    }
 
    @Override
    public String visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
-      String id = ctx.ID().getText();
-      idOfBlockSet = id;
-      return visitChildren(ctx);
+      String resID = ctx.ID().getText();
+      String lineSET = visit(ctx.inlineSet());
+      String blockSET = visit(ctx.blockSet());
+
+      if(resID == null){
+
+         return null;
+
+      }
+      else if(lineSET == null && blockSET == null){
+
+         return null;
+      }
+      else if(lineSET == null){
+
+         return resID + blockSET;
+      }
+      else{
+
+         return resID + lineSET;
+      }
+
+     
    }
 
    @Override
