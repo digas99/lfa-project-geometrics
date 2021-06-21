@@ -4,6 +4,11 @@ if [ $# != 2 ]; then
 	echo "Run: $ bash draw.bash fileGeo OutputClassName"
 
 else
+	cd src/Beaver
+	rm $2.*
+
+	cd ../..
+
 	antlr4-build
 
 	cd src/Geometrics

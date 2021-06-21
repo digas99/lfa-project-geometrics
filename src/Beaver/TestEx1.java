@@ -19,9 +19,9 @@ public class TestEx1 extends JPanel implements ActionListener,KeyListener{
     static final int Width_Board = 1000;
     static final int Height_Board = 1000;
     List<Figure> figures = new ArrayList<>();
-    double varExpr68 = 30;
-    double varExpr67 = varExpr68;
-    private Timer timer = new Timer((int) varExpr67, this);
+    double varExpr70 = 30;
+    double varExpr69 = varExpr70;
+    private Timer timer = new Timer((int) varExpr69, this);
     Map<String,Pair<Double, Double>> positions = new HashMap<>();
     Map<String,structures.Angle> angles = new HashMap<>();
     boolean firstPaint = true;
@@ -32,6 +32,7 @@ public class TestEx1 extends JPanel implements ActionListener,KeyListener{
     structures.Circle circTopFigure;
     double a;
     double b;
+    double recSpeed;
     structures.Circle circTopRightFigure;
     structures.Rectangle recLeftFigure;
     structures.Rectangle recRightFigure;
@@ -39,6 +40,7 @@ public class TestEx1 extends JPanel implements ActionListener,KeyListener{
     double trigger;
     structures.Circle circBottomFigure;
     double trigger2;
+    double leftAndRightCollided;
 
 
 
@@ -299,192 +301,224 @@ public class TestEx1 extends JPanel implements ActionListener,KeyListener{
 
         double varExpr66 = 0;
          if (firstPaint) trigger2 = varExpr66;
-        double varExpr70 = recLeftFigure.center().x();
 
-        double varExpr71 = 1;
-        double varExpr69 = varExpr70+varExpr71;
+        double varExpr67 = 0;
+         if (firstPaint) leftAndRightCollided = varExpr67;
 
-        double varExpr72 = 0;
-        structures.Point varPointExpr7 = new structures.Point(varExpr69,varExpr72);
-        positions.put("recLeft", new Pair<Double, Double>(varExpr69,varExpr72));
-        recLeftFigure.setCenter(varPointExpr7);
-        double varExpr74 = recRightFigure.center().x();
+        double varExpr68 = 5;
+         if (firstPaint) recSpeed = varExpr68;
 
-        double varExpr75 = 1;
-        double varExpr73 = varExpr74-varExpr75;
+        double varExpr72 = leftAndRightCollided;
+        double varExpr71 = varExpr72;
 
-        double varExpr76 = 0;
-        structures.Point varPointExpr8 = new structures.Point(varExpr73,varExpr76);
-        positions.put("recRight", new Pair<Double, Double>(varExpr73,varExpr76));
-        recRightFigure.setCenter(varPointExpr8);
-
-        boolean varBoolExpr1 = recLeftBounds.intersects(recRightBounds);
+        double varExpr74 = 0;
+        double varExpr73 = varExpr74;
+        boolean varBoolExpr1 = varExpr71==varExpr73;
         if(varBoolExpr1){
-            double varExpr78 = recLeftFigure.center().x();
+            double varExpr76 = recLeftFigure.center().x();
 
-            double varExpr79 = 2;
-            double varExpr77 = varExpr78-varExpr79;
+            double varExpr77 = recSpeed;
+            double varExpr75 = varExpr76+varExpr77;
 
-            double varExpr80 = 0;
-            structures.Point varPointExpr9 = new structures.Point(varExpr77,varExpr80);
-            positions.put("recLeft", new Pair<Double, Double>(varExpr77,varExpr80));
-            recLeftFigure.setCenter(varPointExpr9);double varExpr82 = recRightFigure.center().x();
+            double varExpr78 = 0;
+            structures.Point varPointExpr7 = new structures.Point(varExpr75,varExpr78);
+            positions.put("recLeft", new Pair<Double, Double>(varExpr75,varExpr78));
+            recLeftFigure.setCenter(varPointExpr7);double varExpr80 = recRightFigure.center().x();
 
-            double varExpr83 = 2;
-            double varExpr81 = varExpr82+varExpr83;
+            double varExpr81 = recSpeed;
+            double varExpr79 = varExpr80-varExpr81;
 
-            double varExpr84 = 0;
-            structures.Point varPointExpr10 = new structures.Point(varExpr81,varExpr84);
-            positions.put("recRight", new Pair<Double, Double>(varExpr81,varExpr84));
-            recRightFigure.setCenter(varPointExpr10);double varExpr85 = 216;
-
-            double varExpr86 = 22;
-
-            double varExpr87 = 22;
-            structures.Color varExpr88 = new structures.Color(new RGB((int)varExpr85,(int)varExpr86,(int)varExpr87));
-            recLeftFigure.setColor(varExpr88);double varExpr89 = 216;
-
-            double varExpr90 = 22;
-
-            double varExpr91 = 22;
-            structures.Color varExpr92 = new structures.Color(new RGB((int)varExpr89,(int)varExpr90,(int)varExpr91));
-            recRightFigure.setColor(varExpr92);
+            double varExpr82 = 0;
+            structures.Point varPointExpr8 = new structures.Point(varExpr79,varExpr82);
+            positions.put("recRight", new Pair<Double, Double>(varExpr79,varExpr82));
+            recRightFigure.setCenter(varPointExpr8);
         }
 
-        boolean varBoolExpr2 = boardLeftBounds.intersects(recLeftBounds);
+        boolean varBoolExpr2 = recLeftBounds.intersects(recRightBounds);
         if(varBoolExpr2){
-            double varExpr93 = 0;
-
-            double varExpr94 = 0;
-            structures.Point varPointExpr11 = new structures.Point(varExpr93,varExpr94);
-            if(firstPaint) positions.put("recLeft", new Pair<Double, Double>(varExpr93,varExpr94));
-            recLeftFigure.setCenter(varPointExpr11);double varExpr95 = 0;
-
-            double varExpr96 = 0;
-            structures.Point varPointExpr12 = new structures.Point(varExpr95,varExpr96);
-            if(firstPaint) positions.put("recRight", new Pair<Double, Double>(varExpr95,varExpr96));
-            recRightFigure.setCenter(varPointExpr12);double varExpr97 = 0;
-
-            double varExpr98 = 0;
-
-            double varExpr99 = 0;
-            structures.Color varExpr100 = new structures.Color(new RGB((int)varExpr97,(int)varExpr98,(int)varExpr99));
-            recLeftFigure.setColor(varExpr100);double varExpr101 = 0;
-
-            double varExpr102 = 0;
-
-            double varExpr103 = 0;
-            structures.Color varExpr104 = new structures.Color(new RGB((int)varExpr101,(int)varExpr102,(int)varExpr103));
-            recRightFigure.setColor(varExpr104);recLeftFigure.setFilled(true);recLeftFigure.setFilled(true);
-            circTopRightGraphics.draw(circTopRight);
-            circBottomLeftGraphics.draw(circBottomLeft);double varExpr105 = 1;
-            trigger = varExpr105;
+            double varExpr83 = 1;
+            leftAndRightCollided = varExpr83;
         }
 
-        double varExpr107 = trigger;
-        double varExpr106 = varExpr107;
+        double varExpr85 = leftAndRightCollided;
+        double varExpr84 = varExpr85;
 
-        double varExpr109 = 1;
-        double varExpr108 = varExpr109;
-        boolean varBoolExpr3 = varExpr106==varExpr108;
+        double varExpr87 = 1;
+        double varExpr86 = varExpr87;
+        boolean varBoolExpr3 = varExpr84==varExpr86;
         if(varBoolExpr3){
+            double varExpr89 = recLeftFigure.center().x();
+
+            double varExpr90 = recSpeed;
+            double varExpr88 = varExpr89-varExpr90;
+
+            double varExpr91 = 0;
+            structures.Point varPointExpr9 = new structures.Point(varExpr88,varExpr91);
+            positions.put("recLeft", new Pair<Double, Double>(varExpr88,varExpr91));
+            recLeftFigure.setCenter(varPointExpr9);double varExpr93 = recRightFigure.center().x();
+
+            double varExpr94 = recSpeed;
+            double varExpr92 = varExpr93+varExpr94;
+
+            double varExpr95 = 0;
+            structures.Point varPointExpr10 = new structures.Point(varExpr92,varExpr95);
+            positions.put("recRight", new Pair<Double, Double>(varExpr92,varExpr95));
+            recRightFigure.setCenter(varPointExpr10);double varExpr96 = 216;
+
+            double varExpr97 = 22;
+
+            double varExpr98 = 22;
+            structures.Color varExpr99 = new structures.Color(new RGB((int)varExpr96,(int)varExpr97,(int)varExpr98));
+            recLeftFigure.setColor(varExpr99);double varExpr100 = 216;
+
+            double varExpr101 = 22;
+
+            double varExpr102 = 22;
+            structures.Color varExpr103 = new structures.Color(new RGB((int)varExpr100,(int)varExpr101,(int)varExpr102));
+            recRightFigure.setColor(varExpr103);
+        }
+
+        boolean varBoolExpr4 = boardLeftBounds.intersects(recLeftBounds);
+        if(varBoolExpr4){
+            double varExpr104 = 0;
+
+            double varExpr105 = 0;
+            structures.Point varPointExpr11 = new structures.Point(varExpr104,varExpr105);
+            if(firstPaint) positions.put("recLeft", new Pair<Double, Double>(varExpr104,varExpr105));
+            recLeftFigure.setCenter(varPointExpr11);double varExpr106 = 0;
+
+            double varExpr107 = 0;
+            structures.Point varPointExpr12 = new structures.Point(varExpr106,varExpr107);
+            if(firstPaint) positions.put("recRight", new Pair<Double, Double>(varExpr106,varExpr107));
+            recRightFigure.setCenter(varPointExpr12);double varExpr108 = 0;
+
+            double varExpr109 = 0;
+
+            double varExpr110 = 0;
+            structures.Color varExpr111 = new structures.Color(new RGB((int)varExpr108,(int)varExpr109,(int)varExpr110));
+            recLeftFigure.setColor(varExpr111);double varExpr112 = 0;
+
+            double varExpr113 = 0;
+
+            double varExpr114 = 0;
+            structures.Color varExpr115 = new structures.Color(new RGB((int)varExpr112,(int)varExpr113,(int)varExpr114));
+            recRightFigure.setColor(varExpr115);double varExpr116 = 45;
+            Angle varExpr117 = new Angle((int) varExpr116);
+            angles.put("recLeft", varExpr117);
+            recLeftFigure.setAngle(varExpr117);double varExpr119 = 45;
+            double varExpr118 = -varExpr119;
+            Angle varExpr120 = new Angle((int) varExpr118);
+            angles.put("recRight", varExpr120);
+            recRightFigure.setAngle(varExpr120);recLeftFigure.setFilled(true);recRightFigure.setFilled(true);
+            circTopRightGraphics.draw(circTopRight);
+            circBottomLeftGraphics.draw(circBottomLeft);double varExpr121 = 1;
+            trigger = varExpr121;
+        }
+
+        double varExpr123 = trigger;
+        double varExpr122 = varExpr123;
+
+        double varExpr125 = 1;
+        double varExpr124 = varExpr125;
+        boolean varBoolExpr5 = varExpr122==varExpr124;
+        if(varBoolExpr5){
 
             circTopGraphics.draw(circTop);
-            circBottomGraphics.draw(circBottom);double varExpr110 = 0;
-
-            double varExpr112 = circTopFigure.center().y();
-
-            double varExpr113 = 2;
-            double varExpr111 = varExpr112-varExpr113;
-            structures.Point varPointExpr13 = new structures.Point(varExpr110,varExpr111);
-            positions.put("circTop", new Pair<Double, Double>(varExpr110,varExpr111));
-            circTopFigure.setCenter(varPointExpr13);double varExpr114 = 0;
-
-            double varExpr116 = circBottomFigure.center().y();
-
-            double varExpr117 = 2;
-            double varExpr115 = varExpr116+varExpr117;
-            structures.Point varPointExpr14 = new structures.Point(varExpr114,varExpr115);
-            positions.put("circBottom", new Pair<Double, Double>(varExpr114,varExpr115));
-            circBottomFigure.setCenter(varPointExpr14);boolean varBoolExpr4 = circTopBounds.intersects(circBottomBounds);
-            if(varBoolExpr4){
-                double varExpr118 = 0;
-
-                double varExpr120 = circTopFigure.center().y();
-
-                double varExpr121 = 2;
-                double varExpr119 = varExpr120+varExpr121;
-                structures.Point varPointExpr15 = new structures.Point(varExpr118,varExpr119);
-                positions.put("circTop", new Pair<Double, Double>(varExpr118,varExpr119));
-                circTopFigure.setCenter(varPointExpr15);double varExpr122 = 0;
-
-                double varExpr124 = circBottomFigure.center().y();
-
-                double varExpr125 = 2;
-                double varExpr123 = varExpr124-varExpr125;
-                structures.Point varPointExpr16 = new structures.Point(varExpr122,varExpr123);
-                positions.put("circBottom", new Pair<Double, Double>(varExpr122,varExpr123));
-                circBottomFigure.setCenter(varPointExpr16);
-            }
-        }
-
-        boolean varBoolExpr5 = boardTopBounds.intersects(circTopBounds);
-        if(varBoolExpr5){
-            double varExpr126 = 0;
+            circBottomGraphics.draw(circBottom);double varExpr126 = 0;
 
             double varExpr128 = circTopFigure.center().y();
 
             double varExpr129 = 2;
             double varExpr127 = varExpr128-varExpr129;
-            structures.Point varPointExpr17 = new structures.Point(varExpr126,varExpr127);
+            structures.Point varPointExpr13 = new structures.Point(varExpr126,varExpr127);
             positions.put("circTop", new Pair<Double, Double>(varExpr126,varExpr127));
-            circTopFigure.setCenter(varPointExpr17);circTopFigure.setFilled(true);double varExpr130 = 1;
-            trigger2 = varExpr130;
+            circTopFigure.setCenter(varPointExpr13);double varExpr130 = 0;
+
+            double varExpr132 = circBottomFigure.center().y();
+
+            double varExpr133 = 2;
+            double varExpr131 = varExpr132+varExpr133;
+            structures.Point varPointExpr14 = new structures.Point(varExpr130,varExpr131);
+            positions.put("circBottom", new Pair<Double, Double>(varExpr130,varExpr131));
+            circBottomFigure.setCenter(varPointExpr14);boolean varBoolExpr6 = circTopBounds.intersects(circBottomBounds);
+            if(varBoolExpr6){
+                double varExpr134 = 0;
+
+                double varExpr136 = circTopFigure.center().y();
+
+                double varExpr137 = 2;
+                double varExpr135 = varExpr136+varExpr137;
+                structures.Point varPointExpr15 = new structures.Point(varExpr134,varExpr135);
+                positions.put("circTop", new Pair<Double, Double>(varExpr134,varExpr135));
+                circTopFigure.setCenter(varPointExpr15);double varExpr138 = 0;
+
+                double varExpr140 = circBottomFigure.center().y();
+
+                double varExpr141 = 2;
+                double varExpr139 = varExpr140-varExpr141;
+                structures.Point varPointExpr16 = new structures.Point(varExpr138,varExpr139);
+                positions.put("circBottom", new Pair<Double, Double>(varExpr138,varExpr139));
+                circBottomFigure.setCenter(varPointExpr16);
+            }
         }
 
-        boolean varBoolExpr6 = boardBottomBounds.intersects(circBottomBounds);
-        if(varBoolExpr6){
-            double varExpr131 = 0;
-
-            double varExpr133 = circBottomFigure.center().y();
-
-            double varExpr134 = 2;
-            double varExpr132 = varExpr133+varExpr134;
-            structures.Point varPointExpr18 = new structures.Point(varExpr131,varExpr132);
-            positions.put("circBottom", new Pair<Double, Double>(varExpr131,varExpr132));
-            circBottomFigure.setCenter(varPointExpr18);circTopFigure.setFilled(true);double varExpr135 = 1;
-            trigger2 = varExpr135;
-        }
-
-        double varExpr137 = trigger2;
-        double varExpr136 = varExpr137;
-
-        double varExpr139 = 1;
-        double varExpr138 = varExpr139;
-        boolean varBoolExpr7 = varExpr136==varExpr138;
+        boolean varBoolExpr7 = boardTopBounds.intersects(circTopBounds);
         if(varBoolExpr7){
-            double varExpr141 = circTopRightFigure.center().x();
+            double varExpr142 = 0;
 
-            double varExpr142 = 1;
-            double varExpr140 = varExpr141-varExpr142;
+            double varExpr144 = circTopFigure.center().y();
 
-            double varExpr144 = circTopRightFigure.center().y();
-
-            double varExpr145 = 1;
+            double varExpr145 = 2;
             double varExpr143 = varExpr144-varExpr145;
-            structures.Point varPointExpr19 = new structures.Point(varExpr140,varExpr143);
-            positions.put("circTopRight", new Pair<Double, Double>(varExpr140,varExpr143));
-            circTopRightFigure.setCenter(varPointExpr19);double varExpr147 = circBottomFigure.center().x();
+            structures.Point varPointExpr17 = new structures.Point(varExpr142,varExpr143);
+            positions.put("circTop", new Pair<Double, Double>(varExpr142,varExpr143));
+            circTopFigure.setCenter(varPointExpr17);circTopFigure.setFilled(true);double varExpr146 = 1;
+            trigger2 = varExpr146;
+        }
 
-            double varExpr148 = 1;
-            double varExpr146 = varExpr147+varExpr148;
+        boolean varBoolExpr8 = boardBottomBounds.intersects(circBottomBounds);
+        if(varBoolExpr8){
+            double varExpr147 = 0;
 
-            double varExpr150 = circBottomFigure.center().y();
+            double varExpr149 = circBottomFigure.center().y();
 
-            double varExpr151 = 1;
-            double varExpr149 = varExpr150+varExpr151;
-            structures.Point varPointExpr20 = new structures.Point(varExpr146,varExpr149);
-            positions.put("circBottom", new Pair<Double, Double>(varExpr146,varExpr149));
+            double varExpr150 = 2;
+            double varExpr148 = varExpr149+varExpr150;
+            structures.Point varPointExpr18 = new structures.Point(varExpr147,varExpr148);
+            positions.put("circBottom", new Pair<Double, Double>(varExpr147,varExpr148));
+            circBottomFigure.setCenter(varPointExpr18);circTopFigure.setFilled(true);double varExpr151 = 1;
+            trigger2 = varExpr151;
+        }
+
+        double varExpr153 = trigger2;
+        double varExpr152 = varExpr153;
+
+        double varExpr155 = 1;
+        double varExpr154 = varExpr155;
+        boolean varBoolExpr9 = varExpr152==varExpr154;
+        if(varBoolExpr9){
+            double varExpr157 = circTopRightFigure.center().x();
+
+            double varExpr158 = 1;
+            double varExpr156 = varExpr157-varExpr158;
+
+            double varExpr160 = circTopRightFigure.center().y();
+
+            double varExpr161 = 1;
+            double varExpr159 = varExpr160-varExpr161;
+            structures.Point varPointExpr19 = new structures.Point(varExpr156,varExpr159);
+            positions.put("circTopRight", new Pair<Double, Double>(varExpr156,varExpr159));
+            circTopRightFigure.setCenter(varPointExpr19);double varExpr163 = circBottomFigure.center().x();
+
+            double varExpr164 = 1;
+            double varExpr162 = varExpr163+varExpr164;
+
+            double varExpr166 = circBottomFigure.center().y();
+
+            double varExpr167 = 1;
+            double varExpr165 = varExpr166+varExpr167;
+            structures.Point varPointExpr20 = new structures.Point(varExpr162,varExpr165);
+            positions.put("circBottom", new Pair<Double, Double>(varExpr162,varExpr165));
             circBottomFigure.setCenter(varPointExpr20);
         }
         timer.start();

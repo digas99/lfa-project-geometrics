@@ -63,37 +63,36 @@ draw recRight
 
 start Number trigger -> 0
 start Number trigger2 -> 0
-
-start Number begin -> 0
-start Number angVal -> 0
-
+start Number leftAndRightCollided -> 0
+start Number recSpeed -> 5
 
 each 30 ms:
 
-    if begin-> 0
-	    set recLeft center -> (recLeft center x + 1), 0
-        set recRight center -> (recRight center x - 1), 0
-        begin->1
+    if leftAndRightCollided = 0:
+	    set recLeft center -> (recLeft center x + recSpeed), 0
+        set recRight center -> (recRight center x - recSpeed), 0
     end
 
-    if begin ->1
-	    if recLeft collides recRight:
-            set recLeft center -> (recLeft center x - 2), 0
-            set recRight center -> (recRight center x + 2), 0
-		    set recLeft color -> 216,22,22
-            set recRight color -> 216,22,22
-        end    
-	end
+    if recLeft collides recRight:
+        set leftAndRightCollided -> 1
+    end    
+
+    if leftAndRightCollided = 1:
+        set recLeft center -> (recLeft center x - recSpeed), 0
+        set recRight center -> (recRight center x + recSpeed), 0
+        set recLeft color -> 216,22,22
+        set recRight color -> 216,22,22
+    end
 
     if recLeft collides boardLeft:
         set recLeft center -> 0,0
         set recRight center -> 0,0
         set recLeft color -> 0,0,0
         set recRight color -> 0,0,0
-        set  recLeft angVal -> 45
-        set  recLeft angVal -> -45
+        set recLeft angle -> 45 deg
+        set recRight angle -> -45 deg
         set recLeft filled -> true
-        set recLeft filled -> true
+        set recRight filled -> true
         draw circTopRight
         draw circBottomLeft
         set trigger -> 1
