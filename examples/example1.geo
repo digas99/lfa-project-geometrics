@@ -1,4 +1,4 @@
-/- Two rectangles colliding and changing color
+/- example1
 Board "Geometrics"
 
 start Number a -> 10
@@ -9,10 +9,7 @@ start Rectangle recRight:
 	height -> 100
 	thickness -> 5
 	angle -> 0 º
-	display -> true
 	filled -> false
-	depth -> 2
-	color -> #ffffff
 	color -> 21,179,91
 	center -> 400,300
 end
@@ -22,69 +19,112 @@ start Rectangle recLeft:
 	height -> 100
 	thickness -> 5
 	angle -> 0 º
-	display -> true
 	filled -> false
-	depth -> 2
-	color -> #ffffff
 	color -> 0,0,0
 	center -> -400,300
+end
 
 start Circle circTop:
 	diameter -> 50
-	thickness -> 10
-	display -> true
+	thickness -> 5
 	filled -> false
-	depth -> 2
 	color -> 209, 19, 85
 	center -> 0,200
 end
 
 start Circle circBottom:
     diameter -> 50
-	thickness -> 10
-	display -> true
+	thickness -> 5
 	filled -> false
-	depth -> 2
-	color -> 209, 19, 85
+	color -> 0, 70, 235
 	center -> 0,-200
+end
+
+start Circle circTopRight:
+    diameter -> 100
+	thickness -> 10
+	filled -> false
+	color -> 113,125,155
+	center -> 450,450
+end
+
+start Circle circBottomLeft:
+    diameter -> 100
+	thickness -> 10
+	filled -> false
+	color -> 113,125,155
+	center -> -450,-450
 end
 
 
 draw recLeft
 draw recRight
 
-draw circTop
-draw circleBottom
 
-start Number hitTop -> 0 
+start Number trigger -> 0
+start Number trigger2 -> 0
+start Number leftAndRightCollided -> 0
+start Number recSpeed -> 5
 
 each 30 ms:
-	set rectLeft center -> 1,0
-    set rectRight center -> -1,0
 
-	if rectLeft collides rectRight:
-        set rectLeft center -> 0,0
-        set rectRight center -> 0,0
-		set rectLeft color -> 216,22,22
-        set rectRight color -> 216,22,22
-	end
-
-    set circleTop center -> 0,-2
-    set circleBottom center -> 0,2
-
-    if circleTop collides circleBottom:
-        set circleTop center -> 0,2
-        set circleBottom center -> 0,-2
+    if leftAndRightCollided = 0:
+	    set recLeft center -> (recLeft center x + recSpeed), 0
+        set recRight center -> (recRight center x - recSpeed), 0
     end
 
-    if circTop collides boardTop  
-        set circleTop center -> 0,-2 
+    if recLeft collides recRight:
+        set leftAndRightCollided -> 1
+    end    
+
+    if leftAndRightCollided = 1:
+        set recLeft center -> (recLeft center x - recSpeed), 0
+        set recRight center -> (recRight center x + recSpeed), 0
+        set recLeft color -> 216,22,22
+        set recRight color -> 216,22,22
+    end
+
+    if recLeft collides boardLeft:
+        set recLeft center -> 0,0
+        set recRight center -> 0,0
+        set recLeft color -> 0,0,0
+        set recRight color -> 0,0,0
+        set recLeft angle -> 45 deg
+        set recRight angle -> -45 deg
+        set recLeft filled -> true
+        set recRight filled -> true
+        draw circTopRight
+        draw circBottomLeft
+        set trigger -> 1
+    end
+
+    if trigger = 1:
+        draw circTop
+        draw circBottom
+        set circTop center -> 0,circTop center y - 2
+        set circBottom center -> 0,circBottom center y + 2
+        if circTop collides circBottom:
+            set circTop center -> 0,circTop center y + 2
+            set circBottom center -> 0,circBottom center y - 2
+            
+        end
+    end
+
+    if circTop collides boardTop: 
+        set circTop center -> 0,circTop center y - 2
+        set circTop filled -> true
+        set trigger2 -> 1
     end
 
     if circBottom collides boardBottom:
-        set circleBottom center -> 0,2
+        set circBottom center -> 0,circBottom center y + 2
+        set circTop filled -> true
+        set trigger2 -> 1
     end
 
+    if trigger2 equals 1:
+        set circTopRight center -> (circTopRight center x - 1),circTopRight center y - 1
+        set circBottom center -> (circBottom center x + 1),circBottom center y + 1
+    end
+      
 end
- 
-close
