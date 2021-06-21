@@ -67,18 +67,18 @@ start Number trigger2 -> 0
 
 each 30 ms:
 
-	set recLeft center -> 1,0
-    set recRight center -> -1,0
+	set recLeft center -> (recLeft center x + 1), 0
+    set recRight center -> (recRight center x - 1), 0
 
 	if recLeft collides recRight:
-        set recLeft center -> -2,0
-        set recRight center -> 0,2
+        set recLeft center -> (recLeft center x - 2), 0
+        set recRight center -> (recRight center x + 2), 0
 		set recLeft color -> 216,22,22
         set recRight color -> 216,22,22
 	end
 
     if recLeft collides boardLeft:
-        set retLeft center -> 0,0
+        set recLeft center -> 0,0
         set recRight center -> 0,0
         set recLeft color -> 0,0,0
         set recRight color -> 0,0,0
@@ -92,30 +92,30 @@ each 30 ms:
     if trigger = 1:
         draw circTop
         draw circBottom
-        set circleTop center -> 0,-2
-        set circleBottom center -> 0,2
-        if circleTop collides circleBottom:
-            set circleTop center -> 0,2
-            set circleBottom center -> 0,-2
+        set circTop center -> 0,circTop center y - 2
+        set circBottom center -> 0,circBottom center y + 2
+        if circTop collides circBottom:
+            set circTop center -> 0,circTop center y + 2
+            set circBottom center -> 0,circBottom center y - 2
             
         end
     end
 
     if circTop collides boardTop: 
-        set circleTop center -> 0,-2 
-        set circleTop filled -> true
+        set circTop center -> 0,circTop center y - 2
+        set circTop filled -> true
         set trigger2 -> 1
     end
 
     if circBottom collides boardBottom:
-        set circleBottom center -> 0,2
-        set circleTop filled -> true
+        set circBottom center -> 0,circBottom center y + 2
+        set circTop filled -> true
         set trigger2 -> 1
     end
 
     if trigger2 equals 1:
-        set circTopRight center -> -1,-1
-        set circBottom center -> 1,1
+        set circTopRight center -> (circTopRight center x - 1),circTopRight center y - 1
+        set circBottom center -> (circBottom center x + 1),circBottom center y + 1
     end
       
 end
