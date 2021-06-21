@@ -1,19 +1,15 @@
 module(name, stat, boardName, timer, varsInit) ::= <<
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
-import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
 import java.util.Map;
 import java.util.HashMap;
-import static java.util.Map.entry;
+
 
 import structures.*;
 public class <name> extends JPanel implements ActionListener<if(timer)>,KeyListener<endif>{
@@ -131,44 +127,9 @@ rectBoundsList.add(<var>Bounds);
 
 <var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
 <var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
-<var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
-<var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
 
 >>
 
-lineMaking(var)::= <<
-
-<var>Graphics.translate(getWidth()/2,getHeight()/2);
-Shape <var> = new Line2D.Double(lines.get("<var>").a.x(),lines.get("<var>").a.y(),
-                              lines.get("<var>").b.x(),lines.get("<var>".b.y()));
-java.awt.Rectangle <var>Bounds = <var>.getBounds();
-rectBoundsList.add(<var>Bounds);
- 
-<var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
-<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
-<var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
-<var>Graphics.rotate(angles.get("<var>").degree());
-<var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
-
->>
-
-triangleMaking(var)::= <<
-
-<var>Graphics.translate(getWidth()/2,getHeight()/2);
-Polygon <var> =  new Polygon();
-<var>.addPoint((int)triangles.get("<var>").a.x(),(int)triangles.get("<var>").a.y());
-<var>.addPoint((int)triangles.get("<var>").b.x(),(int)triangles.get("<var>").b.y());
-<var>.addPoint((int)triangles.get("<var>").c.x(),(int)triangles.get("<var>").c.y());
-java.awt.Rectangle <var>Bounds = <var>.getBounds();
-rectBoundsList.add(<var>Bounds);
-
-<var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
-<var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
-<var>Graphics.translate(<var>Bounds.getCenterX(),<var>Bounds.getCenterY());
-<var>Graphics.rotate(angles.get("<var>").degree());
-<var>Graphics.translate(-<var>Bounds.getCenterX(),-<var>Bounds.getCenterY());
-
->>
 
 figureSetter(var, funcName, value, stat) ::= <<
 <if(stat)><stat><endif>

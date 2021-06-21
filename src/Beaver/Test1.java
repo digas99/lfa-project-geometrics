@@ -1,18 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
-import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
 import java.util.Map;
 import java.util.HashMap;
-import static java.util.Map.entry;
+
 
 import structures.*;
 public class Test1 extends JPanel implements ActionListener,KeyListener{
@@ -135,8 +131,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circGraphics.setColor(new java.awt.Color(circFigure.color().rgb().p0(), circFigure.color().rgb().p1(), circFigure.color().rgb().p2()));
         circGraphics.setStroke(new BasicStroke((int)circFigure.thickness()));
-        circGraphics.translate(circBounds.getCenterX(),circBounds.getCenterY());
-        circGraphics.translate(-circBounds.getCenterX(),-circBounds.getCenterY());
 
         Graphics2D circ2Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -175,8 +169,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ2Graphics.setColor(new java.awt.Color(circ2Figure.color().rgb().p0(), circ2Figure.color().rgb().p1(), circ2Figure.color().rgb().p2()));
         circ2Graphics.setStroke(new BasicStroke((int)circ2Figure.thickness()));
-        circ2Graphics.translate(circ2Bounds.getCenterX(),circ2Bounds.getCenterY());
-        circ2Graphics.translate(-circ2Bounds.getCenterX(),-circ2Bounds.getCenterY());
 
         Graphics2D circ3Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -214,8 +206,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ3Graphics.setColor(new java.awt.Color(circ3Figure.color().rgb().p0(), circ3Figure.color().rgb().p1(), circ3Figure.color().rgb().p2()));
         circ3Graphics.setStroke(new BasicStroke((int)circ3Figure.thickness()));
-        circ3Graphics.translate(circ3Bounds.getCenterX(),circ3Bounds.getCenterY());
-        circ3Graphics.translate(-circ3Bounds.getCenterX(),-circ3Bounds.getCenterY());
 
         Graphics2D circ4Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -253,8 +243,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ4Graphics.setColor(new java.awt.Color(circ4Figure.color().rgb().p0(), circ4Figure.color().rgb().p1(), circ4Figure.color().rgb().p2()));
         circ4Graphics.setStroke(new BasicStroke((int)circ4Figure.thickness()));
-        circ4Graphics.translate(circ4Bounds.getCenterX(),circ4Bounds.getCenterY());
-        circ4Graphics.translate(-circ4Bounds.getCenterX(),-circ4Bounds.getCenterY());
 
         Graphics2D circ5Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -293,8 +281,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ5Graphics.setColor(new java.awt.Color(circ5Figure.color().rgb().p0(), circ5Figure.color().rgb().p1(), circ5Figure.color().rgb().p2()));
         circ5Graphics.setStroke(new BasicStroke((int)circ5Figure.thickness()));
-        circ5Graphics.translate(circ5Bounds.getCenterX(),circ5Bounds.getCenterY());
-        circ5Graphics.translate(-circ5Bounds.getCenterX(),-circ5Bounds.getCenterY());
 
         Graphics2D circ6Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -332,8 +318,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ6Graphics.setColor(new java.awt.Color(circ6Figure.color().rgb().p0(), circ6Figure.color().rgb().p1(), circ6Figure.color().rgb().p2()));
         circ6Graphics.setStroke(new BasicStroke((int)circ6Figure.thickness()));
-        circ6Graphics.translate(circ6Bounds.getCenterX(),circ6Bounds.getCenterY());
-        circ6Graphics.translate(-circ6Bounds.getCenterX(),-circ6Bounds.getCenterY());
 
         Graphics2D circ7Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -371,8 +355,6 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ7Graphics.setColor(new java.awt.Color(circ7Figure.color().rgb().p0(), circ7Figure.color().rgb().p1(), circ7Figure.color().rgb().p2()));
         circ7Graphics.setStroke(new BasicStroke((int)circ7Figure.thickness()));
-        circ7Graphics.translate(circ7Bounds.getCenterX(),circ7Bounds.getCenterY());
-        circ7Graphics.translate(-circ7Bounds.getCenterX(),-circ7Bounds.getCenterY());
 
         Graphics2D circ8Graphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -410,27 +392,43 @@ public class Test1 extends JPanel implements ActionListener,KeyListener{
 
         circ8Graphics.setColor(new java.awt.Color(circ8Figure.color().rgb().p0(), circ8Figure.color().rgb().p1(), circ8Figure.color().rgb().p2()));
         circ8Graphics.setStroke(new BasicStroke((int)circ8Figure.thickness()));
-        circ8Graphics.translate(circ8Bounds.getCenterX(),circ8Bounds.getCenterY());
-        circ8Graphics.translate(-circ8Bounds.getCenterX(),-circ8Bounds.getCenterY());
 
-
-        recGraphics.fill(rec);
-
-        circGraphics.fill(circ);
-
-        circ2Graphics.fill(circ2);
-
-        circ3Graphics.fill(circ3);
-
-        circ4Graphics.fill(circ4);
-
-        circ5Graphics.fill(circ5);
-
-        circ6Graphics.fill(circ6);
-
-        circ7Graphics.fill(circ7);
-
-        circ8Graphics.fill(circ8);
+        if(recFigure.filled())     
+            recGraphics.fill(rec);
+        else
+            recGraphics.draw(rec);
+        if(circFigure.filled())     
+            circGraphics.fill(circ);
+        else
+            circGraphics.draw(circ);
+        if(circ2Figure.filled())     
+            circ2Graphics.fill(circ2);
+        else
+            circ2Graphics.draw(circ2);
+        if(circ3Figure.filled())     
+            circ3Graphics.fill(circ3);
+        else
+            circ3Graphics.draw(circ3);
+        if(circ4Figure.filled())     
+            circ4Graphics.fill(circ4);
+        else
+            circ4Graphics.draw(circ4);
+        if(circ5Figure.filled())     
+            circ5Graphics.fill(circ5);
+        else
+            circ5Graphics.draw(circ5);
+        if(circ6Figure.filled())     
+            circ6Graphics.fill(circ6);
+        else
+            circ6Graphics.draw(circ6);
+        if(circ7Figure.filled())     
+            circ7Graphics.fill(circ7);
+        else
+            circ7Graphics.draw(circ7);
+        if(circ8Figure.filled())     
+            circ8Graphics.fill(circ8);
+        else
+            circ8Graphics.draw(circ8);
 
         double varExpr89 = 0;
          if (firstPaint) hitTop = varExpr89;

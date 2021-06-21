@@ -1,18 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Path2D;
 import org.antlr.v4.runtime.misc.Pair;
-import org.antlr.v4.runtime.misc.Triple;
 import java.lang.Math;
 import java.util.Map;
 import java.util.HashMap;
-import static java.util.Map.entry;
+
 
 import structures.*;
 public class TestG extends JPanel implements ActionListener,KeyListener{
@@ -37,6 +33,7 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
     double recSpeed;
     structures.Circle circBottomLeftFigure;
     double trigger;
+    double trigger3;
     structures.Circle circBottomFigure;
     double trigger2;
     double moveCircles;
@@ -183,8 +180,6 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
 
         circBottomGraphics.setColor(new java.awt.Color(circBottomFigure.color().rgb().p0(), circBottomFigure.color().rgb().p1(), circBottomFigure.color().rgb().p2()));
         circBottomGraphics.setStroke(new BasicStroke((int)circBottomFigure.thickness()));
-        circBottomGraphics.translate(circBottomBounds.getCenterX(),circBottomBounds.getCenterY());
-        circBottomGraphics.translate(-circBottomBounds.getCenterX(),-circBottomBounds.getCenterY());
 
         Graphics2D circTopGraphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -219,8 +214,6 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
 
         circTopGraphics.setColor(new java.awt.Color(circTopFigure.color().rgb().p0(), circTopFigure.color().rgb().p1(), circTopFigure.color().rgb().p2()));
         circTopGraphics.setStroke(new BasicStroke((int)circTopFigure.thickness()));
-        circTopGraphics.translate(circTopBounds.getCenterX(),circTopBounds.getCenterY());
-        circTopGraphics.translate(-circTopBounds.getCenterX(),-circTopBounds.getCenterY());
 
         Graphics2D circTopRightGraphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -254,8 +247,6 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
 
         circTopRightGraphics.setColor(new java.awt.Color(circTopRightFigure.color().rgb().p0(), circTopRightFigure.color().rgb().p1(), circTopRightFigure.color().rgb().p2()));
         circTopRightGraphics.setStroke(new BasicStroke((int)circTopRightFigure.thickness()));
-        circTopRightGraphics.translate(circTopRightBounds.getCenterX(),circTopRightBounds.getCenterY());
-        circTopRightGraphics.translate(-circTopRightBounds.getCenterX(),-circTopRightBounds.getCenterY());
 
         Graphics2D circBottomLeftGraphics = (Graphics2D) g.create();
         if (firstPaint) {
@@ -291,8 +282,6 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
 
         circBottomLeftGraphics.setColor(new java.awt.Color(circBottomLeftFigure.color().rgb().p0(), circBottomLeftFigure.color().rgb().p1(), circBottomLeftFigure.color().rgb().p2()));
         circBottomLeftGraphics.setStroke(new BasicStroke((int)circBottomLeftFigure.thickness()));
-        circBottomLeftGraphics.translate(circBottomLeftBounds.getCenterX(),circBottomLeftBounds.getCenterY());
-        circBottomLeftGraphics.translate(-circBottomLeftBounds.getCenterX(),-circBottomLeftBounds.getCenterY());
 
         if(recLeftFigure.filled())     
             recLeftGraphics.fill(recLeft);
@@ -508,7 +497,7 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
 
                 double varExpr158 = circTopFigure.center().y();
 
-                double varExpr159 = 2;
+                double varExpr159 = 5;
                 double varExpr157 = varExpr158-varExpr159;
                 structures.Point varPointExpr13 = new structures.Point(varExpr156,varExpr157);
                 positions.put("circTop", new Pair<Double, Double>(varExpr156,varExpr157));
@@ -516,7 +505,7 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
 
                 double varExpr162 = circBottomFigure.center().y();
 
-                double varExpr163 = 2;
+                double varExpr163 = 5;
                 double varExpr161 = varExpr162+varExpr163;
                 structures.Point varPointExpr14 = new structures.Point(varExpr160,varExpr161);
                 positions.put("circBottom", new Pair<Double, Double>(varExpr160,varExpr161));
@@ -533,42 +522,66 @@ public class TestG extends JPanel implements ActionListener,KeyListener{
             circTopFigure.setDiameter(varExpr167);
         }
 
-        double varExpr169 = trigger2;
-        double varExpr168 = varExpr169;
+        double varExpr168 = 0;
+         if (firstPaint) trigger3 = varExpr168;
 
-        double varExpr171 = 1;
-        double varExpr170 = varExpr171;
-        boolean varBoolExpr19 = varExpr168==varExpr170;
+        double varExpr170 = trigger2;
+        double varExpr169 = varExpr170;
+
+        double varExpr172 = 1;
+        double varExpr171 = varExpr172;
+        boolean varBoolExpr20 = varExpr169==varExpr171;
+        double varExpr174 = trigger3;
+        double varExpr173 = varExpr174;
+
+        double varExpr176 = 0;
+        double varExpr175 = varExpr176;
+        boolean varBoolExpr22 = varExpr173==varExpr175;
+        boolean varBoolExpr21 = varBoolExpr22;
+        boolean varBoolExpr19 = varBoolExpr20&&varBoolExpr21;
         if(varBoolExpr19){
-            double varExpr173 = circTopRightFigure.center().x();
+            double varExpr178 = circTopRightFigure.center().x();
 
-            double varExpr174 = 1;
-            double varExpr172 = varExpr173-varExpr174;
+            double varExpr179 = 5;
+            double varExpr177 = varExpr178-varExpr179;
 
-            double varExpr176 = circTopRightFigure.center().y();
+            double varExpr181 = circTopRightFigure.center().y();
 
-            double varExpr177 = 1;
-            double varExpr175 = varExpr176-varExpr177;
-            structures.Point varPointExpr15 = new structures.Point(varExpr172,varExpr175);
-            positions.put("circTopRight", new Pair<Double, Double>(varExpr172,varExpr175));
-            circTopRightFigure.setCenter(varPointExpr15);double varExpr179 = circBottomLeftFigure.center().x();
+            double varExpr182 = 5;
+            double varExpr180 = varExpr181-varExpr182;
+            structures.Point varPointExpr15 = new structures.Point(varExpr177,varExpr180);
+            positions.put("circTopRight", new Pair<Double, Double>(varExpr177,varExpr180));
+            circTopRightFigure.setCenter(varPointExpr15);double varExpr184 = circBottomLeftFigure.center().x();
 
-            double varExpr180 = 1;
-            double varExpr178 = varExpr179+varExpr180;
+            double varExpr185 = 5;
+            double varExpr183 = varExpr184+varExpr185;
 
-            double varExpr182 = circBottomLeftFigure.center().y();
+            double varExpr187 = circBottomLeftFigure.center().y();
 
-            double varExpr183 = 1;
-            double varExpr181 = varExpr182+varExpr183;
-            structures.Point varPointExpr16 = new structures.Point(varExpr178,varExpr181);
-            positions.put("circBottomLeft", new Pair<Double, Double>(varExpr178,varExpr181));
+            double varExpr188 = 5;
+            double varExpr186 = varExpr187+varExpr188;
+            structures.Point varPointExpr16 = new structures.Point(varExpr183,varExpr186);
+            positions.put("circBottomLeft", new Pair<Double, Double>(varExpr183,varExpr186));
             circBottomLeftFigure.setCenter(varPointExpr16);
         }
+        double varExpr190 = circTopRightFigure.center().x();
+        double varExpr189 = varExpr190;
 
-        boolean varBoolExpr20 = circTopRightBounds.intersects(circBottomLeftBounds);
-        if(varBoolExpr20){
-            double varExpr184 = 0;
-            trigger2 = varExpr184;
+        double varExpr192 = circBottomLeftFigure.center().x();
+        double varExpr191 = varExpr192;
+        boolean varBoolExpr25 = varExpr189==varExpr191;
+        boolean varBoolExpr24 = varBoolExpr25;
+        double varExpr194 = circTopRightFigure.center().y();
+        double varExpr193 = varExpr194;
+
+        double varExpr196 = circBottomLeftFigure.center().y();
+        double varExpr195 = varExpr196;
+        boolean varBoolExpr27 = varExpr193==varExpr195;
+        boolean varBoolExpr26 = varBoolExpr27;
+        boolean varBoolExpr23 = varBoolExpr24&&varBoolExpr26;
+        if(varBoolExpr23){
+            double varExpr197 = 1;
+            trigger3 = varExpr197;
         }
         timer.start();
         if (firstPaint) firstPaint = false;
