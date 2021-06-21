@@ -117,8 +117,8 @@ each 30 ms:
             set moveCircles -> 1
         end
         if moveCircles = 1:
-            set circTop center -> 0,(circTop center y - 2)
-            set circBottom center -> 0,(circBottom center y + 2)
+            set circTop center -> 0,(circTop center y - 5)
+            set circBottom center -> 0,(circBottom center y + 5)
         end
     end
 
@@ -131,17 +131,14 @@ each 30 ms:
         set circTop diameter -> 200
     end
 
-    if trigger2 equals 1:
-        set circTopRight center -> (circTopRight center x - 1),circTopRight center y - 1
-        set circBottomLeft center -> (circBottomLeft center x + 1),circBottomLeft center y + 1
+    start Number trigger3 -> 0
+
+    if trigger2 equals 1 and (trigger3 = 0):
+        set circTopRight center -> (circTopRight center x - 5),circTopRight center y - 5
+        set circBottomLeft center -> (circBottomLeft center x + 5),circBottomLeft center y + 5
     end
 
-    if circTopRight collides circBottomLeft:
-        set trigger2 -> 0
+    if (circTopRight center x = circBottomLeft center x) and (circTopRight center y = circBottomLeft center y):
+        set trigger3 -> 1
     end
-
-/-    if circTopRight center x = 0 and (circTopRight center y = 0):
-/-        trigger2 -> 0
-/-    end
-
 end     
