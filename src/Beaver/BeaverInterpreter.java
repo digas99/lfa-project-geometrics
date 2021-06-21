@@ -47,8 +47,7 @@ public class BeaverInterpreter extends BeaverBaseVisitor<String> {
    @Override
    public String visitStatsColor(BeaverParser.StatsColorContext ctx) {
       String id = ctx.ID(0).getText();
-      colorVars.put(id, ctx.ID(1) != null ? colorVars.get(ctx.ID(1).getText())
-            : new Color(id, Color.parseColor(visit(ctx.color()))));
+      colorVars.put(id, ctx.ID(1) != null ? colorVars.get(ctx.ID(1).getText()) : new Color(id, Color.parseColor(visit(ctx.color()))));
       return null;
    }
 

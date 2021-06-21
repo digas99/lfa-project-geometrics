@@ -24,14 +24,10 @@ public class <name> extends JPanel implements ActionListener<if(timer)>,KeyListe
     Map\<String,Pair\<Double, Double>\> positions = new HashMap\<>();
     Map\<String,structures.Angle> angles = new HashMap\<>();
     boolean firstPaint = true;
-    Shape lineTopLeft = new Line2D.Double(0,0,1000,0);
-    Shape lineTopRight = new Line2D.Double(1000,0,1000,1000);
-    Shape lineBottomRight = new Line2D.Double(1000,1000,0,1000);
-    Shape lineBottomLeft = new Line2D.Double(0,1000,0,0);
-    Rectangle boardTopBounds = lineTopLeft.getBounds();
-    Rectangle boardRightBounds = lineTopRight.getBounds();
-    Rectangle boardBottomBounds = lineBottomLeft.getBounds();
-    Rectangle boardLeftBounds = lineBottomRight.getBounds();
+    Shape boardTopBounds = new Line2D.Double(-500,-500,500,-500);
+    Shape boardRightBounds = new Line2D.Double(500,-500,500,500);
+    Shape boardBottomBounds = new Line2D.Double(500,500,-500,500);
+    Shape boardLeftBounds = new Line2D.Double(-500,500,-500,-500);
     <if(varsInit)><varsInit><endif>
 
 
@@ -120,7 +116,7 @@ rectBoundsList.add(<var>Bounds);
 <var>Graphics.setColor(new java.awt.Color(<var>Figure.color().rgb().p0(), <var>Figure.color().rgb().p1(), <var>Figure.color().rgb().p2()));
 <var>Graphics.setStroke(new BasicStroke((int)<var>Figure.thickness()));
 <var>Graphics.translate(<var>.getCenterX(),<var>.getCenterY());
-<var>Graphics.rotate(angles.get("<var>").degree());
+<var>Graphics.rotate(angles.get("<var>").rad());
 <var>Graphics.translate(-<var>.getCenterX(),-<var>.getCenterY());
 
 >>
@@ -224,7 +220,8 @@ call_func(name, values) ::= <<
 <name>(<values>);
 >>
 
-set_var(id, value) ::= <<
+set_var(id, value, stat) ::= <<
+<if(stat)><stats(stat)><endif>
 <id> = <value>;
 >>
 
@@ -264,12 +261,8 @@ print(stat, value) ::= <<
 System.out.println(<value>);
 >>
 
-draw(var) ::= << 
-<var>Graphics.draw(<var>);
->>
-
-filled(var, fig) ::= <<
-<var>.fill(<fig>);
+draw(var, filled) ::= << 
+<var>Graphics.<filled>(<var>);
 >>
 
 set_calc(id, value) ::= <<

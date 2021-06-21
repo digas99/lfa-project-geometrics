@@ -43,14 +43,14 @@ public class BeaverMain {
                List<Figure> sortedByNmrFigures = beaverInterpreter.figures().entrySet().stream().map(figure -> figure.getValue()).collect(Collectors.toList()).stream().sorted(Comparator.comparingInt(Figure::numberFigures).reversed()).collect(Collectors.toList());
                // get all containers
                containers = beaverInterpreter.containers();
-               // containers.stream().forEach(container -> {
-               //    System.out.println("\n");
-               //    container.printFamilyTree(0);
-               //    System.out.println("");
-               //    container.printFamily();
-               //    System.out.println("___________________________________________________________");
-               // });
-               // System.out.println("");
+               containers.stream().forEach(container -> {
+                  System.out.println("\n");
+                  container.printFamilyTree(0);
+                  System.out.println("");
+                  container.printFamily();
+                  System.out.println("___________________________________________________________");
+               });
+               System.out.println("");
 
                //sortedByNmrFigures.forEach(figure -> System.out.println(figure.printFigure()));
 

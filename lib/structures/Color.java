@@ -12,9 +12,6 @@ public class Color {
 		String v0 = this.hexCode.charAt(1) + this.hexCode.charAt(2) +"";
 		String v1 = this.hexCode.charAt(3) + this.hexCode.charAt(4) +"";
 		String v2 = this.hexCode.charAt(5) + this.hexCode.charAt(6) +"";
-		System.out.println("\n\n\n\n\nV0:\n");
-		System.out.println(v0);
-		System.out.println("\n\n\n\n\n");
 		this.rgb = new RGB(Integer.parseInt(v0, 16), Integer.parseInt(v1, 16), Integer.parseInt(v2, 16));
 	}
 
@@ -26,25 +23,44 @@ public class Color {
 
 	public Color(String hexCode) {
 		this.hexCode = hexCode.charAt(0) == '#' ? hexCode : "#"+hexCode;
+		String v0 = this.hexCode.charAt(1) + this.hexCode.charAt(2) +"";
+		String v1 = this.hexCode.charAt(3) + this.hexCode.charAt(4) +"";
+		String v2 = this.hexCode.charAt(5) + this.hexCode.charAt(6) +"";
+		this.rgb = new RGB(Integer.parseInt(v0, 16), Integer.parseInt(v1, 16), Integer.parseInt(v2, 16));
 	}
 
 	public Color(RGB rgb) {
 		this.rgb = rgb;
+		this.hexCode = "#"+Integer.toHexString(this.rgb.p0())+Integer.toHexString(this.rgb.p1())+Integer.toHexString(this.rgb.p2());
 	}
 
 	public Color(Color color) {
-		if (color.hexCode() != null)
+		if (color.hexCode() != null) {
 			this.hexCode = color.hexCode();
-		else
+			String v0 = this.hexCode.charAt(1) + this.hexCode.charAt(2) +"";
+			String v1 = this.hexCode.charAt(3) + this.hexCode.charAt(4) +"";
+			String v2 = this.hexCode.charAt(5) + this.hexCode.charAt(6) +"";
+			this.rgb = new RGB(Integer.parseInt(v0, 16), Integer.parseInt(v1, 16), Integer.parseInt(v2, 16));
+		}
+		else {
 			this.rgb = color.rgb();
+			this.hexCode = "#"+Integer.toHexString(this.rgb.p0())+Integer.toHexString(this.rgb.p1())+Integer.toHexString(this.rgb.p2());
+		}
 		this.id = color.id();
 	}
 
 	public Color(String id, Color color) {
-		if (color.hexCode() != null)
+		if (color.hexCode() != null) {
 			this.hexCode = color.hexCode();
-		else
+			String v0 = this.hexCode.charAt(1) + this.hexCode.charAt(2) +"";
+			String v1 = this.hexCode.charAt(3) + this.hexCode.charAt(4) +"";
+			String v2 = this.hexCode.charAt(5) + this.hexCode.charAt(6) +"";
+			this.rgb = new RGB(Integer.parseInt(v0, 16), Integer.parseInt(v1, 16), Integer.parseInt(v2, 16));
+		}
+		else {
 			this.rgb = color.rgb();
+			this.hexCode = "#"+Integer.toHexString(this.rgb.p0())+Integer.toHexString(this.rgb.p1())+Integer.toHexString(this.rgb.p2());
+		}
 		this.id = id;
 	}
 
@@ -83,6 +99,9 @@ public class Color {
 	}
 
 	@Override public String toString() {
-		return String.format("%s (%s)", this.hexCode, this.rgb);
+		if (this.hexCode != null)
+			return this.hexCode;
+		else
+			return this.rgb.toString();
 	}
 }
