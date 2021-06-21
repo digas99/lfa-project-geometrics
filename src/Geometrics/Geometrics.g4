@@ -11,7 +11,6 @@ useAttribs	: (FIGURE|color) ID '->' ID NEWLINE* ;
 // Begin stats
 stats	: 'start' varsInit NEWLINE*		#statVarsInit
 	| varsSet							#statVarsSet
-	| list								#statList
 	| 'draw' ID	(',' ID)* NEWLINE*		#statDraw
 	| loop								#statLoop
 	| conditional						#statConditional
@@ -65,7 +64,6 @@ booleanLogic returns [String var = null]
 
 // Begin vars initialization
 varsInit: (OBJECT | FIGURE) ID												#varsOnlyInit
-		| FIGURE value='List' ID											#varsInitList
 		| OBJECT ID '->' attribs											#varsInitObject
 		| FIGURE ID blockSet												#varsInitFigure
 		| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'		#varsInitFunc
@@ -99,12 +97,6 @@ color returns [String var = null]
 		;
 
 // End vars initialization
-
-// Begin list
-list	: ID 'add' ID (first='first')?		#listAdd
-		| ID 'remove' (expr | STRING)		#listRemove
-		;
-// End list
 
 // Begin conditional
 conditional	: 'if' booleanLogic ':' blockStats* 'end' ;

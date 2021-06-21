@@ -24,7 +24,7 @@ start Rectangle recLeft:
 	center -> -400,300
 end
 
-start Circle circTop:
+start Circle circBottom:
 	diameter -> 50
 	thickness -> 5
 	filled -> false
@@ -32,7 +32,7 @@ start Circle circTop:
 	center -> 0,200
 end
 
-start Circle circBottom:
+start Circle circTop:
     diameter -> 50
 	thickness -> 5
 	filled -> false
@@ -66,9 +66,13 @@ start Number trigger2 -> 0
 start Number leftAndRightCollided -> 0
 start Number recSpeed -> 5
 
+start Number twoWorldsCollide -> 0
+start Number stopRec -> 0
+
+
 each 30 ms:
 
-    if leftAndRightCollided = 0:
+    if leftAndRightCollided = 0 and (stopRec = 0):
 	    set recLeft center -> (recLeft center x + recSpeed), 0
         set recRight center -> (recRight center x - recSpeed), 0
     end
@@ -77,16 +81,19 @@ each 30 ms:
         set leftAndRightCollided -> 1
     end    
 
-    if leftAndRightCollided = 1:
+    if leftAndRightCollided = 1 and (stopRec = 0):
         set recLeft center -> (recLeft center x - recSpeed), 0
         set recRight center -> (recRight center x + recSpeed), 0
         set recLeft color -> 216,22,22
         set recRight color -> 216,22,22
     end
 
-    if recLeft collides boardLeft:
-        set recLeft center -> 0,0
-        set recRight center -> 0,0
+    if recLeft collides boardLeft or recRight collides boardRight:
+        set twoWorldsCollide -> 1
+        set stopRec -> 1
+    end
+
+    if twoWorldsCollide = 1:
         set recLeft color -> 0,0,0
         set recRight color -> 0,0,0
         set recLeft angle -> 45 deg
@@ -98,33 +105,43 @@ each 30 ms:
         set trigger -> 1
     end
 
+    start Number moveCircles -> 0
     if trigger = 1:
         draw circTop
         draw circBottom
-        set circTop center -> 0,circTop center y - 2
-        set circBottom center -> 0,circBottom center y + 2
-        if circTop collides circBottom:
+        if moveCircles = 0:
             set circTop center -> 0,circTop center y + 2
             set circBottom center -> 0,circBottom center y - 2
-            
+        end
+        if circTop collides circBottom:
+            set moveCircles -> 1
+        end
+        if moveCircles = 1:
+            set circTop center -> 0,(circTop center y - 2)
+            set circBottom center -> 0,(circBottom center y + 2)
         end
     end
 
-    if circTop collides boardTop: 
-        set circTop center -> 0,circTop center y - 2
+    if circTop collides boardTop:
+        set moveCircles -> 2 
         set circTop filled -> true
+        set circBottom filled -> true
         set trigger2 -> 1
-    end
-
-    if circBottom collides boardBottom:
-        set circBottom center -> 0,circBottom center y + 2
-        set circTop filled -> true
-        set trigger2 -> 1
+        set circBottom diameter -> 200
+        set circTop diameter -> 200
     end
 
     if trigger2 equals 1:
         set circTopRight center -> (circTopRight center x - 1),circTopRight center y - 1
-        set circBottom center -> (circBottom center x + 1),circBottom center y + 1
+        set circBottomLeft center -> (circBottomLeft center x + 1),circBottomLeft center y + 1
     end
-      
-end
+
+    if circTopRight collides circBottomLeft:
+        set trigger2 -> 0
+    end
+
+/-    if circTopRight center x = 0 and (circTopRight center y = 0):
+/-        trigger2 -> 0
+/-    end
+
+end     

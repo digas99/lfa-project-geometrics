@@ -93,17 +93,13 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    }
 
    @Override
-   public ST visitStatList(GeometricsParser.StatListContext ctx) {
-      return visit(ctx.list());
-   }
-
-   @Override
    public ST visitStatDraw(GeometricsParser.StatDrawContext ctx) {
       ST stats = template.getInstanceOf("stats");
       ctx.ID().stream().forEach(id -> {
          ST draw = template.getInstanceOf("draw");
          String idText = id.getText();
-         draw.add("filled", filledAssoc.get(idText) ? "fill" : "draw");
+         //draw.add("filled", filledAssoc.get(idText) ? "fill" : "draw");
+
          draw.add("var", idText);
          stats.add("stat", draw.render());
       });
@@ -393,10 +389,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return decl;
    }
 
-   @Override
-   public ST visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
-      return visitChildren(ctx);
-   }
 
    @Override
    public ST visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
@@ -610,23 +602,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       stats.add("stat", "structures.Color " + ctx.var + " = new structures.Color(new RGB((int)" + ctx.expr(0).var + ",(int)" + ctx.expr(1).var + ",(int)"
             + ctx.expr(2).var + "));");
       return stats;
-   }
-
-   @Override
-   public ST visitListAdd(GeometricsParser.ListAddContext ctx) {
-      ST addList = template.getInstanceOf("add_to_list");
-      addList.add("var", ctx.ID(0));
-      addList.add("value", ctx.ID(1));
-      return addList;
-   }
-
-   // grupo 2
-   @Override
-   public ST visitListRemove(GeometricsParser.ListRemoveContext ctx) {
-      ST remList = template.getInstanceOf("remove_from_list");
-      remList.add("var", ctx.ID());
-      remList.add("value", ctx.expr());
-      return remList;
    }
 
    @Override

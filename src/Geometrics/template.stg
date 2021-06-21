@@ -261,8 +261,11 @@ print(stat, value) ::= <<
 System.out.println(<value>);
 >>
 
-draw(var, filled) ::= << 
-<var>Graphics.<filled>(<var>);
+draw(var) ::= <<
+if(<var>Figure.filled())     
+    <var>Graphics.fill(<var>);
+else
+    <var>Graphics.draw(<var>);
 >>
 
 set_calc(id, value) ::= <<

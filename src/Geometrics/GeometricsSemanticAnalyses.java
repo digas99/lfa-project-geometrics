@@ -58,11 +58,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override
-   public String visitStatList(GeometricsParser.StatListContext ctx) {
-      return visit(ctx.list());
-   }
-
-   @Override
    public String visitStatDraw(GeometricsParser.StatDrawContext ctx) {
       // check if they are all figures
       if (!allTrue(ctx.ID().stream().map(id -> {
@@ -184,45 +179,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitVarsSetExpr(GeometricsParser.VarsSetExprContext ctx) {
       return visitChildren(ctx);   
    }
-   // Expr functions end------------------------------------------------------
-
-   // provavelmente para apagar entretanto
-   // @Override public String visitIdProp(GeometricsParser.IdPropContext ctx) {
-   // int line = ctx.getStart().getLine();
-   // int col = ctx.getStart().getCharPositionInLine();
-   // String var = ctx.ID(0).getText();
-   // String type = getType(var);
-   // if (type != null) {
-   // String[] propsList = propsAssoc.get(type);
-   // String prop = ctx.ID(1).getText();
-   // if (!contains(propsList, prop))
-   // throwError(line, col, String.format(notPropOfFigureErrorMessage, prop,
-   // type));
-   // else {
-   // if (ctx.ID(2) != null) {
-   // // if var[prop] is not a point
-   // if (!contains(propsAsPointsExpr, prop))
-   // throwError(line, col, String.format(notAPointErrorMessage,
-   // var+"["+prop+"]"));
-   // // otherwise, check if the third ID is a point property
-   // else {
-   // String thirdId = ctx.ID(2).getText();
-   // if (!contains(pointProps, thirdId)) {
-   // throwError(line, col, String.format(notPropOfFigureErrorMessage, thirdId,
-   // "Point"));
-   // type = null;
-   // }
-   // }
-   // }
-   // }
-   // }
-   // else
-   // throwError(line, col, String.format(notInitVarErrorMessage, type));
-   // return type;
-
-   // }
-
-   // todo
+   
    @Override
    public String visitIdentifiers(GeometricsParser.IdentifiersContext ctx) {
       return visitChildren(ctx);   
@@ -274,11 +231,6 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    public String visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
       return visitChildren(ctx);
 
-   }
-
-   @Override
-   public String visitVarsInitList(GeometricsParser.VarsInitListContext ctx) {
-      return visitChildren(ctx);
    }
 
    @Override
@@ -423,27 +375,7 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
    }
 
    @Override
-   public String visitListAdd(GeometricsParser.ListAddContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   // grupo 2
-   @Override
-   public String visitListRemove(GeometricsParser.ListRemoveContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   // If function
-   @Override
    public String visitConditional(GeometricsParser.ConditionalContext ctx) {
-      // String res = null;
-      // String bologic = visit(ctx.booleanLogic());
-      // String stat = visit(ctx.stats());
-      // if (bologic == null || stat == null) {
-      //    res = null;
-      // } else
-      //    res = bologic;
-      // return res;
       return null;
    }
 
