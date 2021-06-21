@@ -14,7 +14,6 @@ stats	: 'start' varsInit NEWLINE*		#statVarsInit
 	| 'draw' ID	(',' ID)* NEWLINE*		#statDraw
 	| loop								#statLoop
 	| conditional						#statConditional
-	| funcCall							#statFuncCall
 	| 'write' (ID | STRING)				#statConsoleLog
 	| container							#statContainer
 	;
@@ -66,19 +65,14 @@ booleanLogic returns [String var = null]
 varsInit: (OBJECT | FIGURE) ID												#varsOnlyInit
 		| OBJECT ID '->' attribs											#varsInitObject
 		| FIGURE ID blockSet												#varsInitFigure
-		| 'Task' ID ('with' ID (',' ID)* )? ':' (stats NEWLINE*)+ 'end'		#varsInitFunc
 		;
 
 inlineSet	: ID '->' attribs NEWLINE* ;
 
 blockSet : ':' inlineSet+ 'end' ;
 
-attribs	returns [String var = null]: (STRING | expr | angle | time | pointsExpr | color | funcCall | TRUTHVAL) NEWLINE*;
+attribs	returns [String var = null]: (STRING | expr | angle | time | pointsExpr | color | TRUTHVAL) NEWLINE*;
 // End vars initialization
-
-// Begin func call
-funcCall	: 'call' ID ('with' (expr | STRING) (',' (expr | STRING))* )? ;
-// End func call
 
 // Begin vars set
 varsSet	: 'set' ID (inlineSet | blockSet) 			#varsSetProperties

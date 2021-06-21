@@ -116,11 +116,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return visit(ctx.conditional());
    }
 
-   @Override
-   public ST visitStatFuncCall(GeometricsParser.StatFuncCallContext ctx) {
-      return visit(ctx.funcCall());
-   }
-
    // grupo 2
    @Override
    public ST visitStatConsoleLog(GeometricsParser.StatConsoleLogContext ctx) {
@@ -460,11 +455,6 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
    }
 
    @Override
-   public ST visitVarsInitFunc(GeometricsParser.VarsInitFuncContext ctx) {
-      return visitChildren(ctx);
-   }
-
-   @Override
    public ST visitInlineSet(GeometricsParser.InlineSetContext ctx) {
       String id = ctx.ID().getText();
       ST setter = template.getInstanceOf("figureSetter");
@@ -536,18 +526,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       }
       return null;
    }
-
-   @Override
-   public ST visitFuncCall(GeometricsParser.FuncCallContext ctx) {
-      ST func = template.getInstanceOf("call_func");
-      func.add("name", ctx.ID().getText());
-      for (int i = 0; i < ctx.expr().size() - 1; i++) {
-         func.add("value", ctx.expr(i) + ",");
-      }
-      func.add("value", ctx.expr(ctx.expr().size() - 1));
-      return func;
-   }
-
+   
    @Override
    public ST visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
       ST stats = template.getInstanceOf("stats");
