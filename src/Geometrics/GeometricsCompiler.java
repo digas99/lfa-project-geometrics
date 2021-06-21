@@ -1,3 +1,4 @@
+package Geometrics;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -671,7 +672,7 @@ public class GeometricsCompiler extends GeometricsBaseVisitor<ST> {
       return false;
    }
 
-   private STGroup template = new STGroupFile("template.stg");
+   private STGroup template = new STGroupFile("Geometrics/template.stg");
 
    private String newExprVar() {
       exprVars++;

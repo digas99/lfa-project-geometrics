@@ -1,4 +1,7 @@
 grammar Beaver;
+@header{ 
+package Beaver; 
+}
 
 // stats NEWLINE?
 program	: NEWLINE* containers NEWLINE* (stats NEWLINE*)* EOF;

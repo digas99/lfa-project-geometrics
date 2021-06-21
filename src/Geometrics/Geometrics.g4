@@ -1,4 +1,7 @@
 grammar Geometrics;
+@header{
+package Geometrics; 
+}
 
 program	: NEWLINE* use* NEWLINE* 'Board' STRING NEWLINE* (stats NEWLINE*)* NEWLINE* EOF ;
 

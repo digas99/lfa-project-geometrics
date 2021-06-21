@@ -1,30 +1,28 @@
-# Geometrics language
+## Membros do Grupo
+&nbsp;
 
------
+| NMec | Name | email | Contribution (%) | Detailed contribution [1]
+|:-:|:--|:--|:-:|:--|
+| 73150 | Gonçalo Maranhão | goncalo.rodrigues@ua.pt | 22,6% | gramática principal(16,6%)<br> criação de código java swing(backend estático)(100%)<br>geração de código(10%)<br>examples (50%)<br>testes (20%)|
+| 73211 | Mariana Gomes | marianapinheiro@ua.pt | 0% | |
+| 90327 | Diogo Correia | diogo.correia99@ua.pt | 26,7% |gramática principal (33,6%)<br> análise semântica gramática principal (20%)<br> geração de código (80%)<br> gramática secundária (50%)<br> análise semântica gramática secundária (70%)<br>interpretação/geração de código linguagem secundária (100%)<br>exemplos (50%)<br>testes(20%)<br>criação de scripts(100%)|
+| 92975 | Leandro Rito | leandro.rito@ua.pt | 16,9% | gramática principal (16,6%)<br>análise semântica gramática principal (40%)<br>testes (20%)|
+| 93427 | Lara Rodrigues| laravieirarodrigues@ua.pt | 16,9% | gramática principal (16,6%)<br>análise semântica gramática principal(40%)<br>gramática secundária(50%) <br> análise semântica gramática secundária (30%)<br>testes (20%)<br>relatório (100%) |
+| 93460 | João Fernandes | joaogilfernandes@ua.pt | 16,9% | gramática principal(16,6%)<br>geração de código(10%)<br>testing (20%)|
 
-## Group members
 
-| NMec | Name | email |
-|--:|---|---|
-| 73150 | [Gonçalo Rodrigues Maranhão](https://github.com/GoncaloMaranhao) | goncalo.rodrigues@ua.pt |
-| 73211 | [Mariana Pinheiro Gomes](https://github.com/marianapinheiro21) | marianapinheiro@ua.pt |
-| 90327 | [Diogo Costa Correia](https://github.com/digas99) | diogo.correia99@ua.pt |
-| 92975 | [Leandro Filipe Gomes Rito](https://github.com/Strikeneerman) | leandro.rito@ua.pt |
-| 93427 | [Lara Vieira Rodrigues](https://github.com/Lararodrigues1) | laravieirarodrigues@ua.pt |
-| 93460 | [João Gil Ferreira de Sousa Fernandes](https://github.com/GilFernandes2000) | joaogilfernandes@ua.pt |
-|  |  |  |
+[1] Topics:<br>
+   gramática principal (%)<br> análise semântica gramática principal (%)<br> geração de código (%)<br> gramática secundária (%)<br> análise semântica gramática secundária (%)<br>interpretação/geração de código linguagem secundária (%)<br>exemplos (%)<br>testes(%)<br>relatório (%)<br> criação de código java swing(backend estático)(100%)<br>criação de scripts(%)
 
-## Folder organization
 
-- **src** -- all source code should in this folder
-- **doc** -- reports and any other documentation should be inside this folder
-- **examples** -- example programs in your porposed language should be inside this folder
+## Material para avaliação
+
+Todo o código presente na master conta para avalição excepto a pasta JavaGraphicsExample e a pasta figure_making que é apenas material de apoio à realização do projeto.
 
 ## Compilar e Correr
 
-   -A primeira coisa a fazer é executar o comando: `bash setup.sh` no diretório `geometrics-lfa-14`<br>
-    Para compilar e correr os ficheiros da linguagens principal executar o comando: `bash draw.sh fileGeo OutputClassName` novamente no diretório `geometrics-lfa-14`<br>
-    onde fileGeo é o nome do programa .geo e OutputClassName é o nome do ficheiro java gerado automaticamente.
+A primeira coisa a fazer é entrar na `src` e executar o `antlr4-build.`
+Ainda no `src`, se quiser correr os exemplos `example1.geo` e `test.geo`, execute o comando:<br> `java Geometrics.GeometricsMain ../examples/fileGeo.geo NomeDoFicheiro`, onde `fileGeo` é o nome do programa .geo e `NomeDoFicheiro` é o nome do ficheiro java gerado automaticamente.
 
 
 ## Exemplos funcionais (pelo menos dois)
@@ -60,12 +58,12 @@ Nas imagens que incluimos no relatório são visiveis a maioria das mesagens de 
     dentro do diretório : `geometrics-lfa-14/src/Beaver/`<br>
     utilizar o comando: `java BeaverMain ../../doc/Beaver/errors/nome_do_ficheiro`
 
-    ![title](doc/images/test1.png)
+    ![title](images/test1.png)
 
     Neste exemplo (error-test1.bvr) são detetados vários erros de semântica relacionados com as figuras.<br>
     Tal como podemos observar as mensagens de erro indicam especificamente quais foram os erros cometidos.<br>
 
-    ![title](doc/images/test2.png)
+    ![title](images/test2.png)
      
     Este exemplo (error-test2.bvr) testa especificamente erros relacionados com as propriedades de cor. <br>
 
@@ -102,3 +100,6 @@ Linguagem principal : `/-` <br>
 O projeto não está a funcionar como gostariamos que estivesse e apresenta uma mistura entre as caracteristicas obrigatórias e as desejaveis que sabemos que não é o ideal, mas fizemos o máximo esforço possível para recuperar o tempo perdido após a desistência de um dos membros do grupo.<br>
 Por razões que nos são desconhecidas, quando o programa apresenta as animações, fica com quebras de fps. Para a animação ficar mais smooth, inexplicavelmente, se mexer no rato (continuamente) dentro do board a situação melhora.
 
+## Lembrete 
+Na última aula (21/06/2021) estivemos a resolver com o professor a melhor maneira de compilar e de correr os exemplos, visto que, anteriormente tinhamos feito de forma a ter que se correr um script que pedia para alterar a bashrc.<br>
+Sendo que, não faria sentido ter de mudar a bashrc, o último commit é apenas referente a pequenas mudaças de código e localização de pastas para facilitar a compilação e execução do programa.
