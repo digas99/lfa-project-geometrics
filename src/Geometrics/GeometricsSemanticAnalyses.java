@@ -229,14 +229,34 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitVarsOnlyInit(GeometricsParser.VarsOnlyInitContext ctx) {
-      return visitChildren(ctx);
-
+      
+      String resObj = ctx.OBJECT().getText();
+      String resFig = ctx.FIGURE().getText();
+      String resID = ctx.ID().getText();
+     
+      if(resID == null){
+         return null;
+      }
+      else if(resObj == null && resFig == null){
+         return null;
+      }
+      else if(resFig == null){
+         return resObj + resID;
+      }
+      else{
+      return resFig + resID ;
+      }
    }
 
    @Override
    public String visitVarsInitObject(GeometricsParser.VarsInitObjectContext ctx) {
-
-      return visitChildren(ctx);
+      String resObj = ctx.OBJECT().getText();
+      String resID = ctx.ID().getText();
+      String attr = visit(ctx.attribs());
+      if(anyNull(resObj,resID,attr)){
+         return null;
+      }
+      return resObj + resID + "->" + attr;
    }
 
    @Override
@@ -334,19 +354,50 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitFuncCall(GeometricsParser.FuncCallContext ctx) {
+
+      //String resID = ctx.ID().getText();
+      //return resID;
       return visitChildren(ctx);
    }
 
    @Override
    public String visitVarsSetProperties(GeometricsParser.VarsSetPropertiesContext ctx) {
-      String id = ctx.ID().getText();
-      idOfBlockSet = id;
-      return visitChildren(ctx);
+      String resID = ctx.ID().getText();
+      String lineSET = visit(ctx.inlineSet());
+      String blockSET = visit(ctx.blockSet());
+
+      if(resID == null){
+
+         return null;
+
+      }
+      else if(lineSET == null && blockSET == null){
+
+         return null;
+      }
+      else if(lineSET == null){
+
+         return resID + blockSET;
+      }
+      else{
+
+         return resID + lineSET;
+      }
+
+     
    }
 
    @Override
    public String visitVarsSetCalc(GeometricsParser.VarsSetCalcContext ctx) {
-      return visitChildren(ctx);
+      
+      String resID = ctx.ID().getText();
+      String expr0 = visit(ctx.expr());
+
+      if(anyNull(resID,expr0)){
+         return null;
+      }
+      
+      return resID + expr0;
    }
 
    @Override public String visitColorId(GeometricsParser.ColorIdContext ctx) {
@@ -374,28 +425,42 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
       return expr0 + "," + expr1 + "," + expr2;   
    }
 
+   // If function
    @Override
    public String visitConditional(GeometricsParser.ConditionalContext ctx) {
-      return null;
+       String bologic = visit(ctx.booleanLogic());
+       List<String> blocks = ctx.blockStats().stream().map(attr -> visit(attr)).collect(Collectors.toList());
+       if (bologic == null || blocks == null) {}
+      return "if" + bologic + ":" + blocks + "end";
    }
+
+   //created visit blockStats
+   @Override
+   public String visitBlockStats(GeometricsParser.BlockStatsContext ctx){
+      return visit(ctx.stats());
+
+   }
+
 
    // Loop functions start -----------------------------------------
    @Override
    public String visitLoop(GeometricsParser.LoopContext ctx) {
-
-      // String res = null;
-      // String resTime = visit(ctx.time());
-      // String resID = visit(ctx.ID().getText());
-      // String loopSpec = visit(ctx.loopSpecifics());
-
-      // if (resID == null || resTime == null || loopSpec == null) {
-      //    res = null;
-      // } else
-      //    res = loopSpec;
-
-      // return res;
-      // Verify time and loopSpecifics(eachtime,while,for)
-      return null;
+      String timed = visit(ctx.time());
+      String resID = ctx.ID().getText();
+      List<String> resStats = ctx.stats().stream().map(stat -> visit(stat)).collect(Collectors.toList());
+      if( anyNull(resStats) == true){
+         return null;
+      }
+      else if (resID == null && timed == null){
+         return null;
+      }
+      else if (resID == null) {
+          return "each" + timed + resStats + "end";
+      }
+      else{
+          return "each" + resID + resStats + "end";
+      }
+      
    }
 
    // Loop functions end -----------------------------------------
@@ -409,15 +474,28 @@ public class GeometricsSemanticAnalyses extends GeometricsBaseVisitor<String> {
 
    @Override
    public String visitTime(GeometricsParser.TimeContext ctx) {
-      return visit(ctx.expr());
-      // verificar se tempo é positivo ?
+      int line = ctx.getStart().getLine();
+      int col = ctx.getStart().getCharPositionInLine();
+      String timed = visit(ctx.expr());
+      if (!(isNumber(timed))){
+         throwError(line, col, String.format(notVarTypeNumberErrorMessage, timed));
+         return null;
+      } 
+      int time = Integer.parseInt(timed);
+      if (time < 0)  
+      {
+         throwError(line, col, String.format(notValueOfPropErrorMessage, timed));
+         return null;
+      }
+      return timed;
+      
    }
 
    @Override
    public String visitPoint(GeometricsParser.PointContext ctx) {
       String res = null;
       String expr0 = visit(ctx.expr(0));
-      String expr1 = visit(ctx.expr(1));
+      String expr1 = visit(ctx.expr(1));//quick fix: created method expr(int) in type 'PointContext';
       if (expr0 == null || expr1 == null) {
          res = null;
       } else
