@@ -12,17 +12,20 @@
 
 
 [1] Topics:<br>
-   gramática principal (%)<br> análise semântica gramática principal (%)<br> geração de código (%)<br> gramática secundária (%)<br> análise semântica gramática secundária (%)<br>interpretação/geração de código linguagem secundária (%)<br>exemplos (%)<br>testes(%)<br>relatório (%)<br> criação de código java swing(backend estático)(100%)<br>criação de scripts(%)
+   gramática principal (%)<br> análise semântica gramática principal (%)<br> geração de código (%)<br> gramática secundária (%)<br> análise semântica gramática secundária (%)<br>interpretação/geração de código linguagem secundária (%)<br>exemplos (%)<br>testes(%)<br>relatório (%)<br> criação de código java swing("backend estático")(100%)<br>criação de scripts(%)
 
 
 ## Material para avaliação
 
-Todo o código presente na master conta para avalição excepto a pasta JavaGraphicsExample e a pasta figure_making que é apenas material de apoio à realização do projeto.
+Todo o código presente na master conta para avalição excepto a pasta JavaGraphicsExample e a pasta figure_making que apenas serviram de material de apoio à realização do projeto.<br> Na pasta doc os ficheiros fullExampleMainLanguage.txt e LFA_Geometrics_ExemploLinguagemPrincipal.txt representam ambições do que seria o nosso programa caso tivéssemos conseguido fazer tudo o que idealizámos. O princípio do projeto foi realizado com a ambição de conseguir fazer tudo o que está presente nesses ficheiros. 
 
 ## Compilar e Correr
 
 A primeira coisa a fazer é entrar na `src` e executar o `antlr4-build.`
-Ainda no `src`, se quiser correr os exemplos `example1.geo` e `test.geo`, execute o comando:<br> `java Geometrics.GeometricsMain ../examples/fileGeo.geo NomeDoFicheiro`, onde `fileGeo` é o nome do programa .geo e `NomeDoFicheiro` é o nome do ficheiro java gerado automaticamente.
+Ainda no `src`, se quiser correr os exemplos `example1.geo` e `test.geo`, execute o comando:<br> `java Geometrics.GeometricsMain ../examples/fileGeo.geo NomeDoFicheiro`, onde `fileGeo` é o nome do programa .geo e `NomeDoFicheiro` é o nome do ficheiro java gerado automaticamente.<br/>
+Para executar os dois ficheiros de teste da linguagem secundária seria ``java Beaver.BeaverMain ../doc/Beaver/working/nome_do_ficheiro`
+
+
 
 
 ## Exemplos funcionais (pelo menos dois)
@@ -33,24 +36,20 @@ No ponto 1. encontram-se dois exemplos funcionais da linguagem secundária.
 
     No ficheiro `working-test1.bvr` é criada a figura de um stickman que é constituido por diversas figuras que estão dentro de um container retangular.<br>
     No ficheiro `flags.bvr` são criadas figuras de duas bandeiras que, assim como no exemplo acima, são constituidas por diversas figuras.<br>
-    Para compilar e correr este exemplo deve executar o comando :<br> `java Beaver.BeaverMain ../doc/Beaver/working/nome_do_ficheiro` <br> 
-    no diretório : `geometrics-lfa-14/src`
 
 No ponto 2. encontam-se 2 exemplos funcionais da linguagem principal. Em ambos os exemplos, pode-se fazer play/pause com as teclas P/S, respetivamente. 
 
 2. `geometrics-lfa-14/examples`
 
     No ficheiro `test.geo` são criados 6 circulos pretos, após a primeira colisão com a border alteram a cor e vão alternando a troca de cor a cada colisão, simultaneamente, a cada colisão com a border o retangulo que está no centro da figura vai rodando segundo um determinado angulo.<br>
-    Para compilar e correr este exemplo deve executar o comando : `bash draw.sh test OutputClassName` no diretório `geometrics-lfa-14`<br>
 
     No ficheiro `example1.geo` existem dois retangulos que quando colidem se movem em direções opostos, em seguida, quando estes retangulos chegam ao border ficam prenchidos e 4 novas figuras entram no board. Dois circulos que se movem, na vertical na mesma direção e após colidirem vão em direções opostas em direção à border, aquando desta colisão os circulos ficam prenchidos e os outros dois, que até ao momento estão parados nos cantos superior esquerdo e inferior direito do board, começam a andar na diagonal até o seu centro ser (0,0) e ficam parados.
-    Para compilar e correr este exemplo deve executar o comando : `bash draw.sh example1 OutputClassName` no diretório `geometrics-lfa-14`<br>
 
 
 ## Exemplos de erros semânticos
 
 O objetico era ter-mos feito análise semântica com especificação de erros para ambas as linguagens, mas por falta de tempo não conseguimos terminar a análise semântica da linguagem principal. No ponto 1. encontram-se os testes para a linguagem secundária.<br>
-As mensagens de erro vem com a especificação da linha e da coluna onde ocorrem no código.<br>
+As mensagens de erro aparecem com a especificação da linha e da coluna onde ocorrem no código.<br>
 Nas imagens que incluimos no relatório são visiveis a maioria das mesagens de erro criadas.<br>
 
 1. `geometrics-lfa-14/src/Beaver/errors`
@@ -103,3 +102,4 @@ Por razões que nos são desconhecidas, quando o programa apresenta as animaçõ
 ## Lembrete 
 Na última aula (21/06/2021) estivemos a resolver com o professor a melhor maneira de compilar e de correr os exemplos, visto que, anteriormente tinhamos feito de forma a ter que se correr um script que pedia para alterar a bashrc.<br>
 Sendo que, não faria sentido ter de mudar a bashrc, o último commit é apenas referente a pequenas mudaças de código e localização de pastas para facilitar a compilação e execução do programa.
+
