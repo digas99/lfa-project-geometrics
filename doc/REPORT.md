@@ -34,8 +34,8 @@ No ponto 1. encontram-se dois exemplos funcionais da linguagem secundária.
 
     No ficheiro `working-test1.bvr` é criada a figura de um stickman que é constituido por diversas figuras que estão dentro de um container retangular.<br>
     No ficheiro `flags.bvr` são criadas figuras de duas bandeiras que, assim como no exemplo acima, são constituidas por diversas figuras.<br>
-    Para compilar e correr este exemplo deve executar o comando :<br> `java BeaverMain ../../doc/Beaver/working/nome_do_ficheiro` <br> 
-    no diretório : `geometrics-lfa-14/src/Beaver/`
+    Para compilar e correr este exemplo deve executar o comando :<br> `java Beaver.BeaverMain ../doc/Beaver/working/nome_do_ficheiro` <br> 
+    no diretório : `geometrics-lfa-14/src`
 
 No ponto 2. encontam-se 2 exemplos funcionais da linguagem principal. Em ambos os exemplos, pode-se fazer play/pause com as teclas P/S, respetivamente. 
 
